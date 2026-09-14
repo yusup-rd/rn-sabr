@@ -1,13 +1,16 @@
+import DateWithLocation from "@/components/home/DateWithLocation";
+import HeroCountdown from "@/components/home/HeroCountdown";
 import { styled } from "nativewind";
-import { Text } from "react-native";
 import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(NativeSafeAreaView);
 
 const Index = () => {
   return (
-    <SafeAreaView className="bg-background flex-1 items-center justify-center">
-      <Text className="text-foreground font-sans-bold text-2xl">Home</Text>
+    <SafeAreaView className="bg-background flex-1 gap-6 p-5">
+      <DateWithLocation />
+
+      <HeroCountdown />
     </SafeAreaView>
   );
 };
