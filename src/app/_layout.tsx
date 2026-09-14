@@ -20,5 +20,22 @@ export default function RootLayout() {
     return null;
   }
 
-  return <Stack />;
+  return (
+    <Stack>
+      <Stack.Screen
+        name="(tabs)"
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      {/* Screen will be pushed from Home Screen */}
+      {/* <Stack.Screen
+        name="home-details"
+        options={{
+          title: "Home Details",
+        }}
+      /> */}
+    </Stack>
+  );
 }

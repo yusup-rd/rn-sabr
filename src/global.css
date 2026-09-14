@@ -3,118 +3,55 @@
 @import "tailwindcss/utilities.css";
 
 @import "nativewind/theme";
-
-/* ─────────────────────────────────────────
-   Light theme
-───────────────────────────────────────── */
 :root {
-  /* Surfaces & Canvas */
-  --color-background: #F8F9FA;
-  --color-foreground: #0F172A;
+  --color-background: #f8f9fa;
+  --color-foreground: #0f172a;
 
-  --color-card: #FFFFFF;
-  --color-card-foreground: #0F172A;
-  --color-card-subtle: #F1F5F4;
+  --color-card: #ffffff;
+  --color-card-foreground: #0f172a;
 
-  /* Primary - Sacred Emerald */
-  --color-primary: #134E43;
-  --color-primary-foreground: #FFFFFF;
-  --color-primary-dark: #0D3830;
-  --color-primary-light: #1E7364;
-  --color-primary-muted: #E6EFE9;
+  --color-primary: #134e43;
+  --color-primary-foreground: #ffffff;
 
-  /* Secondary - Warm Gold */
-  --color-secondary: #C5A059;
-  --color-secondary-foreground: #1B150A;
-  --color-secondary-light: #E5C158;
-  --color-secondary-muted: #FAF5E9;
+  --color-secondary: #c5a059;
+  --color-secondary-foreground: #1b150a;
 
-  /* Neutral / Muted UI */
-  --color-muted: #F1F5F9;
-  --color-muted-foreground: #64748B;
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
 
-  --color-border: #E2E8F0;
-  --color-border-subtle: #EEF2F6;
+  --color-border: #e2e8f0;
 
-  /* Spiritual States */
-  --color-success: #10B981;
-  --color-success-muted: #ECFDF5;
-
-  --color-accent-qibla: #C5A059;
+  --color-success: #10b981;
+  --color-destructive: #dc2626;
 }
 
-/* ─────────────────────────────────────────
-   Dark theme
-───────────────────────────────────────── */
-.dark {
-  /* Surfaces & Canvas */
-  --color-background: #091512;
-  --color-foreground: #F1F5F9;
-
-  --color-card: #112320;
-  --color-card-foreground: #F8FAFC;
-  --color-card-subtle: #162C28;
-
-  /* Primary */
-  --color-primary: #1E7364;
-  --color-primary-foreground: #FFFFFF;
-  --color-primary-dark: #134E43;
-  --color-primary-light: #2DA38E;
-  --color-primary-muted: #142E28;
-
-  /* Secondary - Warm Gold */
-  --color-secondary: #E5C158;
-  --color-secondary-foreground: #091512;
-  --color-secondary-light: #F3DA8E;
-  --color-secondary-muted: #302A19;
-
-  /* Neutral / Muted UI */
-  --color-muted: #162C28;
-  --color-muted-foreground: #8DA49D;
-
-  --color-border: #1E3A34;
-  --color-border-subtle: #18332E;
-
-  /* Spiritual States */
-  --color-success: #34D399;
-  --color-success-muted: #0D2B23;
-
-  --color-accent-qibla: #E5C158;
-}
-
-/* ─────────────────────────────────────────
-   Tailwind / NativeWind theme
-───────────────────────────────────────── */
 @theme inline {
-  /* Colors */
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);
 
   --color-card: var(--color-card);
   --color-card-foreground: var(--color-card-foreground);
-  --color-card-subtle: var(--color-card-subtle);
 
   --color-primary: var(--color-primary);
   --color-primary-foreground: var(--color-primary-foreground);
-  --color-primary-dark: var(--color-primary-dark);
-  --color-primary-light: var(--color-primary-light);
-  --color-primary-muted: var(--color-primary-muted);
 
   --color-secondary: var(--color-secondary);
   --color-secondary-foreground: var(--color-secondary-foreground);
-  --color-secondary-light: var(--color-secondary-light);
-  --color-secondary-muted: var(--color-secondary-muted);
 
   --color-muted: var(--color-muted);
   --color-muted-foreground: var(--color-muted-foreground);
 
   --color-border: var(--color-border);
-  --color-border-subtle: var(--color-border-subtle);
 
   --color-success: var(--color-success);
-  --color-success-muted: var(--color-success-muted);
+  --color-destructive: var(--color-destructive);
 
-  --color-accent-qibla: var(--color-accent-qibla);
+  --font-sans: sans-regular;
+  --font-sans-light: sans-light;
+  --font-sans-medium: sans-medium;
+  --font-sans-semibold: sans-semibold;
+  --font-sans-bold: sans-bold;
+  --font-sans-extrabold: sans-extrabold;
 
   /* Spacing */
   --spacing-0: 0px;
