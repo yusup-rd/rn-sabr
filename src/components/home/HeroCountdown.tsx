@@ -6,7 +6,7 @@ import { Text, View } from "react-native";
 
 const HeroCountdown = () => {
   return (
-    <View className="bg-primary relative overflow-hidden rounded-xl p-6">
+    <View className="bg-primary relative overflow-hidden rounded-xl p-6 shadow-md">
       <View className="pointer-events-none absolute -top-12 -right-5 opacity-10">
         <Fa name="star-and-crescent" size={224} color="white" />
       </View>
