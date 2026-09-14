@@ -3,3 +3,145 @@
 @import "tailwindcss/utilities.css";
 
 @import "nativewind/theme";
+
+/* ─────────────────────────────────────────
+   Light theme
+───────────────────────────────────────── */
+:root {
+  /* Surfaces & Canvas */
+  --color-background: #F8F9FA;
+  --color-foreground: #0F172A;
+
+  --color-card: #FFFFFF;
+  --color-card-foreground: #0F172A;
+  --color-card-subtle: #F1F5F4;
+
+  /* Primary - Sacred Emerald */
+  --color-primary: #134E43;
+  --color-primary-foreground: #FFFFFF;
+  --color-primary-dark: #0D3830;
+  --color-primary-light: #1E7364;
+  --color-primary-muted: #E6EFE9;
+
+  /* Secondary - Warm Gold */
+  --color-secondary: #C5A059;
+  --color-secondary-foreground: #1B150A;
+  --color-secondary-light: #E5C158;
+  --color-secondary-muted: #FAF5E9;
+
+  /* Neutral / Muted UI */
+  --color-muted: #F1F5F9;
+  --color-muted-foreground: #64748B;
+
+  --color-border: #E2E8F0;
+  --color-border-subtle: #EEF2F6;
+
+  /* Spiritual States */
+  --color-success: #10B981;
+  --color-success-muted: #ECFDF5;
+
+  --color-accent-qibla: #C5A059;
+}
+
+/* ─────────────────────────────────────────
+   Dark theme
+───────────────────────────────────────── */
+.dark {
+  /* Surfaces & Canvas */
+  --color-background: #091512;
+  --color-foreground: #F1F5F9;
+
+  --color-card: #112320;
+  --color-card-foreground: #F8FAFC;
+  --color-card-subtle: #162C28;
+
+  /* Primary */
+  --color-primary: #1E7364;
+  --color-primary-foreground: #FFFFFF;
+  --color-primary-dark: #134E43;
+  --color-primary-light: #2DA38E;
+  --color-primary-muted: #142E28;
+
+  /* Secondary - Warm Gold */
+  --color-secondary: #E5C158;
+  --color-secondary-foreground: #091512;
+  --color-secondary-light: #F3DA8E;
+  --color-secondary-muted: #302A19;
+
+  /* Neutral / Muted UI */
+  --color-muted: #162C28;
+  --color-muted-foreground: #8DA49D;
+
+  --color-border: #1E3A34;
+  --color-border-subtle: #18332E;
+
+  /* Spiritual States */
+  --color-success: #34D399;
+  --color-success-muted: #0D2B23;
+
+  --color-accent-qibla: #E5C158;
+}
+
+/* ─────────────────────────────────────────
+   Tailwind / NativeWind theme
+───────────────────────────────────────── */
+@theme inline {
+  /* Colors */
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+
+  --color-card: var(--color-card);
+  --color-card-foreground: var(--color-card-foreground);
+  --color-card-subtle: var(--color-card-subtle);
+
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-primary-light: var(--color-primary-light);
+  --color-primary-muted: var(--color-primary-muted);
+
+  --color-secondary: var(--color-secondary);
+  --color-secondary-foreground: var(--color-secondary-foreground);
+  --color-secondary-light: var(--color-secondary-light);
+  --color-secondary-muted: var(--color-secondary-muted);
+
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-muted-foreground);
+
+  --color-border: var(--color-border);
+  --color-border-subtle: var(--color-border-subtle);
+
+  --color-success: var(--color-success);
+  --color-success-muted: var(--color-success-muted);
+
+  --color-accent-qibla: var(--color-accent-qibla);
+
+  /* Spacing */
+  --spacing-0: 0px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 28px;
+  --spacing-8: 32px;
+  --spacing-9: 36px;
+  --spacing-10: 40px;
+  --spacing-11: 44px;
+  --spacing-12: 48px;
+  --spacing-14: 56px;
+  --spacing-16: 64px;
+  --spacing-18: 72px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+  --spacing-30: 120px;
+
+  /* Fonts */
+  --font-sans: sans-regular;
+  --font-sans-light: sans-light;
+  --font-sans-medium: sans-medium;
+  --font-sans-semibold: sans-semibold;
+  --font-sans-bold: sans-bold;
+  --font-sans-extrabold: sans-extrabold;
+}
