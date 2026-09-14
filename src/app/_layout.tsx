@@ -1,4 +1,5 @@
 import "@/global.css";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 
@@ -21,21 +22,23 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen
-        name="(tabs)"
-        options={{
-          headerShown: false,
-        }}
-      />
+    <ThemeProvider>
+      <Stack>
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            headerShown: false,
+          }}
+        />
 
-      {/* Screen will be pushed from Home Screen */}
-      {/* <Stack.Screen
+        {/* Screen will be pushed from Home Screen */}
+        {/* <Stack.Screen
         name="home-details"
         options={{
           title: "Home Details",
-        }}
-      /> */}
-    </Stack>
+          }}
+          /> */}
+      </Stack>
+    </ThemeProvider>
   );
 }

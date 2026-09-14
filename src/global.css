@@ -6,23 +6,35 @@
 :root {
   --color-background: #f8f9fa;
   --color-foreground: #0f172a;
-
   --color-card: #ffffff;
   --color-card-foreground: #0f172a;
-
   --color-primary: #134e43;
   --color-primary-foreground: #ffffff;
-
   --color-secondary: #c5a059;
   --color-secondary-foreground: #1b150a;
-
   --color-muted: #f1f5f9;
   --color-muted-foreground: #64748b;
-
   --color-border: #e2e8f0;
-
   --color-success: #10b981;
   --color-destructive: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #0b1412;
+    --color-foreground: #f8fafc;
+    --color-card: #12201d;
+    --color-card-foreground: #f8fafc;
+    --color-primary: #4faf99;
+    --color-primary-foreground: #07100e;
+    --color-secondary: #d6b66a;
+    --color-secondary-foreground: #181207;
+    --color-muted: #17221f;
+    --color-muted-foreground: #94a3b8;
+    --color-border: #263631;
+    --color-success: #34d399;
+    --color-destructive: #f87171;
+  }
 }
 
 @theme inline {

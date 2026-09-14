@@ -1,13 +1,15 @@
-import { theme } from "@/constants/theme";
+import { useTheme } from "@/providers/ThemeProvider";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { Platform } from "react-native";
 
 const TabsLayout = () => {
+  const { colors } = useTheme();
+
   if (Platform.OS === "ios") {
     return (
-      <NativeTabs tintColor={theme.colors.primary}>
+      <NativeTabs tintColor={colors.primary}>
         <NativeTabs.Trigger name="index">
           <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
@@ -50,12 +52,12 @@ const TabsLayout = () => {
       <Tabs
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: theme.colors.primary,
-          tabBarInactiveTintColor: theme.colors.mutedForeground,
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.mutedForeground,
 
           tabBarStyle: {
-            backgroundColor: theme.colors.card,
-            borderTopColor: theme.colors.border,
+            backgroundColor: colors.card,
+            borderTopColor: colors.border,
           },
 
           tabBarLabelStyle: {

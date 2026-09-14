@@ -1,4 +1,4 @@
-export const colors = {
+export const lightColors = {
   background: "#F8F9FA",
   foreground: "#0F172A",
 
@@ -17,8 +17,36 @@ export const colors = {
   border: "#E2E8F0",
 
   success: "#10B981",
-  destructive: "#dc2626",
+  destructive: "#DC2626",
 } as const;
+
+export const darkColors = {
+  background: "#0B1412",
+  foreground: "#F8FAFC",
+
+  card: "#12201D",
+  cardForeground: "#F8FAFC",
+
+  primary: "#4FAF99",
+  primaryForeground: "#07100E",
+
+  secondary: "#D6B66A",
+  secondaryForeground: "#181207",
+
+  muted: "#17221F",
+  mutedForeground: "#94A3B8",
+
+  border: "#263631",
+
+  success: "#34D399",
+  destructive: "#F87171",
+} as const;
+
+export type ThemeColors = {
+  [K in keyof typeof lightColors]: string;
+};
+
+export type ThemeMode = "light" | "dark" | "system";
 
 export const spacing = {
   0: 0,
@@ -43,6 +71,7 @@ export const spacing = {
 } as const;
 
 export const theme = {
-  colors,
+  light: lightColors,
+  dark: darkColors,
   spacing,
 } as const;
