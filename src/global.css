@@ -1,8 +1,8 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css";
-
 @import "nativewind/theme";
+
 :root {
   --color-background: #f8f9fa;
   --color-foreground: #0f172a;
@@ -38,32 +38,20 @@
 }
 
 @theme inline {
+  /* Colors */
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);
-
   --color-card: var(--color-card);
   --color-card-foreground: var(--color-card-foreground);
-
   --color-primary: var(--color-primary);
   --color-primary-foreground: var(--color-primary-foreground);
-
   --color-secondary: var(--color-secondary);
   --color-secondary-foreground: var(--color-secondary-foreground);
-
   --color-muted: var(--color-muted);
   --color-muted-foreground: var(--color-muted-foreground);
-
   --color-border: var(--color-border);
-
   --color-success: var(--color-success);
   --color-destructive: var(--color-destructive);
-
-  --font-sans: sans-regular;
-  --font-sans-light: sans-light;
-  --font-sans-medium: sans-medium;
-  --font-sans-semibold: sans-semibold;
-  --font-sans-bold: sans-bold;
-  --font-sans-extrabold: sans-extrabold;
 
   /* Spacing */
   --spacing-0: 0px;
