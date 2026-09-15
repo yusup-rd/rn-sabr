@@ -1,13 +1,29 @@
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
-import { Text, View } from "react-native";
+import { Href, router } from "expo-router";
+import { Pressable, Text, View } from "react-native";
 
 interface QuickAccessButtonProps {
   type: "quran" | "mosques" | "prayer" | "zakat";
 }
 
-const quickAccessConfig = {
+interface QuickAccessItem {
+  icon: React.ComponentProps<typeof Fa>["name"];
+  iconClassName: string;
+  iconContainerClassName: string;
+  badge: string;
+  badgeClassName: string;
+  badgeTextClassName: string;
+  title: string;
+  description: string;
+  route: Href;
+}
+
+const quickAccessConfig: Record<
+  QuickAccessButtonProps["type"],
+  QuickAccessItem
+> = {
   quran: {
-    icon: "book-quran" as const,
+    icon: "book-quran",
     iconClassName: "text-secondary-soft-foreground",
     iconContainerClassName: "bg-secondary-soft",
     badge: "Surah",
@@ -15,9 +31,11 @@ const quickAccessConfig = {
     badgeTextClassName: "text-secondary-soft-foreground",
     title: "Quran",
     description: "Read Surah Al-Kahf",
+    route: "/quran",
   },
+
   mosques: {
-    icon: "mosque" as const,
+    icon: "mosque",
     iconClassName: "text-primary-soft-foreground",
     iconContainerClassName: "bg-primary-soft",
     badge: "0.4 mi",
@@ -25,9 +43,11 @@ const quickAccessConfig = {
     badgeTextClassName: "text-primary-soft-foreground",
     title: "Mosques",
     description: "4 open nearby",
+    route: "/mosques",
   },
+
   prayer: {
-    icon: "calendar-days" as const,
+    icon: "calendar-days",
     iconClassName: "text-muted-foreground",
     iconContainerClassName: "bg-muted",
     badge: "Daily",
@@ -35,9 +55,11 @@ const quickAccessConfig = {
     badgeTextClassName: "text-muted-foreground",
     title: "Prayer Times",
     description: "Times & notifications",
+    route: "/prayer-times",
   },
+
   zakat: {
-    icon: "money-bill-wave" as const,
+    icon: "money-bill-wave",
     iconClassName: "text-muted-foreground",
     iconContainerClassName: "bg-muted",
     badge: "Nisab",
@@ -45,14 +67,25 @@ const quickAccessConfig = {
     badgeTextClassName: "text-muted-foreground",
     title: "Zakat",
     description: "Quick Calculator",
+    route: "/zakat",
   },
 };
 
 const QuickAccessButton = ({ type }: QuickAccessButtonProps) => {
   const item = quickAccessConfig[type];
 
+  const handlePress = () => {
+    if (item.route) {
+      router.push(item.route);
+    }
+  };
+
   return (
-    <View className="bg-card gap-3 rounded-xl p-4 shadow-md">
+    <Pressable
+      className="bg-card gap-3 rounded-xl p-4 shadow-md"
+      onPress={handlePress}
+      accessibilityLabel={item.title}
+    >
       <View className="flex-row items-center justify-between gap-2">
         <View
           className={`size-9 items-center justify-center rounded-full ${item.iconContainerClassName}`}
@@ -90,7 +123,7 @@ const QuickAccessButton = ({ type }: QuickAccessButtonProps) => {
           {item.description}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

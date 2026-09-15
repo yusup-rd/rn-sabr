@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { Appearance, useColorScheme } from "react-native";
+import { Appearance, Platform, useColorScheme } from "react-native";
 
 import {
   darkColors,
@@ -47,13 +47,19 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       : mode;
 
   useEffect(() => {
-    Appearance.setColorScheme(mode === "system" ? "unspecified" : mode);
+    if (Platform.OS !== "web") {
+      Appearance.setColorScheme(mode === "system" ? "unspecified" : mode);
+    }
   }, [mode]);
 
   const setMode = async (nextMode: ThemeMode) => {
     setModeState(nextMode);
 
-    Appearance.setColorScheme(nextMode === "system" ? "unspecified" : nextMode);
+    if (Platform.OS !== "web") {
+      Appearance.setColorScheme(
+        nextMode === "system" ? "unspecified" : nextMode,
+      );
+    }
 
     await AsyncStorage.setItem(STORAGE_KEY, nextMode);
   };

@@ -39,13 +39,21 @@ export default function RootLayout() {
           }}
         />
 
-        {/* Screen will be pushed from Home Screen */}
-        {/* <Stack.Screen
-        name="home-details"
-        options={{
-          title: "Home Details",
+        <Stack.Screen
+          name="prayer-times"
+          options={{
+            presentation: "modal",
+            headerShown: false,
           }}
-          /> */}
+        />
+
+        <Stack.Screen
+          name="zakat"
+          options={{
+            presentation: "modal",
+            headerShown: false,
+          }}
+        />
       </Stack>
     </ThemeProvider>
   );

@@ -29,7 +29,7 @@ const SpiritualPauseCard = () => {
           }}
         />
 
-        <View className="flex-row items-center justify-between gap-2 p-4">
+        <View className="flex-row items-end justify-between gap-2 p-4">
           <View className="gap-0.5">
             <Text className="font-sans-semibold text-secondary text-xs uppercase">
               Spiritual Pause
@@ -45,8 +45,12 @@ const SpiritualPauseCard = () => {
             tint="default"
             className="flex-row items-center gap-1 overflow-hidden rounded-full px-2.5 py-1"
           >
-            <Fa name="heart" size={14} className="text-success" />
-            <Text className="text-success font-sans-semibold text-xs">
+            <Fa
+              name="heart"
+              size={14}
+              className="text-primary-soft-foreground"
+            />
+            <Text className="text-primary-soft-foreground font-sans-semibold text-xs">
               33x SubhanAllah
             </Text>
           </BlurView>

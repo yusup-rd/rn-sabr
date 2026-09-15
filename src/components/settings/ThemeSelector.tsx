@@ -20,6 +20,8 @@ export function ThemeSelector() {
           <Pressable
             key={option.value}
             onPress={() => setMode(option.value)}
+            accessibilityRole="radio"
+            accessibilityState={{ checked: selected }}
             className={`flex-1 items-center rounded-lg px-3 py-2.5 ${
               selected ? "bg-card" : ""
             }`}
