@@ -10,7 +10,7 @@ const SafeAreaView = styled(NativeSafeAreaView);
 
 const Index = () => {
   return (
-    <SafeAreaView className="bg-background flex-1">
+    <SafeAreaView className="bg-background flex-1" edges={["top"]}>
       <ScrollView
         className="flex-1"
         contentContainerClassName="gap-5 p-5"
