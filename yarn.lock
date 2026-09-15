@@ -2261,6 +2261,11 @@ expo-asset@~57.0.17:
     "@expo/image-utils" "^0.11.5"
     expo-constants "~57.0.18"
 
+expo-blur@~57.0.3:
+  version "57.0.3"
+  resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-57.0.3.tgz#87feb0b2e48e7ecba239b3b7a5358d1810203ccc"
+  integrity sha512-uyBeJwxIuXzWXXNrnRub5pcF8VzQsiOz0VBTWDpMG2UztmaFyfAz6pI/GCwRtWpHhiOpLoJj79WLdg1GMB+9cg==
+
 expo-constants@~57.0.18:
   version "57.0.18"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-57.0.18.tgz#51b6af86caa1bcfc7dde92fbe501449172891dc5"
@@ -2303,6 +2308,11 @@ expo-keep-awake@~57.0.2:
   version "57.0.2"
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-57.0.2.tgz#ce266252ad478523bb3431d40f67bd643f86bd9c"
   integrity sha512-GqgH746wtJImmsbyHmCQoi7cOslKuWQBbJHXr53S35Bpf5UvxCAztvnitUEd7D0QvFN2rvkOhylbZpgZZfBLlQ==
+
+expo-linear-gradient@~57.0.2:
+  version "57.0.2"
+  resolved "https://registry.yarnpkg.com/expo-linear-gradient/-/expo-linear-gradient-57.0.2.tgz#a9d85700cd822678556a6166640b0240d31fe011"
+  integrity sha512-eGNSfcbdXYvw0B/TQ3nmXKQgj0jLUi3EgsXGlvI79rlXg5RR5dQTkY2yqkf7BQDM3PMd3tqBMZdsLhvBqSUaMg==
 
 expo-linking@~57.0.10:
   version "57.0.10"

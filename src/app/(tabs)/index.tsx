@@ -2,6 +2,7 @@ import DateWithLocation from "@/components/home/DateWithLocation";
 import HeroCountdown from "@/components/home/HeroCountdown";
 import PrayersToday from "@/components/home/PrayersToday";
 import QuickAccess from "@/components/home/QuickAccess";
+import SpiritualPauseCard from "@/components/home/SpiritualPauseCard";
 import { styled } from "nativewind";
 import { ScrollView } from "react-native";
 import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-context";
@@ -20,6 +21,7 @@ const Index = () => {
         <HeroCountdown />
         <QuickAccess />
         <PrayersToday />
+        <SpiritualPauseCard />
       </ScrollView>
     </SafeAreaView>
   );

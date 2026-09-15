@@ -1,0 +1,59 @@
+import { FontAwesome6 as Fa } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
+import { ImageBackground } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { Text, View } from "react-native";
+
+const SpiritualPauseCard = () => {
+  const backgroundImage = require("@/assets/images/spiritual-pause-card/spiritual-pause.webp");
+
+  return (
+    <View className="bg-card h-36 overflow-hidden rounded-xl shadow-md">
+      <ImageBackground
+        source={backgroundImage}
+        contentFit="cover"
+        style={{ flex: 1, justifyContent: "flex-end" }}
+        imageStyle={{ width: "100%", height: "100%" }}
+      >
+        <LinearGradient
+          colors={["rgba(0,0,0,0)", "rgba(0,0,0,0.4)", "rgba(0,0,0,0.9)"]}
+          locations={[0, 0.5, 1]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+          }}
+        />
+
+        <View className="flex-row items-center justify-between gap-2 p-4">
+          <View className="gap-0.5">
+            <Text className="font-sans-semibold text-secondary text-xs uppercase">
+              Spiritual Pause
+            </Text>
+
+            <Text className="font-sans-semibold text-primary-foreground text-sm">
+              Evening Dhikr & Istighfar
+            </Text>
+          </View>
+
+          <BlurView
+            intensity={30}
+            tint="default"
+            className="flex-row items-center gap-1 overflow-hidden rounded-full px-2.5 py-1"
+          >
+            <Fa name="heart" size={14} className="text-success" />
+            <Text className="text-success font-sans-semibold text-xs">
+              33x SubhanAllah
+            </Text>
+          </BlurView>
+        </View>
+      </ImageBackground>
+    </View>
+  );
+};
+
+export default SpiritualPauseCard;
