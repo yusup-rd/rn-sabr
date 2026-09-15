@@ -56,14 +56,12 @@ const PrayerCalculationSheet = ({
           background(colors.background),
         ]}
         contentPadding={{
-          top: 32,
-          bottom: 32,
           left: 20,
           right: 20,
         }}
       >
         <RNHostView>
-          <View className="p5">
+          <View className="px-1 py-5">
             <View className="mb-6">
               <Text className="text-foreground font-sans-bold text-xl">
                 Prayer Calculation
@@ -176,7 +174,7 @@ const SelectionRow = ({
       </View>
 
       <View
-        className={`h-5 w-5 items-center justify-center rounded-full border-2 ${
+        className={`size-5 items-center justify-center rounded-full border-2 ${
           selected
             ? "border-primary bg-primary"
             : "border-border bg-transparent"

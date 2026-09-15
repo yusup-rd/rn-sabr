@@ -2,6 +2,14 @@ import { CalculationMethod, Madhab, type CalculationParameters } from "adhan";
 
 import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 
+/**
+ * Converts the app's prayer calculation settings into the
+ * calculation parameters expected by Adhan.
+ *
+ * The calculation method determines the parameters used for
+ * Fajr, Isha, and other prayer times, while the Asr method
+ * determines the madhab-specific shadow-length calculation.
+ */
 export function getCalculationParameters(
   method: CalculationMethodId,
   asrMethod: AsrMethod,
