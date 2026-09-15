@@ -1,4 +1,4 @@
-import { Prayer } from "@/types";
+import { Prayer } from "@/types/prayer";
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { clsx } from "clsx";
 import { Text, View } from "react-native";
