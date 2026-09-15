@@ -4,9 +4,9 @@ import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 import { BottomSheet, Host, RNHostView } from "@expo/ui";
 import { background } from "@expo/ui/jetpack-compose/modifiers";
 import { presentationBackground } from "@expo/ui/swift-ui/modifiers";
-import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import PrayerCalculationOption from "./PrayerCalculationOption";
 
 interface PrayerCalculationSheetProps {
   visible: boolean;
@@ -61,27 +61,27 @@ const PrayerCalculationSheet = ({
         }}
       >
         <RNHostView>
-          <View className="px-1 py-5">
-            <View className="mb-6">
+          <View className="gap-5 px-1 py-5">
+            <View className="gap-1">
               <Text className="text-foreground font-sans-bold text-xl">
                 Prayer Calculation
               </Text>
 
-              <Text className="text-muted-foreground font-sans-medium mt-1 text-sm">
+              <Text className="text-muted-foreground font-sans-medium text-sm">
                 Choose how your prayer times are calculated.
               </Text>
             </View>
 
-            <View className="gap-6">
+            <View className="gap-5">
               {/* Calculation method */}
-              <View>
-                <Text className="text-foreground font-sans-semibold mb-3 text-sm">
+              <View className="gap-2">
+                <Text className="text-foreground font-sans-semibold text-sm">
                   Calculation Method
                 </Text>
 
                 <View className="gap-2">
                   {calculationMethods.map((method) => (
-                    <SelectionRow
+                    <PrayerCalculationOption
                       key={method.id}
                       title={method.label}
                       description={method.description}
@@ -93,14 +93,14 @@ const PrayerCalculationSheet = ({
               </View>
 
               {/* Asr method */}
-              <View>
-                <Text className="text-foreground font-sans-semibold mb-3 text-sm">
+              <View className="gap-2">
+                <Text className="text-foreground font-sans-semibold text-sm">
                   Asr Calculation
                 </Text>
 
                 <View className="gap-2">
                   {asrMethods.map((method) => (
-                    <SelectionRow
+                    <PrayerCalculationOption
                       key={method.id}
                       title={method.label}
                       description={method.description}
@@ -113,7 +113,7 @@ const PrayerCalculationSheet = ({
             </View>
 
             {/* Actions */}
-            <View className="mt-6 flex-row gap-3">
+            <View className="flex-row gap-3">
               <Pressable
                 onPress={onClose}
                 className="bg-muted flex-1 items-center rounded-xl py-3.5"
@@ -136,55 +136,6 @@ const PrayerCalculationSheet = ({
         </RNHostView>
       </BottomSheet>
     </Host>
-  );
-};
-
-interface SelectionRowProps {
-  title: string;
-  description: string;
-  selected: boolean;
-  onPress: () => void;
-}
-
-const SelectionRow = ({
-  title,
-  description,
-  selected,
-  onPress,
-}: SelectionRowProps) => {
-  return (
-    <Pressable
-      onPress={onPress}
-      className={`flex-row items-center justify-between rounded-xl border px-4 py-3 ${
-        selected ? "border-primary bg-primary-soft" : "border-border bg-card"
-      }`}
-    >
-      <View className="flex-1 pr-3">
-        <Text
-          className={`font-sans-semibold text-sm ${
-            selected ? "text-primary" : "text-foreground"
-          }`}
-        >
-          {title}
-        </Text>
-
-        <Text className="text-muted-foreground font-sans-medium mt-0.5 text-xs">
-          {description}
-        </Text>
-      </View>
-
-      <View
-        className={`size-5 items-center justify-center rounded-full border-2 ${
-          selected
-            ? "border-primary bg-primary"
-            : "border-border bg-transparent"
-        }`}
-      >
-        {selected && (
-          <Fa name="check" size={10} className="text-primary-foreground" />
-        )}
-      </View>
-    </Pressable>
   );
 };
 
