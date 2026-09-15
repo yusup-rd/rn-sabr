@@ -2,7 +2,7 @@ import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 
 interface QuickAccessButtonProps {
-  type: "quran" | "qibla" | "mosques" | "zakat";
+  type: "quran" | "mosques" | "prayer" | "zakat";
 }
 
 const quickAccessConfig = {
@@ -16,25 +16,25 @@ const quickAccessConfig = {
     title: "Quran",
     description: "Read Surah Al-Kahf",
   },
-  qibla: {
-    icon: "compass" as const,
-    iconClassName: "text-primary",
-    iconContainerClassName: "bg-success/20",
-    badge: "Live",
-    badgeClassName: "bg-success/20",
-    badgeTextClassName: "text-primary",
-    title: "Qibla",
-    description: "118° SE from Ashgabat AAAAAAAAAAAA",
-  },
   mosques: {
     icon: "mosque" as const,
-    iconClassName: "text-muted-foreground",
-    iconContainerClassName: "bg-muted",
+    iconClassName: "text-primary",
+    iconContainerClassName: "bg-success/20",
     badge: "0.4 mi",
-    badgeClassName: "",
-    badgeTextClassName: "text-muted-foreground",
+    badgeClassName: "bg-success/20",
+    badgeTextClassName: "text-primary",
     title: "Mosques",
     description: "4 open nearby",
+  },
+  prayer: {
+    icon: "calendar-days" as const,
+    iconClassName: "text-muted-foreground",
+    iconContainerClassName: "bg-muted",
+    badge: "Daily",
+    badgeClassName: "",
+    badgeTextClassName: "text-muted-foreground",
+    title: "Prayer Times",
+    description: "Times & notifications",
   },
   zakat: {
     icon: "money-bill-wave" as const,

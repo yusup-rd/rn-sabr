@@ -8,10 +8,10 @@ const QuickAccess = () => {
         <QuickAccessButton type="quran" />
       </View>
       <View className="flex-1 basis-[45%]">
-        <QuickAccessButton type="qibla" />
+        <QuickAccessButton type="mosques" />
       </View>
       <View className="flex-1 basis-[45%]">
-        <QuickAccessButton type="mosques" />
+        <QuickAccessButton type="prayer" />
       </View>
       <View className="flex-1 basis-[45%]">
         <QuickAccessButton type="zakat" />
