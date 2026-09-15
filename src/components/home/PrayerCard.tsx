@@ -12,13 +12,17 @@ const PrayerCard = ({ prayer }: { prayer: Prayer }) => {
       <Ionicons
         name={prayer.icon}
         size={16}
-        color={isSoon ? "#C5A059" : "#64748B"}
+        className={clsx(
+          isSoon ? "text-secondary-soft-foreground" : "text-muted-foreground",
+        )}
       />
     ) : (
       <Feather
         name={prayer.icon}
         size={16}
-        color={isSoon ? "#C5A059" : "#64748B"}
+        className={clsx(
+          isSoon ? "text-secondary-soft-foreground" : "text-muted-foreground",
+        )}
       />
     );
 
@@ -78,12 +82,16 @@ const PrayerCard = ({ prayer }: { prayer: Prayer }) => {
           )}
         >
           {isCompleted ? (
-            <Feather name="check" size={12} color="#10B981" />
+            <Feather name="check" size={12} className="text-success" />
           ) : (
             <MaterialCommunityIcons
               name={isSoon ? "bell-ring-outline" : "bell-outline"}
               size={13}
-              color={isSoon ? "#C5A059" : "#64748B"}
+              className={clsx(
+                isSoon
+                  ? "text-secondary-soft-foreground"
+                  : "text-muted-foreground",
+              )}
             />
           )}
         </View>
