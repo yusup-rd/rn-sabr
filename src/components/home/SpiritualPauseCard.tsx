@@ -35,7 +35,7 @@ const SpiritualPauseCard = () => {
               Spiritual Pause
             </Text>
 
-            <Text className="font-sans-semibold text-primary-foreground text-sm">
+            <Text className="font-sans-semibold text-sm text-white">
               Evening Dhikr & Istighfar
             </Text>
           </View>

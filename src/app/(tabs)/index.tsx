@@ -1,3 +1,4 @@
+import AyahCard from "@/components/home/AyahCard";
 import DateWithLocation from "@/components/home/DateWithLocation";
 import HeroCountdown from "@/components/home/HeroCountdown";
 import PrayersToday from "@/components/home/PrayersToday";
@@ -22,6 +23,7 @@ const Index = () => {
         <QuickAccess />
         <PrayersToday />
         <SpiritualPauseCard />
+        <AyahCard />
       </ScrollView>
     </SafeAreaView>
   );
