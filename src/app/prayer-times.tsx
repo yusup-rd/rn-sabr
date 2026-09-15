@@ -1,20 +1,18 @@
 import PrayerCalculationSelector from "@/components/prayer-times/PrayerCalculationSelector";
 import PrayerCalculationSheet from "@/components/prayer-times/PrayerCalculationSheet";
+import { usePrayerStore } from "@/store/prayerStore";
 import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 import { useState } from "react";
 import { ScrollView } from "react-native";
 
 const PrayerTimes = () => {
-  const [calculationMethod, setCalculationMethod] =
-    useState<CalculationMethodId>("mwl");
-
-  const [asrMethod, setAsrMethod] = useState<AsrMethod>("standard");
+  const { calculationMethod, asrMethod, setCalculationSettings } =
+    usePrayerStore();
 
   const [sheetVisible, setSheetVisible] = useState(false);
 
   const handleSave = (method: CalculationMethodId, asr: AsrMethod) => {
-    setCalculationMethod(method);
-    setAsrMethod(asr);
+    setCalculationSettings(method, asr);
     setSheetVisible(false);
   };
 

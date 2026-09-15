@@ -1,4 +1,10 @@
-import { CalculationMethod, Madhab, type CalculationParameters } from "adhan";
+import {
+  CalculationMethod,
+  Coordinates,
+  Madhab,
+  PrayerTimes,
+  type CalculationParameters,
+} from "adhan";
 
 import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 
@@ -41,4 +47,17 @@ function getCalculationMethod(method: CalculationMethodId) {
     default:
       return CalculationMethod.MuslimWorldLeague();
   }
+}
+
+export function calculatePrayerTimes(
+  latitude: number,
+  longitude: number,
+  date: Date,
+  method: CalculationMethodId,
+  asrMethod: AsrMethod,
+) {
+  const coordinates = new Coordinates(latitude, longitude);
+  const params = getCalculationParameters(method, asrMethod);
+
+  return new PrayerTimes(coordinates, date, params);
 }
