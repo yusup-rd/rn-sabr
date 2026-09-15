@@ -1,4 +1,4 @@
-import { Prayer } from "@/types";
+import { Prayer } from "@/types/prayer";
 
 export const prayers: Prayer[] = [
   {
