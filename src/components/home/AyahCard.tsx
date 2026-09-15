@@ -16,7 +16,7 @@ const AyahCard = () => {
           </View>
 
           <Text className="font-sans-semibold text-muted-foreground text-xs">
-            Surah Ash-Sharh (94:6)
+            Surah Ash-Sharh (94:5)
           </Text>
         </View>
 

@@ -3,7 +3,11 @@ import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { clsx } from "clsx";
 import { Text, View } from "react-native";
 
-const PrayerCard = ({ prayer }: { prayer: Prayer }) => {
+interface PrayerCardProps {
+  prayer: Prayer;
+}
+
+const PrayerCard = ({ prayer }: PrayerCardProps) => {
   const isSoon = prayer.status === "soon";
   const isCompleted = prayer.status === "completed";
 
