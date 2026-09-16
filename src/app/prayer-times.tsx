@@ -1,3 +1,4 @@
+import CalendarPicker from "@/components/prayer-times/CalendarPicker";
 import PrayerCalculationSelector from "@/components/prayer-times/PrayerCalculationSelector";
 import PrayerCalculationSheet from "@/components/prayer-times/PrayerCalculationSheet";
 import { usePrayerStore } from "@/store/prayerStore";
@@ -28,6 +29,8 @@ const PrayerTimes = () => {
           asrMethod={asrMethod}
           onPress={() => setSheetVisible(true)}
         />
+
+        <CalendarPicker />
       </ScrollView>
 
       <PrayerCalculationSheet

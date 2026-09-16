@@ -1,8 +1,38 @@
 /**
+ * Formats a Date into a localized weekday, day, and month string.
+ *
+ * Example:
+ * "Thursday, 13 Feb"
+ */
+export function formatDate(date: Date) {
+  return date.toLocaleDateString([], {
+    weekday: "long",
+    day: "numeric",
+    month: "short",
+  });
+}
+
+/**
+ * Formats a Date into a localized Hijri calendar date.
+ *
+ * Uses the Islamic calendar provided by the Intl API.
+ *
+ * Example:
+ * "14 Sha'ban 1446 AH"
+ */
+export function formatHijriDate(date: Date) {
+  return new Intl.DateTimeFormat("en-US-u-ca-islamic", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
+
+/**
  * Formats a Date into a localized 12-hour time string.
  *
  * Example:
- * 2026-09-16T05:42:00 → "5:42 AM"
+ * "5:42 AM"
  */
 export function formatTime(date: Date) {
   return date.toLocaleTimeString([], {

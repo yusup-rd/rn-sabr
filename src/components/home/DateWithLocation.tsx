@@ -1,7 +1,10 @@
+import { formatDate, formatHijriDate } from "@/lib/format";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 
 const DateWithLocation = () => {
+  const today = new Date();
+
   return (
     <View>
       <View className="flex-row items-center gap-1">
@@ -13,12 +16,12 @@ const DateWithLocation = () => {
         <View className="bg-muted-foreground/50 size-1 rounded-full" />
 
         <Text className="font-sans-semibold text-secondary text-xs">
-          14 Sha'ban 1446 AH
+          {formatHijriDate(today)}
         </Text>
       </View>
 
       <Text className="font-sans-semibold text-foreground text-lg">
-        Thursday, 13 February
+        <Text>{formatDate(today)}</Text>
       </Text>
     </View>
   );

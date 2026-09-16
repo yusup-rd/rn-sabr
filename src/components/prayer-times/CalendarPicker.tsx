@@ -1,0 +1,156 @@
+import { addDays, isSameDay, startOfWeek } from "@/lib/date";
+import { formatDate, formatHijriDate } from "@/lib/format";
+import { getIslamicEventForDate } from "@/lib/islamic-events";
+import { FontAwesome6 as Fa } from "@expo/vector-icons";
+import { clsx } from "clsx";
+import { useState } from "react";
+import { Pressable, Text, View } from "react-native";
+import CalendarSheet from "./CalendarSheet";
+
+const getDayLabel = (date: Date) => {
+  return date.toLocaleDateString([], {
+    weekday: "short",
+  });
+};
+
+const CalendarPicker = () => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [sheetVisible, setSheetVisible] = useState(false);
+
+  const weekStart = startOfWeek(selectedDate);
+
+  const weekDays = Array.from({ length: 7 }, (_, index) =>
+    addDays(weekStart, index),
+  );
+
+  const selectedEvent = getIslamicEventForDate(selectedDate);
+
+  const selectDate = (date: Date) => {
+    setSelectedDate(date);
+
+    console.log("Selected date:", {
+      gregorian: date,
+      hijri: formatHijriDate(date),
+      event: getIslamicEventForDate(date),
+    });
+  };
+
+  const goToPreviousDay = () => {
+    selectDate(addDays(selectedDate, -1));
+  };
+
+  const goToNextDay = () => {
+    selectDate(addDays(selectedDate, 1));
+  };
+
+  return (
+    <>
+      <View className="bg-card gap-2 rounded-xl p-4 shadow-md">
+        <View className="flex-row items-center gap-2">
+          <Pressable
+            onPress={goToPreviousDay}
+            className="bg-muted size-8 shrink-0 items-center justify-center rounded-full"
+          >
+            <Fa name="chevron-left" size={10} className="text-foreground" />
+          </Pressable>
+
+          <View className="min-w-0 flex-1">
+            <Text className="text-foreground font-sans-semibold text-lg">
+              {formatDate(selectedDate)}
+            </Text>
+
+            <View className="flex-row items-center gap-1">
+              <Text
+                className="text-secondary font-sans-medium text-xs"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {formatHijriDate(selectedDate)}
+              </Text>
+            </View>
+          </View>
+
+          <Pressable
+            onPress={() => setSheetVisible(true)}
+            className="bg-muted size-8 shrink-0 items-center justify-center rounded-full"
+          >
+            <Fa name="calendar-days" size={13} className="text-foreground" />
+          </Pressable>
+
+          <Pressable
+            onPress={goToNextDay}
+            className="bg-muted size-8 shrink-0 items-center justify-center rounded-full"
+          >
+            <Fa name="chevron-right" size={10} className="text-foreground" />
+          </Pressable>
+        </View>
+
+        <View className="flex-row gap-1">
+          {weekDays.map((date) => {
+            const selected = isSameDay(date, selectedDate);
+            const event = getIslamicEventForDate(date);
+
+            return (
+              <Pressable
+                key={date.toISOString()}
+                onPress={() => selectDate(date)}
+                className={clsx(
+                  "will-change-variable flex-1 items-center rounded-lg p-2",
+                  selected ? "bg-primary shadow-xs" : "bg-card",
+                )}
+              >
+                <Text
+                  className={
+                    selected
+                      ? "text-primary-foreground/70 font-sans-semibold text-xs"
+                      : "text-muted-foreground font-sans-semibold text-xs"
+                  }
+                >
+                  {getDayLabel(date)}
+                </Text>
+
+                <Text
+                  className={
+                    selected
+                      ? "text-primary-foreground font-sans-bold text-xs"
+                      : "text-foreground font-sans-bold text-xs"
+                  }
+                >
+                  {date.getDate()}
+                </Text>
+
+                {event && (
+                  <View className="bg-secondary mt-1 size-1 rounded-full" />
+                )}
+              </Pressable>
+            );
+          })}
+        </View>
+
+        {/* Selected event */}
+        {selectedEvent && (
+          <View className="bg-secondary-soft flex-row items-center gap-2 rounded-lg px-3 py-2">
+            <View className="bg-secondary size-1.5 shrink-0 rounded-full" />
+
+            <Text className="text-secondary-soft-foreground font-sans-semibold text-xs">
+              {selectedEvent.name}
+            </Text>
+          </View>
+        )}
+      </View>
+
+      {/* Calendar sheet */}
+      <CalendarSheet
+        visible={sheetVisible}
+        selectedDate={selectedDate}
+        onClose={() => setSheetVisible(false)}
+        onSelectDate={(date) => {
+          selectDate(date);
+          setSheetVisible(false);
+        }}
+      />
+    </>
+  );
+};
+
+export default CalendarPicker;
