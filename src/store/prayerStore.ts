@@ -1,6 +1,9 @@
 import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 import { create } from "zustand";
 
+export type LocationPermissionStatus =
+  "checking" | "granted" | "denied" | "blocked";
+
 interface PrayerStore {
   calculationMethod: CalculationMethodId;
   asrMethod: AsrMethod;
@@ -8,7 +11,14 @@ interface PrayerStore {
   latitude: number | null;
   longitude: number | null;
 
+  locationLoading: boolean;
+  locationError: string | null;
+  locationPermissionStatus: LocationPermissionStatus;
+
+  retryLocation: () => Promise<void>;
+
   setCalculationMethod: (method: CalculationMethodId) => void;
+
   setAsrMethod: (method: AsrMethod) => void;
 
   setCalculationSettings: (
@@ -17,19 +27,38 @@ interface PrayerStore {
   ) => void;
 
   setLocation: (latitude: number, longitude: number) => void;
+
+  setLocationLoading: (loading: boolean) => void;
+
+  setLocationError: (error: string | null) => void;
+
+  setLocationPermissionStatus: (status: LocationPermissionStatus) => void;
+
+  setRetryLocation: (retry: () => Promise<void>) => void;
 }
 
 export const usePrayerStore = create<PrayerStore>((set) => ({
   calculationMethod: "mwl",
   asrMethod: "standard",
 
-  // TODO: Replace with GPS-derived coordinates later.
-  latitude: 37.91609248656695,
-  longitude: 58.35721334830225,
+  latitude: null,
+  longitude: null,
 
-  setCalculationMethod: (method) => set({ calculationMethod: method }),
+  locationLoading: true,
+  locationError: null,
+  locationPermissionStatus: "checking",
 
-  setAsrMethod: (method) => set({ asrMethod: method }),
+  retryLocation: async () => {},
+
+  setCalculationMethod: (method) =>
+    set({
+      calculationMethod: method,
+    }),
+
+  setAsrMethod: (method) =>
+    set({
+      asrMethod: method,
+    }),
 
   setCalculationSettings: (method, asrMethod) =>
     set({
@@ -41,5 +70,29 @@ export const usePrayerStore = create<PrayerStore>((set) => ({
     set({
       latitude,
       longitude,
+      locationLoading: false,
+      locationError: null,
+      locationPermissionStatus: "granted",
+    }),
+
+  setLocationLoading: (loading) =>
+    set({
+      locationLoading: loading,
+    }),
+
+  setLocationError: (error) =>
+    set({
+      locationError: error,
+      locationLoading: false,
+    }),
+
+  setLocationPermissionStatus: (status) =>
+    set({
+      locationPermissionStatus: status,
+    }),
+
+  setRetryLocation: (retry) =>
+    set({
+      retryLocation: retry,
     }),
 }));

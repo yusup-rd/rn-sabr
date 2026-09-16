@@ -1,4 +1,5 @@
 import { calculationMethods } from "@/constants/prayer-calculation";
+import { useLocationName } from "@/hooks/useLocationName";
 import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
@@ -14,6 +15,8 @@ const PrayerCalculationSelector = ({
   asrMethod,
   onPress,
 }: PrayerCalculationSelectorProps) => {
+  const { locationName } = useLocationName();
+
   const method = calculationMethods.find(
     (item) => item.id === calculationMethod,
   );
@@ -30,7 +33,7 @@ const PrayerCalculationSelector = ({
 
         <View>
           <Text className="text-foreground font-sans-semibold text-xs">
-            Ashgabat, Turkmenistan
+            {locationName}
           </Text>
 
           <Text className="text-muted-foreground font-sans-semibold text-xs">

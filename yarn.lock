@@ -2327,6 +2327,13 @@ expo-linking@~57.0.10:
     expo-constants "~57.0.18"
     invariant "^2.2.4"
 
+expo-location@~57.0.18:
+  version "57.0.18"
+  resolved "https://registry.yarnpkg.com/expo-location/-/expo-location-57.0.18.tgz#f45dc53b26ad458f42fc03eef611303c7a3c3f95"
+  integrity sha512-NRrXdNJjAbxtjVrXrWPpYSH0pefp9edwluU7Xy2bZrETP0+Wy8UuzgVEjWqo/8tLsF8Cgm503eE8gS+V2S31+Q==
+  dependencies:
+    "@expo/image-utils" "^0.11.5"
+
 expo-modules-autolinking@~57.0.13:
   version "57.0.13"
   resolved "https://registry.yarnpkg.com/expo-modules-autolinking/-/expo-modules-autolinking-57.0.13.tgz#64c93c919ff6207d5b2183fcc4e954a440baf8d2"
