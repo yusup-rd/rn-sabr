@@ -4,6 +4,7 @@ import HeroCountdown from "@/components/home/HeroCountdown";
 import PrayersToday from "@/components/home/PrayersToday";
 import QuickAccess from "@/components/home/QuickAccess";
 import SpiritualPauseCard from "@/components/home/SpiritualPauseCard";
+import { usePrayerTimes } from "@/hooks/usePrayerTimes";
 import { styled } from "nativewind";
 import { ScrollView } from "react-native";
 import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-context";
@@ -11,6 +12,8 @@ import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-conte
 const SafeAreaView = styled(NativeSafeAreaView);
 
 const Index = () => {
+  const prayerTimes = usePrayerTimes();
+
   return (
     <SafeAreaView className="bg-background flex-1" edges={["top"]}>
       <ScrollView
@@ -19,9 +22,15 @@ const Index = () => {
         showsVerticalScrollIndicator={false}
       >
         <DateWithLocation />
-        <HeroCountdown />
+        <HeroCountdown
+          previousPrayer={prayerTimes.previousPrayer}
+          nextPrayer={prayerTimes.nextPrayer}
+          countdown={prayerTimes.countdown}
+          elapsedPercent={prayerTimes.elapsedPercent}
+          solarEvent={prayerTimes.solarEvent}
+        />
         <QuickAccess />
-        <PrayersToday />
+        <PrayersToday prayers={prayerTimes.prayers} />
         <SpiritualPauseCard />
         <AyahCard />
       </ScrollView>

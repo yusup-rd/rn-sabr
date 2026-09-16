@@ -1,5 +1,5 @@
-import { Prayer } from "@/types/prayer";
-import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import type { Prayer } from "@/types/prayer";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { clsx } from "clsx";
 import { Text, View } from "react-native";
 
@@ -11,25 +11,6 @@ const PrayerCard = ({ prayer }: PrayerCardProps) => {
   const isSoon = prayer.status === "soon";
   const isCompleted = prayer.status === "completed";
 
-  const prayerIcon =
-    prayer.iconFamily === "ionicons" ? (
-      <Ionicons
-        name={prayer.icon}
-        size={16}
-        className={clsx(
-          isSoon ? "text-secondary-soft-foreground" : "text-muted-foreground",
-        )}
-      />
-    ) : (
-      <Feather
-        name={prayer.icon}
-        size={16}
-        className={clsx(
-          isSoon ? "text-secondary-soft-foreground" : "text-muted-foreground",
-        )}
-      />
-    );
-
   return (
     <View className="bg-card flex-row items-center justify-between gap-2 rounded-xl p-3.5 shadow-md">
       <View className="flex-row items-center gap-3">
@@ -39,7 +20,15 @@ const PrayerCard = ({ prayer }: PrayerCardProps) => {
             isSoon ? "bg-secondary/30" : "bg-muted",
           )}
         >
-          {prayerIcon}
+          <Ionicons
+            name={prayer.icon}
+            size={16}
+            className={clsx(
+              isSoon
+                ? "text-secondary-soft-foreground"
+                : "text-muted-foreground",
+            )}
+          />
         </View>
 
         <View className="gap-0.5">
@@ -59,7 +48,9 @@ const PrayerCard = ({ prayer }: PrayerCardProps) => {
                 : "text-muted-foreground font-sans",
             )}
           >
-            {isSoon ? "Next in 1h 24 min" : prayer.description}
+            {isSoon
+              ? `Next in ${prayer.remainingFormatted}`
+              : prayer.description}
           </Text>
         </View>
       </View>
@@ -72,7 +63,7 @@ const PrayerCard = ({ prayer }: PrayerCardProps) => {
               : "font-sans-medium text-foreground text-sm",
           )}
         >
-          {prayer.time}
+          {prayer.formattedTime}
         </Text>
 
         <View
@@ -86,10 +77,10 @@ const PrayerCard = ({ prayer }: PrayerCardProps) => {
           )}
         >
           {isCompleted ? (
-            <Feather name="check" size={12} className="text-success" />
+            <MaterialIcons name="check" size={13} className="text-success" />
           ) : (
-            <MaterialCommunityIcons
-              name={isSoon ? "bell-ring-outline" : "bell-outline"}
+            <MaterialIcons
+              name={isSoon ? "notifications-active" : "notifications"}
               size={13}
               className={clsx(
                 isSoon

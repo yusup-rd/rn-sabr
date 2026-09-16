@@ -86,3 +86,32 @@ export function formatDurationClock(milliseconds: number) {
     seconds.toString().padStart(2, "0"),
   ].join(":");
 }
+
+/**
+ * Formats a remaining duration in milliseconds into a human-readable
+ * hours and minutes string.
+ *
+ * Uses ceil() so any remaining seconds are displayed as at least 1 minute
+ * instead of showing "0 min" before the target time is reached.
+ *
+ * Examples:
+ * 45 seconds → "1 min"
+ * 45 minutes → "45 mins"
+ * 2 hours → "2 hrs"
+ * 2 hours 30 minutes → "2 hrs 30 mins"
+ */
+export function formatRemainingDuration(milliseconds: number) {
+  const totalMinutes = Math.max(0, Math.ceil(milliseconds / 60_000));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours === 0) {
+    return `${minutes} min`;
+  }
+
+  if (minutes === 0) {
+    return `${hours} hr`;
+  }
+
+  return `${hours} hr ${minutes} min`;
+}

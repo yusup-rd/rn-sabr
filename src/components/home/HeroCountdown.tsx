@@ -1,15 +1,29 @@
-import { usePrayerTimes } from "@/hooks/usePrayerTimes";
+import type { Prayer } from "@/types/prayer";
 import {
   FontAwesome6 as Fa,
   MaterialCommunityIcons as Mi,
 } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 
-const HeroCountdown = () => {
-  const { previousPrayer, nextPrayer, countdown, elapsedPercent, solarEvent } =
-    usePrayerTimes();
+interface HeroCountdownProps {
+  previousPrayer: Prayer | null;
+  nextPrayer: Prayer | null;
+  countdown: string;
+  elapsedPercent: number;
+  solarEvent: {
+    label: "Sunrise" | "Sunset";
+    remainingFormatted: string;
+  } | null;
+}
 
-  if (!nextPrayer) {
+const HeroCountdown = ({
+  previousPrayer,
+  nextPrayer,
+  countdown,
+  elapsedPercent,
+  solarEvent,
+}: HeroCountdownProps) => {
+  if (!nextPrayer || !previousPrayer || !solarEvent) {
     return (
       <View className="bg-primary relative overflow-hidden rounded-xl p-6 shadow-md">
         <View className="pointer-events-none absolute -top-12 -right-5 opacity-10">
