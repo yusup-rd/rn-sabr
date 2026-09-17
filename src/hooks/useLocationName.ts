@@ -9,6 +9,9 @@ export function useLocationName() {
   const locationLoading = useLocationStore((state) => state.locationLoading);
   const locationError = useLocationStore((state) => state.locationError);
   const setLocationName = useLocationStore((state) => state.setLocationName);
+  const setLocationNameStatus = useLocationStore(
+    (state) => state.setLocationNameStatus,
+  );
 
   useEffect(() => {
     if (latitude == null || longitude == null) {
@@ -22,6 +25,8 @@ export function useLocationName() {
     let cancelled = false;
 
     const loadLocationName = async () => {
+      setLocationNameStatus("loading");
+
       try {
         const address = await reverseGeocode(latitude, longitude);
 
@@ -35,21 +40,29 @@ export function useLocationName() {
             : (address.country ?? address.city ?? null);
 
         setLocationName(name);
+        setLocationNameStatus(name ? "resolved" : "failed");
       } catch {
         if (cancelled) {
           return;
         }
 
         setLocationName(null);
+        setLocationNameStatus("failed");
       }
     };
 
-    loadLocationName();
+    void loadLocationName();
 
     return () => {
       cancelled = true;
     };
-  }, [latitude, longitude, locationName, setLocationName]);
+  }, [
+    latitude,
+    longitude,
+    locationName,
+    setLocationName,
+    setLocationNameStatus,
+  ]);
 
   return {
     locationName: locationName ?? "Location unavailable",

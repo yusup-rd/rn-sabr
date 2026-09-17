@@ -16,6 +16,9 @@ const PrayerCalculationSelector = ({
   onPress,
 }: PrayerCalculationSelectorProps) => {
   const locationName = useLocationStore((state) => state.locationName);
+  const locationNameStatus = useLocationStore(
+    (state) => state.locationNameStatus,
+  );
 
   const method = calculationMethods.find(
     (item) => item.id === calculationMethod,
@@ -36,7 +39,9 @@ const PrayerCalculationSelector = ({
           className="text-muted-foreground font-sans-medium flex-1 text-xs"
           numberOfLines={1}
         >
-          {locationName ?? "Locating..."}
+          {locationNameStatus === "loading"
+            ? "Locating..."
+            : (locationName ?? "Location unavailable")}
         </Text>
 
         <Fa name="chevron-right" size={11} className="text-muted-foreground" />

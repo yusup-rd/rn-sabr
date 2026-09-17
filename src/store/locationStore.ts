@@ -3,18 +3,22 @@ import { create } from "zustand";
 export type LocationPermissionStatus =
   "checking" | "granted" | "denied" | "blocked";
 
+export type LocationNameStatus = "idle" | "loading" | "resolved" | "failed";
+
 interface LocationStore {
   latitude: number | null;
   longitude: number | null;
-
   locationName: string | null;
+  locationNameStatus: LocationNameStatus;
   locationLoading: boolean;
   locationError: string | null;
   locationPermissionStatus: LocationPermissionStatus;
 
   retryLocation: () => Promise<void>;
+
   setLocation: (latitude: number, longitude: number) => void;
   setLocationName: (name: string | null) => void;
+  setLocationNameStatus: (status: LocationNameStatus) => void;
   setLocationLoading: (loading: boolean) => void;
   setLocationError: (error: string | null) => void;
   setLocationPermissionStatus: (status: LocationPermissionStatus) => void;
@@ -24,12 +28,11 @@ interface LocationStore {
 export const useLocationStore = create<LocationStore>((set) => ({
   latitude: null,
   longitude: null,
-
   locationName: null,
+  locationNameStatus: "idle",
   locationLoading: true,
   locationError: null,
   locationPermissionStatus: "checking",
-
   retryLocation: async () => {},
 
   setLocation: (latitude, longitude) =>
@@ -43,10 +46,10 @@ export const useLocationStore = create<LocationStore>((set) => ({
         locationLoading: false,
         locationError: null,
         locationPermissionStatus: "granted",
-
         ...(coordinatesChanged
           ? {
               locationName: null,
+              locationNameStatus: "idle",
             }
           : {}),
       };
@@ -55,6 +58,11 @@ export const useLocationStore = create<LocationStore>((set) => ({
   setLocationName: (name) =>
     set({
       locationName: name,
+    }),
+
+  setLocationNameStatus: (status) =>
+    set({
+      locationNameStatus: status,
     }),
 
   setLocationLoading: (loading) =>
@@ -70,6 +78,7 @@ export const useLocationStore = create<LocationStore>((set) => ({
         : {
             locationLoading: false,
             locationName: null,
+            locationNameStatus: "idle",
           }),
     }),
 

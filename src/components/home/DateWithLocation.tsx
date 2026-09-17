@@ -7,6 +7,9 @@ const DateWithLocation = () => {
   const today = new Date();
 
   const locationName = useLocationStore((state) => state.locationName);
+  const locationNameStatus = useLocationStore(
+    (state) => state.locationNameStatus,
+  );
 
   return (
     <View>
@@ -17,7 +20,9 @@ const DateWithLocation = () => {
           className="text-muted-foreground font-sans-semibold text-xs"
           numberOfLines={1}
         >
-          {locationName ?? "Locating..."}
+          {locationNameStatus === "loading"
+            ? "Locating..."
+            : (locationName ?? "Location unavailable")}
         </Text>
 
         <View className="bg-muted-foreground/50 size-1 rounded-full" />
