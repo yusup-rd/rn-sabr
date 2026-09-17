@@ -13,6 +13,44 @@ export function formatDate(date: Date) {
 }
 
 /**
+ * Formats a Date into a localized day and month string.
+ *
+ * Example:
+ * "13 Feb"
+ */
+export function formatDayMonth(date: Date) {
+  return date.toLocaleDateString([], {
+    day: "numeric",
+    month: "short",
+  });
+}
+
+/**
+ * Formats a Date into a localized abbreviated weekday.
+ *
+ * Example:
+ * "Thu"
+ */
+export function formatWeekday(date: Date) {
+  return date.toLocaleDateString([], {
+    weekday: "short",
+  });
+}
+
+/**
+ * Formats a Date into a localized month and year string.
+ *
+ * Example:
+ * "September 2026"
+ */
+export function formatMonthYear(date: Date) {
+  return date.toLocaleDateString([], {
+    month: "long",
+    year: "numeric",
+  });
+}
+
+/**
  * Formats a Date into a localized Hijri calendar date.
  *
  * Uses the Islamic calendar provided by the Intl API.
@@ -69,26 +107,6 @@ export function formatDuration(milliseconds: number) {
 }
 
 /**
- * Formats a duration in milliseconds as a digital countdown.
- *
- * Example:
- * 5056000 → "01:24:16"
- */
-export function formatDurationClock(milliseconds: number) {
-  const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
-
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  return [
-    hours.toString().padStart(2, "0"),
-    minutes.toString().padStart(2, "0"),
-    seconds.toString().padStart(2, "0"),
-  ].join(":");
-}
-
-/**
  * Formats a remaining duration in milliseconds into a human-readable
  * hours and minutes string.
  *
@@ -119,4 +137,24 @@ export function formatRemainingDuration(milliseconds: number) {
   return `${hours} hr${hours === 1 ? "" : "s"} ${minutes} min${
     minutes === 1 ? "" : "s"
   }`;
+}
+
+/**
+ * Formats a duration in milliseconds as a digital countdown.
+ *
+ * Example:
+ * 5056000 → "01:24:16"
+ */
+export function formatDurationClock(milliseconds: number) {
+  const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
+
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  return [
+    hours.toString().padStart(2, "0"),
+    minutes.toString().padStart(2, "0"),
+    seconds.toString().padStart(2, "0"),
+  ].join(":");
 }

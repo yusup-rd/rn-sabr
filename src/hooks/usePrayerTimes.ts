@@ -6,6 +6,7 @@ import {
   formatTime,
 } from "@/lib/format";
 import { calculatePrayerTimes } from "@/lib/prayer-calculations";
+import { useLocationStore } from "@/store/locationStore";
 import { usePrayerStore } from "@/store/prayerStore";
 import type { Prayer, PrayerName, PrayerStatus } from "@/types/prayer";
 import { useEffect, useMemo, useState } from "react";
@@ -33,12 +34,16 @@ function getPrayerTime(
   switch (name) {
     case "Fajr":
       return times.fajr;
+
     case "Dhuhr":
       return times.dhuhr;
+
     case "Asr":
       return times.asr;
+
     case "Maghrib":
       return times.maghrib;
+
     case "Isha":
       return times.isha;
   }
@@ -80,9 +85,11 @@ function getPrayerData(
   };
 }
 
-export function usePrayerTimes() {
-  const { calculationMethod, asrMethod, latitude, longitude } =
-    usePrayerStore();
+export function usePrayerTimes(selectedDate?: Date) {
+  const calculationMethod = usePrayerStore((state) => state.calculationMethod);
+  const asrMethod = usePrayerStore((state) => state.asrMethod);
+  const latitude = useLocationStore((state) => state.latitude);
+  const longitude = useLocationStore((state) => state.longitude);
 
   const [now, setNow] = useState(getNow);
 
@@ -94,8 +101,15 @@ export function usePrayerTimes() {
     return () => clearInterval(interval);
   }, []);
 
-  // Recalculate prayer times only when the date, location, or settings change.
   const todayKey = [now.getFullYear(), now.getMonth(), now.getDate()].join("-");
+
+  const selectedKey = selectedDate
+    ? [
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
+      ].join("-")
+    : todayKey;
 
   const calculatedData = useMemo(() => {
     if (latitude == null || longitude == null) {
@@ -116,6 +130,7 @@ export function usePrayerTimes() {
         calculationMethod,
         asrMethod,
       ),
+
       today: getPrayerData(
         now,
         latitude,
@@ -123,6 +138,7 @@ export function usePrayerTimes() {
         calculationMethod,
         asrMethod,
       ),
+
       tomorrow: getPrayerData(
         tomorrow,
         latitude,
@@ -130,22 +146,43 @@ export function usePrayerTimes() {
         calculationMethod,
         asrMethod,
       ),
+
+      selected: getPrayerData(
+        selectedDate ?? now,
+        latitude,
+        longitude,
+        calculationMethod,
+        asrMethod,
+      ),
     };
-  }, [todayKey, latitude, longitude, calculationMethod, asrMethod]);
+  }, [
+    todayKey,
+    selectedKey,
+    latitude,
+    longitude,
+    calculationMethod,
+    asrMethod,
+  ]);
 
   return useMemo(() => {
     if (!calculatedData) {
       return {
         prayers: [],
+        selectedPrayers: [],
+        selectedSunrise: null,
+        selectedSunset: null,
         previousPrayer: null,
         nextPrayer: null,
         countdown: "00:00:00",
         elapsedPercent: 0,
+        sunrise: null,
+        sunset: null,
+        now,
         solarEvent: null,
       };
     }
 
-    const { yesterday, today, tomorrow } = calculatedData;
+    const { yesterday, today, tomorrow, selected } = calculatedData;
 
     const nextTodayPrayer = today.prayers.find(
       (prayer) => prayer.time.getTime() > now.getTime(),
@@ -160,6 +197,7 @@ export function usePrayerTimes() {
 
     if (nextTodayPrayer) {
       nextPrayer = nextTodayPrayer;
+
       previousPrayer = previousTodayPrayer ?? yesterday.prayers[4];
     } else {
       nextPrayer = tomorrow.prayers[0];
@@ -190,8 +228,11 @@ export function usePrayerTimes() {
     });
 
     const intervalStart = previousPrayer.time.getTime();
+
     const intervalEnd = nextPrayer.time.getTime();
+
     const intervalDuration = intervalEnd - intervalStart;
+
     const elapsed = now.getTime() - intervalStart;
 
     const elapsedPercent =
@@ -200,6 +241,7 @@ export function usePrayerTimes() {
         : 0;
 
     const isBeforeSunrise = now.getTime() < today.sunrise.getTime();
+
     const isBeforeSunset = now.getTime() < today.sunset.getTime();
 
     let solarEvent: {
@@ -226,10 +268,16 @@ export function usePrayerTimes() {
 
     return {
       prayers,
+      selectedPrayers: selected.prayers,
+      selectedSunrise: selected.sunrise,
+      selectedSunset: selected.sunset,
       previousPrayer,
       nextPrayer,
       countdown: formatDurationClock(nextPrayer.time.getTime() - now.getTime()),
       elapsedPercent,
+      sunrise: today.sunrise,
+      sunset: today.sunset,
+      now,
       solarEvent: {
         label: solarEvent.label,
         remainingFormatted: formatDuration(

@@ -1,21 +1,20 @@
-import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
+import type {
+  AsrMethod,
+  CalculationMethodId,
+  PrayerName,
+} from "@/types/prayer";
 import { create } from "zustand";
 
-export type LocationPermissionStatus =
-  "checking" | "granted" | "denied" | "blocked";
+export interface PrayerNotificationSettings {
+  enabled: boolean;
+  minutesBefore: number;
+}
 
 interface PrayerStore {
   calculationMethod: CalculationMethodId;
   asrMethod: AsrMethod;
 
-  latitude: number | null;
-  longitude: number | null;
-
-  locationLoading: boolean;
-  locationError: string | null;
-  locationPermissionStatus: LocationPermissionStatus;
-
-  retryLocation: () => Promise<void>;
+  prayerNotifications: Record<PrayerName, PrayerNotificationSettings>;
 
   setCalculationMethod: (method: CalculationMethodId) => void;
 
@@ -26,29 +25,43 @@ interface PrayerStore {
     asrMethod: AsrMethod,
   ) => void;
 
-  setLocation: (latitude: number, longitude: number) => void;
-
-  setLocationLoading: (loading: boolean) => void;
-
-  setLocationError: (error: string | null) => void;
-
-  setLocationPermissionStatus: (status: LocationPermissionStatus) => void;
-
-  setRetryLocation: (retry: () => Promise<void>) => void;
+  setPrayerNotification: (
+    prayer: PrayerName,
+    settings: PrayerNotificationSettings,
+  ) => void;
 }
 
 export const usePrayerStore = create<PrayerStore>((set) => ({
   calculationMethod: "mwl",
+
   asrMethod: "standard",
 
-  latitude: null,
-  longitude: null,
+  prayerNotifications: {
+    Fajr: {
+      enabled: false,
+      minutesBefore: 10,
+    },
 
-  locationLoading: true,
-  locationError: null,
-  locationPermissionStatus: "checking",
+    Dhuhr: {
+      enabled: false,
+      minutesBefore: 10,
+    },
 
-  retryLocation: async () => {},
+    Asr: {
+      enabled: false,
+      minutesBefore: 10,
+    },
+
+    Maghrib: {
+      enabled: false,
+      minutesBefore: 10,
+    },
+
+    Isha: {
+      enabled: false,
+      minutesBefore: 10,
+    },
+  },
 
   setCalculationMethod: (method) =>
     set({
@@ -66,39 +79,11 @@ export const usePrayerStore = create<PrayerStore>((set) => ({
       asrMethod,
     }),
 
-  setLocation: (latitude, longitude) =>
-    set({
-      latitude,
-      longitude,
-      locationLoading: false,
-      locationError: null,
-      locationPermissionStatus: "granted",
-    }),
-
-  setLocationLoading: (loading) =>
-    set({
-      locationLoading: loading,
-    }),
-
-  setLocationError: (error) =>
-    set({
-      locationError: error,
-      ...(error === null
-        ? {}
-        : {
-            locationLoading: false,
-            latitude: null,
-            longitude: null,
-          }),
-    }),
-
-  setLocationPermissionStatus: (status) =>
-    set({
-      locationPermissionStatus: status,
-    }),
-
-  setRetryLocation: (retry) =>
-    set({
-      retryLocation: retry,
-    }),
+  setPrayerNotification: (prayer, settings) =>
+    set((state) => ({
+      prayerNotifications: {
+        ...state.prayerNotifications,
+        [prayer]: settings,
+      },
+    })),
 }));

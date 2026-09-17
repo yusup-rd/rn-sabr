@@ -1,5 +1,5 @@
 import { calculationMethods } from "@/constants/prayer-calculation";
-import { useLocationName } from "@/hooks/useLocationName";
+import { useLocationStore } from "@/store/locationStore";
 import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
@@ -15,7 +15,10 @@ const PrayerCalculationSelector = ({
   asrMethod,
   onPress,
 }: PrayerCalculationSelectorProps) => {
-  const { locationName } = useLocationName();
+  const locationName = useLocationStore((state) => state.locationName);
+  const locationNameStatus = useLocationStore(
+    (state) => state.locationNameStatus,
+  );
 
   const method = calculationMethods.find(
     (item) => item.id === calculationMethod,
@@ -26,26 +29,52 @@ const PrayerCalculationSelector = ({
   return (
     <Pressable
       onPress={onPress}
-      className="bg-border/50 flex-row items-center justify-between gap-2 rounded-xl px-4 py-2 shadow-xs"
+      className="bg-card active:bg-muted rounded-2xl px-4 py-3.5 shadow-md"
     >
+      {/* Location */}
       <View className="flex-row items-center gap-2">
-        <Fa name="location-dot" size={16} className="text-primary" />
+        <Fa name="location-dot" size={12} className="text-primary" />
 
-        <View>
-          <Text className="text-foreground font-sans-semibold text-xs">
-            {locationName}
-          </Text>
+        <Text
+          className="text-muted-foreground font-sans-medium flex-1 text-xs"
+          numberOfLines={1}
+        >
+          {locationNameStatus === "loading"
+            ? "Locating..."
+            : (locationName ?? "Location unavailable")}
+        </Text>
 
-          <Text className="text-muted-foreground font-sans-semibold text-xs">
-            {method?.description} • {asrLabel}
-          </Text>
-        </View>
+        <Fa name="chevron-right" size={11} className="text-muted-foreground" />
       </View>
 
-      <View className="bg-border flex-row items-center gap-1 rounded-full px-2 py-1">
-        <Text className="text-primary font-sans-semibold text-xs">Change</Text>
+      <View className="bg-border my-3 h-px" />
 
-        <Fa name="sliders" size={12} className="text-primary" />
+      {/* Calculation settings */}
+      <View className="flex-row">
+        {/* Calculation method */}
+        <View className="flex-1">
+          <Text className="text-muted-foreground font-sans-medium text-xs">
+            Calculation method
+          </Text>
+
+          <Text
+            className="text-foreground font-sans-semibold mt-1 text-sm"
+            numberOfLines={1}
+          >
+            {method?.description ?? "Unknown"}
+          </Text>
+        </View>
+
+        {/* Asr method */}
+        <View className="flex-1">
+          <Text className="text-muted-foreground font-sans-medium text-xs">
+            Asr method
+          </Text>
+
+          <Text className="text-foreground font-sans-semibold mt-1 text-sm">
+            {asrLabel}
+          </Text>
+        </View>
       </View>
     </Pressable>
   );

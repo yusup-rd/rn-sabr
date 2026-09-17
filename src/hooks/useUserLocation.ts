@@ -1,3 +1,4 @@
+import type { LocationPermissionStatus } from "@/store/locationStore";
 import * as Location from "expo-location";
 import { useCallback, useEffect, useState } from "react";
 
@@ -5,9 +6,6 @@ interface UserLocation {
   latitude: number;
   longitude: number;
 }
-
-export type LocationPermissionStatus =
-  "checking" | "granted" | "denied" | "blocked";
 
 export function useUserLocation() {
   const [location, setLocation] = useState<UserLocation | null>(null);
@@ -17,31 +15,32 @@ export function useUserLocation() {
   const [error, setError] = useState<string | null>(null);
 
   const getLocation = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
+    setLoading(true);
+    setError(null);
 
-      const permission = await Location.getForegroundPermissionsAsync();
+    let permissionConfirmed = false;
+
+    try {
+      let permission = await Location.getForegroundPermissionsAsync();
 
       if (!permission.granted) {
         if (!permission.canAskAgain) {
           setPermissionStatus("blocked");
+
           setError(
             "Location permission is disabled. Please enable it in Settings.",
           );
+
           return;
         }
 
-        const requestedPermission =
-          await Location.requestForegroundPermissionsAsync();
+        permission = await Location.requestForegroundPermissionsAsync();
 
-        if (!requestedPermission.granted) {
-          setPermissionStatus(
-            requestedPermission.canAskAgain ? "denied" : "blocked",
-          );
+        if (!permission.granted) {
+          setPermissionStatus(permission.canAskAgain ? "denied" : "blocked");
 
           setError(
-            requestedPermission.canAskAgain
+            permission.canAskAgain
               ? "Location permission was not granted."
               : "Location permission is disabled. Please enable it in Settings.",
           );
@@ -51,6 +50,7 @@ export function useUserLocation() {
       }
 
       setPermissionStatus("granted");
+      permissionConfirmed = true;
 
       const currentLocation = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.Balanced,
@@ -60,7 +60,13 @@ export function useUserLocation() {
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
       });
-    } catch {
+    } catch (error) {
+      console.error("Failed to get user location:", error);
+
+      if (permissionConfirmed) {
+        setPermissionStatus("granted");
+      }
+
       setError("Unable to get your current location.");
     } finally {
       setLoading(false);
@@ -68,7 +74,7 @@ export function useUserLocation() {
   }, []);
 
   useEffect(() => {
-    getLocation();
+    void getLocation();
   }, [getLocation]);
 
   return {
