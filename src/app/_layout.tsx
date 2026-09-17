@@ -1,7 +1,10 @@
 import "@/global.css";
+import { useUserLocation } from "@/hooks/useUserLocation";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import { usePrayerStore } from "@/store/prayerStore";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import { useEffect } from "react";
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
@@ -29,8 +32,53 @@ export default function RootLayout() {
     return null;
   }
 
+  function LocationInitializer() {
+    const { location, loading, error, permissionStatus, retry } =
+      useUserLocation();
+
+    const setLocation = usePrayerStore((state) => state.setLocation);
+
+    const setLocationLoading = usePrayerStore(
+      (state) => state.setLocationLoading,
+    );
+
+    const setLocationError = usePrayerStore((state) => state.setLocationError);
+
+    const setLocationPermissionStatus = usePrayerStore(
+      (state) => state.setLocationPermissionStatus,
+    );
+
+    const setRetryLocation = usePrayerStore((state) => state.setRetryLocation);
+
+    useEffect(() => {
+      setRetryLocation(retry);
+    }, [retry, setRetryLocation]);
+
+    useEffect(() => {
+      setLocationLoading(loading);
+    }, [loading, setLocationLoading]);
+
+    useEffect(() => {
+      setLocationPermissionStatus(permissionStatus);
+    }, [permissionStatus, setLocationPermissionStatus]);
+
+    useEffect(() => {
+      setLocationError(error);
+    }, [error, setLocationError]);
+
+    useEffect(() => {
+      if (!location) return;
+
+      setLocation(location.latitude, location.longitude);
+    }, [location, setLocation]);
+
+    return null;
+  }
+
   return (
     <ThemeProvider>
+      <LocationInitializer />
+
       <Stack>
         <Stack.Screen
           name="(tabs)"

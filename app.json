@@ -45,6 +45,12 @@
             "./assets/fonts/PlusJakartaSans-Light.ttf"
           ]
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location to calculate accurate prayer times."
+        }
       ]
     ],
     "experiments": {

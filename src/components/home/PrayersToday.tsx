@@ -1,8 +1,22 @@
-import { prayers } from "@/constants/dummy-data";
+import { calculationMethods } from "@/constants/prayer-calculation";
+import { usePrayerStore } from "@/store/prayerStore";
+import type { Prayer } from "@/types/prayer";
 import { Text, View } from "react-native";
 import PrayerCard from "./PrayerCard";
 
-const PrayersToday = () => {
+interface PrayersTodayProps {
+  prayers: Prayer[];
+}
+
+const PrayersToday = ({ prayers }: PrayersTodayProps) => {
+  const { calculationMethod, asrMethod } = usePrayerStore();
+
+  const calculationMethodLabel =
+    calculationMethods.find((method) => method.id === calculationMethod)
+      ?.description ?? calculationMethod;
+
+  const asrLabel = asrMethod === "hanafi" ? "Hanafi" : "Standard";
+
   return (
     <View className="gap-2">
       <View className="flex-row items-center justify-between gap-2">
@@ -11,7 +25,7 @@ const PrayersToday = () => {
         </Text>
 
         <Text className="font-sans-semibold text-muted-foreground text-xs">
-          Standard (MWL)
+          {asrLabel} ({calculationMethodLabel})
         </Text>
       </View>
 

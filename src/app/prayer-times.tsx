@@ -1,16 +1,46 @@
-import { styled } from "nativewind";
-import { Text } from "react-native";
-import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-context";
-
-const SafeAreaView = styled(NativeSafeAreaView);
+import CalendarPicker from "@/components/prayer-times/CalendarPicker";
+import PrayerCalculationSelector from "@/components/prayer-times/PrayerCalculationSelector";
+import PrayerCalculationSheet from "@/components/prayer-times/PrayerCalculationSheet";
+import { usePrayerStore } from "@/store/prayerStore";
+import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
+import { useState } from "react";
+import { ScrollView } from "react-native";
 
 const PrayerTimes = () => {
+  const { calculationMethod, asrMethod, setCalculationSettings } =
+    usePrayerStore();
+
+  const [sheetVisible, setSheetVisible] = useState(false);
+
+  const handleSave = (method: CalculationMethodId, asr: AsrMethod) => {
+    setCalculationSettings(method, asr);
+    setSheetVisible(false);
+  };
+
   return (
-    <SafeAreaView className="bg-background flex-1 items-center justify-center">
-      <Text className="text-foreground font-sans-bold text-2xl">
-        Prayer Times{" "}
-      </Text>
-    </SafeAreaView>
+    <>
+      <ScrollView
+        className="bg-background flex-1"
+        contentContainerClassName="gap-5 p-5"
+        showsVerticalScrollIndicator={false}
+      >
+        <PrayerCalculationSelector
+          calculationMethod={calculationMethod}
+          asrMethod={asrMethod}
+          onPress={() => setSheetVisible(true)}
+        />
+
+        <CalendarPicker />
+      </ScrollView>
+
+      <PrayerCalculationSheet
+        visible={sheetVisible}
+        calculationMethod={calculationMethod}
+        asrMethod={asrMethod}
+        onClose={() => setSheetVisible(false)}
+        onSave={handleSave}
+      />
+    </>
   );
 };
 
