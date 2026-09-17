@@ -22,13 +22,13 @@ const LocationInitializer = () => {
   }, [retry, setRetryLocation]);
 
   useEffect(() => {
+    if (location && !error) {
+      setLocation(location.latitude, location.longitude);
+    }
+
     setLocationLoading(loading);
     setLocationError(error);
     setLocationPermissionStatus(permissionStatus);
-
-    if (location) {
-      setLocation(location.latitude, location.longitude);
-    }
   }, [
     location,
     loading,
