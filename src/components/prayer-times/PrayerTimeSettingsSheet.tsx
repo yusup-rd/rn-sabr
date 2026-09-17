@@ -189,7 +189,7 @@ const PrayerTimeSettingsSheet = ({
               <Ionicons
                 name="information-circle-outline"
                 size={17}
-                className="text-primary"
+                className="text-primary-soft-foreground"
               />
 
               <Text className="text-primary-soft-foreground flex-1 font-sans text-xs leading-5">
