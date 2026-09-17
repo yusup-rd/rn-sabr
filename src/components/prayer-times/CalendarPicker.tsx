@@ -49,6 +49,8 @@ const CalendarPicker = () => {
         <View className="flex-row items-center gap-2">
           <Pressable
             onPress={goToPreviousDay}
+            accessibilityRole="button"
+            accessibilityLabel="Previous day"
             className="bg-muted size-8 shrink-0 items-center justify-center rounded-full"
           >
             <Fa name="chevron-left" size={10} className="text-foreground" />
@@ -72,6 +74,8 @@ const CalendarPicker = () => {
 
           <Pressable
             onPress={() => setSheetVisible(true)}
+            accessibilityRole="button"
+            accessibilityLabel="Open calendar"
             className="bg-muted size-8 shrink-0 items-center justify-center rounded-full"
           >
             <Fa name="calendar-days" size={13} className="text-foreground" />
@@ -79,6 +83,8 @@ const CalendarPicker = () => {
 
           <Pressable
             onPress={goToNextDay}
+            accessibilityRole="button"
+            accessibilityLabel="Next day"
             className="bg-muted size-8 shrink-0 items-center justify-center rounded-full"
           >
             <Fa name="chevron-right" size={10} className="text-foreground" />

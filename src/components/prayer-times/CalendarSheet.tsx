@@ -102,6 +102,8 @@ const CalendarSheet = ({
             <View className="flex-row items-center justify-between">
               <Pressable
                 onPress={goToPreviousMonth}
+                accessibilityRole="button"
+                accessibilityLabel="Previous month"
                 className="bg-muted size-9 items-center justify-center rounded-full"
               >
                 <Fa name="chevron-left" size={10} className="text-foreground" />
@@ -109,6 +111,8 @@ const CalendarSheet = ({
 
               <Pressable
                 onPress={goToToday}
+                accessibilityRole="button"
+                accessibilityLabel="Today"
                 className="bg-secondary-soft rounded-full px-4 py-2"
               >
                 <Text className="text-secondary-soft-foreground font-sans-semibold text-xs">
@@ -118,6 +122,8 @@ const CalendarSheet = ({
 
               <Pressable
                 onPress={goToNextMonth}
+                accessibilityRole="button"
+                accessibilityLabel="Next month"
                 className="bg-muted size-9 items-center justify-center rounded-full"
               >
                 <Fa
