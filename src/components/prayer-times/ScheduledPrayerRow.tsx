@@ -1,14 +1,20 @@
 import { usePrayerStore } from "@/store/prayerStore";
 import type { Prayer } from "@/types/prayer";
 import { Ionicons } from "@expo/vector-icons";
+import { clsx } from "clsx";
 import { Pressable, Text, View } from "react-native";
 
 interface ScheduledPrayerRowProps {
   prayer: Prayer;
   onPress: () => void;
+  showBorder: boolean;
 }
 
-const ScheduledPrayerRow = ({ prayer, onPress }: ScheduledPrayerRowProps) => {
+const ScheduledPrayerRow = ({
+  prayer,
+  showBorder,
+  onPress,
+}: ScheduledPrayerRowProps) => {
   const notificationSettings = usePrayerStore(
     (state) => state.prayerNotifications[prayer.name],
   );
@@ -32,7 +38,10 @@ const ScheduledPrayerRow = ({ prayer, onPress }: ScheduledPrayerRowProps) => {
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={`${prayer.name} prayer settings`}
-      className="border-border active:bg-muted flex-row items-center justify-between border-b px-4 py-3.5"
+      className={clsx(
+        "active:bg-muted flex-row items-center justify-between px-4 py-3.5",
+        showBorder && "border-border border-b",
+      )}
     >
       <View className="min-w-0 flex-1 flex-row items-center gap-3">
         <View className="bg-muted size-9 shrink-0 items-center justify-center rounded-full">

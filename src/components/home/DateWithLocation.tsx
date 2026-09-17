@@ -1,19 +1,23 @@
-import { useLocationName } from "@/hooks/useLocationName";
 import { formatDate, formatHijriDate } from "@/lib/format";
+import { useLocationStore } from "@/store/locationStore";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 
 const DateWithLocation = () => {
   const today = new Date();
-  const { locationName } = useLocationName();
+
+  const locationName = useLocationStore((state) => state.locationName);
 
   return (
     <View>
       <View className="flex-row items-center gap-1">
         <Fa name="location-dot" className="text-primary size-3" />
 
-        <Text className="text-muted-foreground font-sans-semibold text-xs">
-          {locationName}
+        <Text
+          className="text-muted-foreground font-sans-semibold text-xs"
+          numberOfLines={1}
+        >
+          {locationName ?? "Locating..."}
         </Text>
 
         <View className="bg-muted-foreground/50 size-1 rounded-full" />

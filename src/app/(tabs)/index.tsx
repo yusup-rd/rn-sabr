@@ -7,7 +7,7 @@ import SpiritualPauseCard from "@/components/home/SpiritualPauseCard";
 import ErrorCard from "@/components/ui/ErrorCard";
 import LoadingCard from "@/components/ui/LoadingCard";
 import { usePrayerTimes } from "@/hooks/usePrayerTimes";
-import { usePrayerStore } from "@/store/prayerStore";
+import { useLocationStore } from "@/store/locationStore";
 import { styled } from "nativewind";
 import { useEffect, useRef } from "react";
 import {
@@ -22,12 +22,13 @@ const SafeAreaView = styled(NativeSafeAreaView);
 
 const Index = () => {
   const prayerTimes = usePrayerTimes();
-  const locationLoading = usePrayerStore((state) => state.locationLoading);
-  const locationError = usePrayerStore((state) => state.locationError);
-  const locationPermissionStatus = usePrayerStore(
+  const locationLoading = useLocationStore((state) => state.locationLoading);
+  const locationError = useLocationStore((state) => state.locationError);
+  const locationPermissionStatus = useLocationStore(
     (state) => state.locationPermissionStatus,
   );
-  const retryLocation = usePrayerStore((state) => state.retryLocation);
+  const retryLocation = useLocationStore((state) => state.retryLocation);
+
   const previousAppState = useRef<AppStateStatus>(AppState.currentState);
 
   useEffect(() => {

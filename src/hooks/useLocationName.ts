@@ -1,21 +1,21 @@
 import { reverseGeocode } from "@/lib/location";
-import { usePrayerStore } from "@/store/prayerStore";
-import { useEffect, useState } from "react";
+import { useLocationStore } from "@/store/locationStore";
+import { useEffect } from "react";
 
 export function useLocationName() {
-  const latitude = usePrayerStore((state) => state.latitude);
-  const longitude = usePrayerStore((state) => state.longitude);
-
-  const [city, setCity] = useState<string | null>(null);
-  const [country, setCountry] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const latitude = useLocationStore((state) => state.latitude);
+  const longitude = useLocationStore((state) => state.longitude);
+  const locationName = useLocationStore((state) => state.locationName);
+  const locationLoading = useLocationStore((state) => state.locationLoading);
+  const locationError = useLocationStore((state) => state.locationError);
+  const setLocationName = useLocationStore((state) => state.setLocationName);
 
   useEffect(() => {
     if (latitude == null || longitude == null) {
-      setCity(null);
-      setCountry(null);
-      setLoading(false);
+      return;
+    }
+
+    if (locationName) {
       return;
     }
 
@@ -23,25 +23,24 @@ export function useLocationName() {
 
     const loadLocationName = async () => {
       try {
-        setLoading(true);
-        setError(null);
-
         const address = await reverseGeocode(latitude, longitude);
 
-        if (cancelled) return;
-
-        setCity(address.city);
-        setCountry(address.country);
-      } catch {
-        if (cancelled) return;
-
-        setCity(null);
-        setCountry(null);
-        setError("Unable to determine your location.");
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
+        if (cancelled) {
+          return;
         }
+
+        const name =
+          address.city && address.country
+            ? `${address.city}, ${address.country}`
+            : (address.country ?? address.city ?? null);
+
+        setLocationName(name);
+      } catch {
+        if (cancelled) {
+          return;
+        }
+
+        setLocationName(null);
       }
     };
 
@@ -50,18 +49,11 @@ export function useLocationName() {
     return () => {
       cancelled = true;
     };
-  }, [latitude, longitude]);
-
-  const locationName =
-    city && country
-      ? `${city}, ${country}`
-      : (country ?? city ?? "Location unavailable");
+  }, [latitude, longitude, locationName, setLocationName]);
 
   return {
-    city,
-    country,
-    locationName,
-    loading,
-    error,
+    locationName: locationName ?? "Location unavailable",
+    loading: locationLoading,
+    error: locationError,
   };
 }

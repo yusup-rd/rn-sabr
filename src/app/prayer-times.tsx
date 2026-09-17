@@ -12,16 +12,12 @@ import { ScrollView } from "react-native";
 
 const PrayerTimes = () => {
   const [calculationSheetVisible, setCalculationSheetVisible] = useState(false);
-
   const [prayerSettingsVisible, setPrayerSettingsVisible] = useState(false);
-
   const [selectedDate, setSelectedDate] = useState(new Date());
-
   const [selectedPrayer, setSelectedPrayer] = useState<Prayer | null>(null);
 
   const { calculationMethod, asrMethod, setCalculationSettings } =
     usePrayerStore();
-
   const prayerTimes = usePrayerTimes(selectedDate);
 
   const isToday = selectedDate.toDateString() === new Date().toDateString();
