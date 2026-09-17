@@ -9,7 +9,13 @@ import LoadingCard from "@/components/ui/LoadingCard";
 import { usePrayerTimes } from "@/hooks/usePrayerTimes";
 import { usePrayerStore } from "@/store/prayerStore";
 import { styled } from "nativewind";
-import { Linking, ScrollView } from "react-native";
+import { useEffect, useRef } from "react";
+import {
+  AppState,
+  type AppStateStatus,
+  Linking,
+  ScrollView,
+} from "react-native";
 import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(NativeSafeAreaView);
@@ -22,6 +28,27 @@ const Index = () => {
     (state) => state.locationPermissionStatus,
   );
   const retryLocation = usePrayerStore((state) => state.retryLocation);
+  const previousAppState = useRef<AppStateStatus>(AppState.currentState);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      const wasInactive =
+        previousAppState.current === "inactive" ||
+        previousAppState.current === "background";
+
+      const returnedToApp = wasInactive && nextAppState === "active";
+
+      if (returnedToApp && locationPermissionStatus === "blocked") {
+        void retryLocation();
+      }
+
+      previousAppState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [locationPermissionStatus, retryLocation]);
 
   const renderLocationContent = () => {
     if (locationLoading) {
