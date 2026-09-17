@@ -85,7 +85,7 @@ function getPrayerData(
   };
 }
 
-export function usePrayerTimes(selectedDate: Date = new Date()) {
+export function usePrayerTimes(selectedDate?: Date) {
   const calculationMethod = usePrayerStore((state) => state.calculationMethod);
   const asrMethod = usePrayerStore((state) => state.asrMethod);
   const latitude = useLocationStore((state) => state.latitude);
@@ -101,9 +101,15 @@ export function usePrayerTimes(selectedDate: Date = new Date()) {
     return () => clearInterval(interval);
   }, []);
 
-  // Recalculate prayer times only when the date,
-  // location, or prayer settings change.
   const todayKey = [now.getFullYear(), now.getMonth(), now.getDate()].join("-");
+
+  const selectedKey = selectedDate
+    ? [
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
+      ].join("-")
+    : todayKey;
 
   const calculatedData = useMemo(() => {
     if (latitude == null || longitude == null) {
@@ -142,7 +148,7 @@ export function usePrayerTimes(selectedDate: Date = new Date()) {
       ),
 
       selected: getPrayerData(
-        selectedDate,
+        selectedDate ?? now,
         latitude,
         longitude,
         calculationMethod,
@@ -151,7 +157,7 @@ export function usePrayerTimes(selectedDate: Date = new Date()) {
     };
   }, [
     todayKey,
-    selectedDate,
+    selectedKey,
     latitude,
     longitude,
     calculationMethod,
