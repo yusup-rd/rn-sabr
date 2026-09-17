@@ -97,22 +97,26 @@ export function formatDurationClock(milliseconds: number) {
  *
  * Examples:
  * 45 seconds → "1 min"
- * 45 minutes → "45 mins"
+ * 2 minutes → "2 mins"
+ * 1 hour → "1 hr"
  * 2 hours → "2 hrs"
  * 2 hours 30 minutes → "2 hrs 30 mins"
  */
 export function formatRemainingDuration(milliseconds: number) {
   const totalMinutes = Math.max(0, Math.ceil(milliseconds / 60_000));
+
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
 
   if (hours === 0) {
-    return `${minutes} min`;
+    return `${minutes} min${minutes === 1 ? "" : "s"}`;
   }
 
   if (minutes === 0) {
-    return `${hours} hr`;
+    return `${hours} hr${hours === 1 ? "" : "s"}`;
   }
 
-  return `${hours} hr ${minutes} min`;
+  return `${hours} hr${hours === 1 ? "" : "s"} ${minutes} min${
+    minutes === 1 ? "" : "s"
+  }`;
 }
