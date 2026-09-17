@@ -82,7 +82,7 @@ const QuickAccessButton = ({ type }: QuickAccessButtonProps) => {
 
   return (
     <Pressable
-      className="bg-card gap-3 rounded-xl p-4 shadow-md"
+      className="bg-card gap-3 rounded-xl p-4 shadow-md active:opacity-75"
       onPress={handlePress}
       accessibilityLabel={item.title}
     >
