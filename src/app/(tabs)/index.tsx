@@ -38,7 +38,7 @@ const Index = () => {
 
       const handleLocationAction = async () => {
         if (isBlocked) {
-          await Linking.openURL("app-settings:");
+          await Linking.openSettings();
           return;
         }
 
