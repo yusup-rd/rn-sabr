@@ -83,7 +83,13 @@ export const usePrayerStore = create<PrayerStore>((set) => ({
   setLocationError: (error) =>
     set({
       locationError: error,
-      locationLoading: false,
+      ...(error === null
+        ? {}
+        : {
+            locationLoading: false,
+            latitude: null,
+            longitude: null,
+          }),
     }),
 
   setLocationPermissionStatus: (status) =>
