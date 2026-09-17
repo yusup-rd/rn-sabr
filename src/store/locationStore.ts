@@ -85,6 +85,13 @@ export const useLocationStore = create<LocationStore>((set) => ({
   setLocationPermissionStatus: (status) =>
     set({
       locationPermissionStatus: status,
+      ...(status === "denied" || status === "blocked"
+        ? {
+            latitude: null,
+            longitude: null,
+            locationName: null,
+          }
+        : {}),
     }),
 
   setRetryLocation: (retry) =>
