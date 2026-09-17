@@ -5,7 +5,7 @@ import { BottomSheet, Host, RNHostView } from "@expo/ui";
 import { background } from "@expo/ui/jetpack-compose/modifiers";
 import { presentationBackground } from "@expo/ui/swift-ui/modifiers";
 import { useEffect, useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import PrayerCalculationOption from "./PrayerCalculationOption";
 
 interface PrayerCalculationSheetProps {
@@ -61,7 +61,11 @@ const PrayerCalculationSheet = ({
         }}
       >
         <RNHostView>
-          <View className="gap-5 px-1 py-5">
+          <ScrollView
+            className="flex-1"
+            contentContainerClassName="gap-5 px-1 py-5"
+            showsVerticalScrollIndicator={false}
+          >
             <View className="gap-1">
               <Text className="text-foreground font-sans-bold text-xl">
                 Prayer Calculation
@@ -132,7 +136,7 @@ const PrayerCalculationSheet = ({
                 </Text>
               </Pressable>
             </View>
-          </View>
+          </ScrollView>
         </RNHostView>
       </BottomSheet>
     </Host>
