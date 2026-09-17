@@ -1,5 +1,5 @@
 import { nextMonth, previousMonth } from "@/lib/date";
-import { formatHijriDate } from "@/lib/format";
+import { formatHijriDate, formatMonthYear } from "@/lib/format";
 import { getIslamicEventForDate } from "@/lib/islamic-events";
 import { useTheme } from "@/providers/ThemeProvider";
 import { BottomSheet, Host, RNHostView } from "@expo/ui";
@@ -39,19 +39,8 @@ const CalendarSheet = ({
 
   const selectedEvent = getIslamicEventForDate(selectedDate);
 
-  const monthLabel = visibleMonth.toLocaleDateString([], {
-    month: "long",
-    year: "numeric",
-  });
-
   const handleSelectDate = (date: Date) => {
     onSelectDate(date);
-
-    console.log("Calendar date selected:", {
-      gregorian: date,
-      hijri: formatHijriDate(date),
-      event: getIslamicEventForDate(date),
-    });
   };
 
   const goToPreviousMonth = () => {
@@ -90,7 +79,7 @@ const CalendarSheet = ({
             {/* Header */}
             <View className="items-center">
               <Text className="text-foreground font-sans-bold text-xl">
-                {monthLabel}
+                {formatMonthYear(visibleMonth)}
               </Text>
 
               <Text className="text-muted-foreground font-sans-medium text-xs">

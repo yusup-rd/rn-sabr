@@ -1,4 +1,9 @@
-import { formatDuration, formatTime } from "@/lib/format";
+import {
+  formatDayMonth,
+  formatDuration,
+  formatRemainingDuration,
+  formatTime,
+} from "@/lib/format";
 import { useTheme } from "@/providers/ThemeProvider";
 import { Text, View } from "react-native";
 import { Circle, Path, Svg } from "react-native-svg";
@@ -7,6 +12,8 @@ interface DaylightArcProps {
   sunrise: Date;
   sunset: Date;
   now: Date;
+  isToday: boolean;
+  selectedDate: Date;
 }
 
 const VIEWBOX_WIDTH = 320;
@@ -33,6 +40,7 @@ function getArcPoint(progress: number) {
 
 function getPartialArcPath(progress: number) {
   const steps = Math.max(1, Math.ceil(progress * 60));
+
   const points = Array.from({ length: steps + 1 }, (_, index) =>
     getArcPoint((progress * index) / steps),
   );
@@ -44,7 +52,13 @@ function getPartialArcPath(progress: number) {
     .join(" ");
 }
 
-const DaylightArc = ({ sunrise, sunset, now }: DaylightArcProps) => {
+const DaylightArc = ({
+  sunrise,
+  sunset,
+  now,
+  isToday,
+  selectedDate,
+}: DaylightArcProps) => {
   const { colors } = useTheme();
 
   const sunriseTime = sunrise.getTime();
@@ -59,9 +73,13 @@ const DaylightArc = ({ sunrise, sunset, now }: DaylightArcProps) => {
   const isBeforeSunrise = nowTime < sunriseTime;
   const isAfterSunset = nowTime > sunsetTime;
   const isDaytime = !isBeforeSunrise && !isAfterSunset;
+
   const progress = Math.min(1, Math.max(0, rawProgress));
+
   const sunPosition = getArcPoint(progress);
+
   const remainingDaylight = Math.max(0, sunsetTime - nowTime);
+
   const daylightProgress = Math.min(100, Math.max(0, progress * 100));
 
   const arcPath = `
@@ -70,6 +88,63 @@ const DaylightArc = ({ sunrise, sunset, now }: DaylightArcProps) => {
       ${END_X} ${BASE_Y}
   `;
 
+  /*
+   * Non-today view
+   *
+   * We don't show the dynamic arc because there is no
+   * meaningful "current progress" for another date.
+   */
+  if (!isToday) {
+    return (
+      <View className="bg-card rounded-2xl p-5 shadow-md">
+        <View className="gap-1">
+          <Text className="font-sans-semibold text-foreground text-base">
+            Daylight · {formatDayMonth(selectedDate)}
+          </Text>
+
+          <Text className="text-muted-foreground font-sans text-xs">
+            Sun's journey across the sky
+          </Text>
+        </View>
+
+        <View className="mt-5 flex-row items-center justify-between">
+          <View className="gap-0.5">
+            <Text className="text-muted-foreground font-sans text-xs">
+              Sunrise
+            </Text>
+
+            <Text className="font-sans-semibold text-foreground text-base">
+              {formatTime(sunrise)}
+            </Text>
+          </View>
+
+          <View className="items-center gap-0.5">
+            <Text className="text-muted-foreground font-sans text-xs">
+              Daylight
+            </Text>
+
+            <Text className="font-sans-semibold text-primary text-base">
+              {formatDuration(daylightDuration)}
+            </Text>
+          </View>
+
+          <View className="items-end gap-0.5">
+            <Text className="text-muted-foreground font-sans text-xs">
+              Sunset
+            </Text>
+
+            <Text className="font-sans-semibold text-foreground text-base">
+              {formatTime(sunset)}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  /*
+   * Today view
+   */
   return (
     <View className="bg-card rounded-2xl p-5 shadow-md">
       <View className="flex-row items-center justify-between">
@@ -100,7 +175,6 @@ const DaylightArc = ({ sunrise, sunset, now }: DaylightArcProps) => {
           height={180}
           viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
         >
-          {/* Full daylight path */}
           <Path
             d={arcPath}
             fill="none"
@@ -109,7 +183,6 @@ const DaylightArc = ({ sunrise, sunset, now }: DaylightArcProps) => {
             strokeLinecap="round"
           />
 
-          {/* Completed portion */}
           {isDaytime && (
             <Path
               d={getPartialArcPath(progress)}
@@ -120,13 +193,10 @@ const DaylightArc = ({ sunrise, sunset, now }: DaylightArcProps) => {
             />
           )}
 
-          {/* Sunrise marker */}
           <Circle cx={START_X} cy={BASE_Y} r={5} fill={colors.secondary} />
 
-          {/* Sunset marker */}
           <Circle cx={END_X} cy={BASE_Y} r={5} fill={colors.secondary} />
 
-          {/* Sun glow */}
           {isDaytime && (
             <>
               <Circle
@@ -155,7 +225,6 @@ const DaylightArc = ({ sunrise, sunset, now }: DaylightArcProps) => {
           )}
         </Svg>
 
-        {/* Time labels */}
         <View className="flex-row justify-between px-1">
           <View className="gap-0.5">
             <Text className="font-sans-semibold text-foreground text-sm">
@@ -199,11 +268,13 @@ const DaylightArc = ({ sunrise, sunset, now }: DaylightArcProps) => {
                 : "Daylight ended"}
           </Text>
 
-          <Text className="font-sans-semibold text-primary text-sm">
-            {formatDuration(
-              isBeforeSunrise ? sunriseTime - nowTime : remainingDaylight,
-            )}
-          </Text>
+          {isDaytime || isBeforeSunrise ? (
+            <Text className="font-sans-semibold text-primary text-sm">
+              {formatRemainingDuration(
+                isBeforeSunrise ? sunriseTime - nowTime : remainingDaylight,
+              )}
+            </Text>
+          ) : null}
         </View>
       </View>
     </View>

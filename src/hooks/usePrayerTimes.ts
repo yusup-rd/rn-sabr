@@ -80,7 +80,7 @@ function getPrayerData(
   };
 }
 
-export function usePrayerTimes() {
+export function usePrayerTimes(selectedDate: Date = new Date()) {
   const { calculationMethod, asrMethod, latitude, longitude } =
     usePrayerStore();
 
@@ -130,13 +130,30 @@ export function usePrayerTimes() {
         calculationMethod,
         asrMethod,
       ),
+      selected: getPrayerData(
+        selectedDate,
+        latitude,
+        longitude,
+        calculationMethod,
+        asrMethod,
+      ),
     };
-  }, [todayKey, latitude, longitude, calculationMethod, asrMethod]);
+  }, [
+    todayKey,
+    selectedDate,
+    latitude,
+    longitude,
+    calculationMethod,
+    asrMethod,
+  ]);
 
   return useMemo(() => {
     if (!calculatedData) {
       return {
         prayers: [],
+        selectedPrayers: [],
+        selectedSunrise: null,
+        selectedSunset: null,
         previousPrayer: null,
         nextPrayer: null,
         countdown: "00:00:00",
@@ -147,7 +164,7 @@ export function usePrayerTimes() {
         solarEvent: null,
       };
     }
-    const { yesterday, today, tomorrow } = calculatedData;
+    const { yesterday, today, tomorrow, selected } = calculatedData;
 
     const nextTodayPrayer = today.prayers.find(
       (prayer) => prayer.time.getTime() > now.getTime(),
@@ -228,6 +245,10 @@ export function usePrayerTimes() {
 
     return {
       prayers,
+      selectedPrayers: selected.prayers,
+      selectedSunrise: selected.sunrise,
+      selectedSunset: selected.sunset,
+
       previousPrayer,
       nextPrayer,
       countdown: formatDurationClock(nextPrayer.time.getTime() - now.getTime()),
@@ -235,6 +256,7 @@ export function usePrayerTimes() {
       sunrise: today.sunrise,
       sunset: today.sunset,
       now,
+
       solarEvent: {
         label: solarEvent.label,
         remainingFormatted: formatDuration(

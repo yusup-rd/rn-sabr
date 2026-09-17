@@ -1,5 +1,5 @@
 import { addDays, isSameDay, startOfWeek } from "@/lib/date";
-import { formatDate, formatHijriDate } from "@/lib/format";
+import { formatDate, formatHijriDate, formatWeekday } from "@/lib/format";
 import { getIslamicEventForDate } from "@/lib/islamic-events";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { clsx } from "clsx";
@@ -7,14 +7,15 @@ import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import CalendarSheet from "./CalendarSheet";
 
-const getDayLabel = (date: Date) => {
-  return date.toLocaleDateString([], {
-    weekday: "short",
-  });
-};
+interface CalendarPickerProps {
+  selectedDate: Date;
+  onSelectDate: (date: Date) => void;
+}
 
-const CalendarPicker = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+const CalendarPicker = ({
+  selectedDate,
+  onSelectDate,
+}: CalendarPickerProps) => {
   const [sheetVisible, setSheetVisible] = useState(false);
 
   const weekStart = startOfWeek(selectedDate);
@@ -26,13 +27,7 @@ const CalendarPicker = () => {
   const selectedEvent = getIslamicEventForDate(selectedDate);
 
   const selectDate = (date: Date) => {
-    setSelectedDate(date);
-
-    console.log("Selected date:", {
-      gregorian: date,
-      hijri: formatHijriDate(date),
-      event: getIslamicEventForDate(date),
-    });
+    onSelectDate(date);
   };
 
   const goToPreviousDay = () => {
@@ -112,7 +107,7 @@ const CalendarPicker = () => {
                       : "text-muted-foreground font-sans-semibold text-xs"
                   }
                 >
-                  {getDayLabel(date)}
+                  {formatWeekday(date)}
                 </Text>
 
                 <Text
