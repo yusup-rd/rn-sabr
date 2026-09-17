@@ -146,15 +146,17 @@ const CalendarPicker = () => {
       </View>
 
       {/* Calendar sheet */}
-      <CalendarSheet
-        visible={sheetVisible}
-        selectedDate={selectedDate}
-        onClose={() => setSheetVisible(false)}
-        onSelectDate={(date) => {
-          selectDate(date);
-          setSheetVisible(false);
-        }}
-      />
+      <View className="absolute inset-0">
+        <CalendarSheet
+          visible={sheetVisible}
+          selectedDate={selectedDate}
+          onClose={() => setSheetVisible(false)}
+          onSelectDate={(date) => {
+            selectDate(date);
+            setSheetVisible(false);
+          }}
+        />
+      </View>
     </>
   );
 };

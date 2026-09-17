@@ -141,10 +141,12 @@ export function usePrayerTimes() {
         nextPrayer: null,
         countdown: "00:00:00",
         elapsedPercent: 0,
+        sunrise: null,
+        sunset: null,
+        now,
         solarEvent: null,
       };
     }
-
     const { yesterday, today, tomorrow } = calculatedData;
 
     const nextTodayPrayer = today.prayers.find(
@@ -230,6 +232,9 @@ export function usePrayerTimes() {
       nextPrayer,
       countdown: formatDurationClock(nextPrayer.time.getTime() - now.getTime()),
       elapsedPercent,
+      sunrise: today.sunrise,
+      sunset: today.sunset,
+      now,
       solarEvent: {
         label: solarEvent.label,
         remainingFormatted: formatDuration(

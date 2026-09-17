@@ -1,6 +1,8 @@
 import CalendarPicker from "@/components/prayer-times/CalendarPicker";
+import DaylightArc from "@/components/prayer-times/DaylightArc";
 import PrayerCalculationSelector from "@/components/prayer-times/PrayerCalculationSelector";
 import PrayerCalculationSheet from "@/components/prayer-times/PrayerCalculationSheet";
+import { usePrayerTimes } from "@/hooks/usePrayerTimes";
 import { usePrayerStore } from "@/store/prayerStore";
 import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 import { useState } from "react";
@@ -9,6 +11,7 @@ import { ScrollView } from "react-native";
 const PrayerTimes = () => {
   const { calculationMethod, asrMethod, setCalculationSettings } =
     usePrayerStore();
+  const prayerTimes = usePrayerTimes();
 
   const [sheetVisible, setSheetVisible] = useState(false);
 
@@ -31,6 +34,14 @@ const PrayerTimes = () => {
         />
 
         <CalendarPicker />
+
+        {prayerTimes.sunrise && prayerTimes.sunset && (
+          <DaylightArc
+            sunrise={prayerTimes.sunrise}
+            sunset={prayerTimes.sunset}
+            now={prayerTimes.now}
+          />
+        )}
       </ScrollView>
 
       <PrayerCalculationSheet
