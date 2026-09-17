@@ -18,6 +18,8 @@ const SelectionRow = ({
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="radio"
+      accessibilityState={{ checked: selected }}
       className={clsx(
         "flex-row items-center justify-between rounded-xl border px-4 py-3",
         selected ? "border-primary bg-primary-soft" : "border-border bg-card",
