@@ -18,6 +18,8 @@ export function useUserLocation() {
     setLoading(true);
     setError(null);
 
+    let permissionConfirmed = false;
+
     try {
       let permission = await Location.getForegroundPermissionsAsync();
 
@@ -48,6 +50,7 @@ export function useUserLocation() {
       }
 
       setPermissionStatus("granted");
+      permissionConfirmed = true;
 
       const currentLocation = await Location.getCurrentPositionAsync({
         accuracy: Location.Accuracy.Balanced,
@@ -60,7 +63,9 @@ export function useUserLocation() {
     } catch (error) {
       console.error("Failed to get user location:", error);
 
-      setPermissionStatus("granted");
+      if (permissionConfirmed) {
+        setPermissionStatus("granted");
+      }
 
       setError("Unable to get your current location.");
     } finally {
