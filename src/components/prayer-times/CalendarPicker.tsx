@@ -141,7 +141,7 @@ const CalendarPicker = ({
       </View>
 
       {/* Calendar sheet */}
-      <View className="absolute inset-0">
+      <View className="absolute inset-0" pointerEvents="box-none">
         <CalendarSheet
           visible={sheetVisible}
           selectedDate={selectedDate}
