@@ -1,4 +1,5 @@
 import { View } from "react-native";
+
 import Svg, {
   Circle,
   Defs,
@@ -9,6 +10,7 @@ import Svg, {
 
 interface SunProps {
   progress: number;
+  sceneScale?: number;
 }
 
 const START_X = 32;
@@ -32,35 +34,34 @@ function getSunPosition(progress: number) {
   };
 }
 
-export default function Sun({ progress }: SunProps) {
+export default function Sun({ progress, sceneScale = 1 }: SunProps) {
   const position = getSunPosition(progress);
+
+  const size = SUN_SIZE * sceneScale;
 
   return (
     <View
       pointerEvents="none"
       style={{
         position: "absolute",
-        left: position.x - SUN_SIZE / 2,
-        top: position.y - SUN_SIZE / 2,
-        width: SUN_SIZE,
-        height: SUN_SIZE,
+        left: position.x * sceneScale - size / 2,
+        top: position.y * sceneScale - size / 2,
+        width: size,
+        height: size,
       }}
     >
-      <Svg width={SUN_SIZE} height={SUN_SIZE} viewBox="0 0 58 58">
+      <Svg width={size} height={size} viewBox="0 0 58 58">
         <Defs>
           <LinearGradient id="sunBodyGradient" x1="0" y1="0" x2="1" y2="1">
             <Stop offset="0" stopColor="#FFF1A8" />
-
             <Stop offset="1" stopColor="#F7B83F" />
           </LinearGradient>
         </Defs>
 
-        {/* Outer glow */}
         <Circle cx="29" cy="29" r="27" fill="#FFE28A" opacity={0.12} />
 
         <Circle cx="29" cy="29" r="22" fill="#FFE28A" opacity={0.16} />
 
-        {/* Rays */}
         <Path
           d="
             M29 2V8
@@ -78,10 +79,8 @@ export default function Sun({ progress }: SunProps) {
           strokeLinecap="round"
         />
 
-        {/* Sun */}
         <Circle cx="29" cy="29" r="14" fill="url(#sunBodyGradient)" />
 
-        {/* Highlight */}
         <Circle cx="24" cy="24" r="4" fill="#FFF9D8" opacity={0.48} />
       </Svg>
     </View>
