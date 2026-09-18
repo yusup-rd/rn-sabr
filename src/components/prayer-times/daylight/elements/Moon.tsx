@@ -23,7 +23,7 @@ const MOON_HEIGHT = 78;
 const MOVEMENT_DISTANCE = 10;
 const MOVEMENT_DURATION = 7000;
 
-export default function Moon() {
+const Moon = () => {
   const movement = useSharedValue(0);
   const glow = useSharedValue(0.35);
 
@@ -133,4 +133,6 @@ export default function Moon() {
       </Svg>
     </AnimatedView>
   );
-}
+};
+
+export default Moon;

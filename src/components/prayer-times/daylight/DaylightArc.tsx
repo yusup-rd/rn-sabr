@@ -4,10 +4,9 @@ import {
   formatRemainingDuration,
   formatTime,
 } from "@/lib/format";
-
-import DaylightScene from "@/components/daylight/DaylightView";
-
 import { Text, View } from "react-native";
+import DayScene from "./scenes/DayScene";
+import NightScene from "./scenes/NightScene";
 
 interface DaylightArcProps {
   sunrise: Date;
@@ -126,7 +125,7 @@ const DaylightArc = ({
 
       {/* Day / Night illustration */}
       <View className="mt-5">
-        <DaylightScene isDaytime={isDaytime} progress={progress} />
+        {isDaytime ? <DayScene progress={progress} /> : <NightScene />}
       </View>
 
       {/* Sunrise / Sunset */}

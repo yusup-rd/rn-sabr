@@ -7,7 +7,7 @@ interface SunTrajectoryProps {
 const VIEWBOX_WIDTH = 320;
 const VIEWBOX_HEIGHT = 180;
 
-export default function SunTrajectory({ sceneScale = 1 }: SunTrajectoryProps) {
+const SunTrajectory = ({ sceneScale = 1 }: SunTrajectoryProps) => {
   return (
     <Svg
       pointerEvents="none"
@@ -34,4 +34,6 @@ export default function SunTrajectory({ sceneScale = 1 }: SunTrajectoryProps) {
       />
     </Svg>
   );
-}
+};
+
+export default SunTrajectory;

@@ -23,7 +23,7 @@ const AnimatedView = Animated.View;
 const CLOUD_WIDTH = 76;
 const CLOUD_HEIGHT = 38;
 
-export default function Cloud({
+const Cloud = ({
   x,
   y,
   scale = 1,
@@ -31,7 +31,7 @@ export default function Cloud({
   duration,
   opacity = 1,
   sceneScale = 1,
-}: CloudProps) {
+}: CloudProps) => {
   const movement = useSharedValue(0);
 
   useEffect(() => {
@@ -108,4 +108,6 @@ export default function Cloud({
       </Svg>
     </AnimatedView>
   );
-}
+};
+
+export default Cloud;
