@@ -1,18 +1,23 @@
 import Svg, { Path } from "react-native-svg";
 
+interface SunTrajectoryProps {
+  sceneScale?: number;
+}
+
 const VIEWBOX_WIDTH = 320;
 const VIEWBOX_HEIGHT = 180;
 
-export default function SunTrajectory() {
+export default function SunTrajectory({ sceneScale = 1 }: SunTrajectoryProps) {
   return (
     <Svg
       pointerEvents="none"
-      width="100%"
-      height="100%"
+      width={VIEWBOX_WIDTH * sceneScale}
+      height={VIEWBOX_HEIGHT * sceneScale}
       viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
       style={{
         position: "absolute",
-        inset: 0,
+        left: 0,
+        top: 0,
       }}
     >
       <Path

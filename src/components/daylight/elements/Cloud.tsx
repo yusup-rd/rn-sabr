@@ -15,9 +15,13 @@ interface CloudProps {
   distance: number;
   duration: number;
   opacity?: number;
+  sceneScale?: number;
 }
 
 const AnimatedView = Animated.View;
+
+const CLOUD_WIDTH = 76;
+const CLOUD_HEIGHT = 38;
 
 export default function Cloud({
   x,
@@ -26,6 +30,7 @@ export default function Cloud({
   distance,
   duration,
   opacity = 1,
+  sceneScale = 1,
 }: CloudProps) {
   const movement = useSharedValue(0);
 
@@ -41,7 +46,14 @@ export default function Cloud({
   }, [distance, duration, movement]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: movement.value }, { scale }],
+    transform: [
+      {
+        translateX: movement.value * sceneScale,
+      },
+      {
+        scale,
+      },
+    ],
   }));
 
   return (
@@ -50,38 +62,36 @@ export default function Cloud({
       style={[
         {
           position: "absolute",
-          left: x,
-          top: y,
+          left: x * sceneScale,
+          top: y * sceneScale,
           opacity,
         },
         animatedStyle,
       ]}
     >
-      <Svg width={76} height={38} viewBox="0 0 76 38">
+      <Svg
+        width={CLOUD_WIDTH * sceneScale}
+        height={CLOUD_HEIGHT * sceneScale}
+        viewBox="0 0 76 38"
+      >
         <Path
           d="
             M11 30
             C5 30 2 27 3 22
             C4 18 8 15 14 15
-
             C15 9 20 5 26 5
             C32 5 37 9 39 15
-
             C41 12 45 10 49 10
             C56 10 61 15 61 21
-
             C67 21 72 24 73 29
             C73 33 69 35 64 35
-
             H13
             C11 35 10 33 11 30
-
             Z
           "
           fill="#FFFFFF"
         />
 
-        {/* Tiny lower shadow */}
         <Path
           d="
             M13 30

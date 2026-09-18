@@ -15,9 +15,9 @@ const VIEWBOX_WIDTH = 320;
 const VIEWBOX_HEIGHT = 180;
 
 export default function DayScene({ progress }: DaySceneProps) {
-  const [sceneWidth, setSceneWidth] = useState(VIEWBOX_WIDTH);
+  const [sceneWidth, setSceneWidth] = useState(0);
 
-  const overlayScale = sceneWidth / VIEWBOX_WIDTH;
+  const sceneScale = sceneWidth > 0 ? sceneWidth / VIEWBOX_WIDTH : 1;
 
   const handleLayout = (event: LayoutChangeEvent) => {
     const { width } = event.nativeEvent.layout;
@@ -59,71 +59,64 @@ export default function DayScene({ progress }: DaySceneProps) {
         <Path d="M0 0H320V180H0Z" fill="url(#daySkyGradient)" />
       </Svg>
 
-      {/* Overlay coordinate system */}
-      <View
-        pointerEvents="none"
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          width: VIEWBOX_WIDTH,
-          height: VIEWBOX_HEIGHT,
-          transformOrigin: "top left",
-          transform: [{ scale: overlayScale }],
-        }}
-      >
-        {/* Background clouds */}
-        <Cloud
-          x={-8}
-          y={27}
-          scale={0.88}
-          distance={16}
-          duration={5200}
-          opacity={0.88}
-        />
+      {sceneWidth > 0 && (
+        <>
+          {/* Clouds */}
+          <Cloud
+            x={-8}
+            y={27}
+            scale={0.88}
+            distance={16}
+            duration={5200}
+            opacity={0.88}
+            sceneScale={sceneScale}
+          />
 
-        <Cloud
-          x={116}
-          y={66}
-          scale={0.62}
-          distance={-13}
-          duration={6900}
-          opacity={0.7}
-        />
+          <Cloud
+            x={116}
+            y={66}
+            scale={0.62}
+            distance={-13}
+            duration={6900}
+            opacity={0.7}
+            sceneScale={sceneScale}
+          />
 
-        <Cloud
-          x={226}
-          y={27}
-          scale={0.76}
-          distance={19}
-          duration={6100}
-          opacity={0.84}
-        />
+          <Cloud
+            x={226}
+            y={27}
+            scale={0.76}
+            distance={19}
+            duration={6100}
+            opacity={0.84}
+            sceneScale={sceneScale}
+          />
 
-        <Cloud
-          x={176}
-          y={116}
-          scale={0.5}
-          distance={-11}
-          duration={7600}
-          opacity={0.5}
-        />
+          <Cloud
+            x={176}
+            y={116}
+            scale={0.5}
+            distance={-11}
+            duration={7600}
+            opacity={0.5}
+            sceneScale={sceneScale}
+          />
 
-        <Cloud
-          x={-18}
-          y={112}
-          scale={0.55}
-          distance={14}
-          duration={6500}
-          opacity={0.46}
-        />
+          <Cloud
+            x={-18}
+            y={112}
+            scale={0.55}
+            distance={14}
+            duration={6500}
+            opacity={0.46}
+            sceneScale={sceneScale}
+          />
 
-        {/* Sun trajectory */}
-        <SunTrajectory />
+          <SunTrajectory sceneScale={sceneScale} />
 
-        {/* Sun */}
-        <Sun progress={progress} />
-      </View>
+          <Sun progress={progress} sceneScale={sceneScale} />
+        </>
+      )}
     </View>
   );
 }

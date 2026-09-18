@@ -122,6 +122,9 @@ export function usePrayerTimes(selectedDate?: Date) {
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
+    const selectedNextDay = new Date(selectedDate ?? now);
+    selectedNextDay.setDate(selectedNextDay.getDate() + 1);
+
     return {
       yesterday: getPrayerData(
         yesterday,
@@ -154,6 +157,14 @@ export function usePrayerTimes(selectedDate?: Date) {
         calculationMethod,
         asrMethod,
       ),
+
+      selectedNextDay: getPrayerData(
+        selectedNextDay,
+        latitude,
+        longitude,
+        calculationMethod,
+        asrMethod,
+      ),
     };
   }, [
     todayKey,
@@ -171,6 +182,7 @@ export function usePrayerTimes(selectedDate?: Date) {
         selectedPrayers: [],
         selectedSunrise: null,
         selectedSunset: null,
+        selectedNextFajr: null,
         previousPrayer: null,
         nextPrayer: null,
         countdown: "00:00:00",
@@ -182,7 +194,8 @@ export function usePrayerTimes(selectedDate?: Date) {
       };
     }
 
-    const { yesterday, today, tomorrow, selected } = calculatedData;
+    const { yesterday, today, tomorrow, selected, selectedNextDay } =
+      calculatedData;
 
     const nextTodayPrayer = today.prayers.find(
       (prayer) => prayer.time.getTime() > now.getTime(),
@@ -271,6 +284,9 @@ export function usePrayerTimes(selectedDate?: Date) {
       selectedPrayers: selected.prayers,
       selectedSunrise: selected.sunrise,
       selectedSunset: selected.sunset,
+      selectedNextFajr:
+        selectedNextDay.prayers.find((prayer) => prayer.name === "Fajr")
+          ?.time ?? null,
       previousPrayer,
       nextPrayer,
       countdown: formatDurationClock(nextPrayer.time.getTime() - now.getTime()),
