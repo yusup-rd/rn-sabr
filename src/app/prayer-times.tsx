@@ -1,5 +1,6 @@
 import CalendarPicker from "@/components/prayer-times/CalendarPicker";
 import DaylightArc from "@/components/prayer-times/DaylightArc";
+import NightPortions from "@/components/prayer-times/NightPortions";
 import PrayerCalculationSelector from "@/components/prayer-times/PrayerCalculationSelector";
 import PrayerCalculationSheet from "@/components/prayer-times/PrayerCalculationSheet";
 import PrayerTimeSettingsSheet from "@/components/prayer-times/PrayerTimeSettingsSheet";
@@ -117,6 +118,18 @@ const PrayerTimes = () => {
             <DaylightArc
               sunrise={prayerTimes.selectedSunrise}
               sunset={prayerTimes.selectedSunset}
+              now={prayerTimes.now}
+              isToday={isToday}
+              selectedDate={selectedDate}
+            />
+          )}
+
+        {hasLocation &&
+          prayerTimes.selectedSunset &&
+          prayerTimes.selectedNextFajr && (
+            <NightPortions
+              sunset={prayerTimes.selectedSunset}
+              fajr={prayerTimes.selectedNextFajr}
               now={prayerTimes.now}
               isToday={isToday}
               selectedDate={selectedDate}
