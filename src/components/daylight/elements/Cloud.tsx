@@ -41,11 +41,7 @@ export default function Cloud({
   }, [distance, duration, movement]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateX: movement.value,
-      },
-    ],
+    transform: [{ translateX: movement.value }, { scale }],
   }));
 
   return (
@@ -57,7 +53,6 @@ export default function Cloud({
           left: x,
           top: y,
           opacity,
-          transform: [{ scale }],
         },
         animatedStyle,
       ]}
