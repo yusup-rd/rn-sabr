@@ -1,10 +1,10 @@
-import CalendarPicker from "@/components/prayer-times/CalendarPicker";
-import DaylightArc from "@/components/prayer-times/DaylightArc";
-import NightPortions from "@/components/prayer-times/NightPortions";
-import PrayerCalculationSelector from "@/components/prayer-times/PrayerCalculationSelector";
-import PrayerCalculationSheet from "@/components/prayer-times/PrayerCalculationSheet";
-import PrayerTimeSettingsSheet from "@/components/prayer-times/PrayerTimeSettingsSheet";
-import ScheduledTimes from "@/components/prayer-times/ScheduledTimes";
+import CalendarPicker from "@/components/prayer-times/calendar/CalendarPicker";
+import DaylightArc from "@/components/prayer-times/daylight/DaylightArc";
+import NightPortions from "@/components/prayer-times/night-portions/NightPortions";
+import PrayerCalculationSelector from "@/components/prayer-times/prayer-calculation/PrayerCalculationSelector";
+import PrayerCalculationSheet from "@/components/prayer-times/prayer-calculation/PrayerCalculationSheet";
+import PrayerTimeSettingsSheet from "@/components/prayer-times/scheduled-prayers/PrayerTimeSettingsSheet";
+import ScheduledTimes from "@/components/prayer-times/scheduled-prayers/ScheduledTimes";
 import ErrorCard from "@/components/ui/ErrorCard";
 import LoadingCard from "@/components/ui/LoadingCard";
 import { usePrayerTimes } from "@/hooks/usePrayerTimes";

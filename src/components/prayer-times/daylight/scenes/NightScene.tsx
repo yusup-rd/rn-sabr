@@ -1,6 +1,5 @@
 import { View } from "react-native";
 import Svg, { Defs, LinearGradient, Path, Stop } from "react-native-svg";
-
 import Cloud from "../elements/Cloud";
 import Moon from "../elements/Moon";
 import Star from "../elements/Star";
@@ -8,7 +7,7 @@ import Star from "../elements/Star";
 const VIEWBOX_WIDTH = 320;
 const VIEWBOX_HEIGHT = 180;
 
-export default function NightScene() {
+const NightScene = () => {
   return (
     <View
       style={{
@@ -97,4 +96,6 @@ export default function NightScene() {
       />
     </View>
   );
-}
+};
+
+export default NightScene;

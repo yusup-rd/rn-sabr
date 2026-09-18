@@ -1,5 +1,4 @@
 import { View } from "react-native";
-
 import Svg, {
   Circle,
   Defs,
@@ -34,7 +33,7 @@ function getSunPosition(progress: number) {
   };
 }
 
-export default function Sun({ progress, sceneScale = 1 }: SunProps) {
+const Sun = ({ progress, sceneScale = 1 }: SunProps) => {
   const position = getSunPosition(progress);
 
   const size = SUN_SIZE * sceneScale;
@@ -85,4 +84,6 @@ export default function Sun({ progress, sceneScale = 1 }: SunProps) {
       </Svg>
     </View>
   );
-}
+};
+
+export default Sun;

@@ -1,10 +1,10 @@
-import LocationInitializer from "@/components/location/LocationInitializer";
 import "@/global.css";
+import LocationInitializer from "@/initializers/LocationInitializer";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 
-export default function RootLayout() {
+const RootLayout = () => {
   const [fontsLoaded, fontError] = useFonts({
     "sans-regular": require("@/assets/fonts/PlusJakartaSans-Regular.ttf"),
     "sans-extralight": require("@/assets/fonts/PlusJakartaSans-ExtraLight.ttf"),
@@ -60,4 +60,6 @@ export default function RootLayout() {
       </Stack>
     </ThemeProvider>
   );
-}
+};
+
+export default RootLayout;

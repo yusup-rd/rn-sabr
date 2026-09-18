@@ -18,7 +18,7 @@ interface StarProps {
 
 const AnimatedView = Animated.View;
 
-export default function Star({ x, y, scale, duration, delay = 0 }: StarProps) {
+const Star = ({ x, y, scale, duration, delay = 0 }: StarProps) => {
   const opacity = useSharedValue(0.35);
 
   useEffect(() => {
@@ -73,4 +73,6 @@ export default function Star({ x, y, scale, duration, delay = 0 }: StarProps) {
       </Svg>
     </AnimatedView>
   );
-}
+};
+
+export default Star;

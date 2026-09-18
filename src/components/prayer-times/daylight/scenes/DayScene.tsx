@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { LayoutChangeEvent, View } from "react-native";
-
 import Svg, { Defs, LinearGradient, Path, Stop } from "react-native-svg";
-
 import Cloud from "../elements/Cloud";
 import Sun from "../elements/Sun";
 import SunTrajectory from "../elements/SunTrajectory";
@@ -14,7 +12,7 @@ interface DaySceneProps {
 const VIEWBOX_WIDTH = 320;
 const VIEWBOX_HEIGHT = 180;
 
-export default function DayScene({ progress }: DaySceneProps) {
+const DayScene = ({ progress }: DaySceneProps) => {
   const [sceneWidth, setSceneWidth] = useState(0);
 
   const sceneScale = sceneWidth > 0 ? sceneWidth / VIEWBOX_WIDTH : 1;
@@ -119,4 +117,6 @@ export default function DayScene({ progress }: DaySceneProps) {
       )}
     </View>
   );
-}
+};
+
+export default DayScene;
