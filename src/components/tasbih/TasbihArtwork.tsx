@@ -3,9 +3,10 @@ import TasbihCord from "@/components/tasbih/TasbihCord";
 import TasbihImame from "@/components/tasbih/TasbihImame";
 import TasbihTassel from "@/components/tasbih/TasbihTassel";
 import { getTasbihLayout } from "@/components/tasbih/tasbih-geometry";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pressable, useWindowDimensions, View } from "react-native";
 import {
+  cancelAnimation,
   Easing,
   useSharedValue,
   withDelay,
@@ -18,6 +19,8 @@ const DESIGN_WIDTH = 320;
 const DESIGN_HEIGHT = 680;
 
 const BEAD_COUNT = 33;
+const CYCLE_LENGTH = BEAD_COUNT + 1;
+
 const COUNT_DURATION = 420;
 const RESET_DELAY = 200;
 const RESET_DURATION = 700;
@@ -26,13 +29,19 @@ const HORIZONTAL_PADDING = 24;
 const VERTICAL_PADDING = 32;
 const MAX_SCALE = 1.15;
 
-const TasbihArtwork = () => {
+interface TasbihArtworkProps {
+  resetKey: number;
+  onCountChange: (currentCount: number, totalCount: number) => void;
+}
+
+const TasbihArtwork = ({ resetKey, onCountChange }: TasbihArtworkProps) => {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   const [tapCount, setTapCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+
   const layout = useMemo(() => getTasbihLayout(), []);
 
-  // Position stays continuous between cycles to prevent a visual jump after reset.
   const position = useSharedValue(0);
 
   const scale = useMemo(() => {
@@ -55,10 +64,14 @@ const TasbihArtwork = () => {
     }
 
     const nextTap = tapCount + 1;
-    setTapCount(nextTap);
+    const nextTotal = totalCount + 1;
 
-    const cycleStart =
-      Math.floor(position.value / (BEAD_COUNT + 1)) * (BEAD_COUNT + 1);
+    setTapCount(nextTap);
+    setTotalCount(nextTotal);
+
+    onCountChange(nextTap, nextTotal);
+
+    const cycleStart = Math.floor(position.value / CYCLE_LENGTH) * CYCLE_LENGTH;
 
     const nextPosition = cycleStart + nextTap;
 
@@ -79,7 +92,7 @@ const TasbihArtwork = () => {
       withDelay(
         RESET_DELAY,
         withTiming(
-          cycleStart + BEAD_COUNT + 1,
+          cycleStart + CYCLE_LENGTH,
           {
             duration: RESET_DURATION,
             easing: Easing.inOut(Easing.cubic),
@@ -96,47 +109,69 @@ const TasbihArtwork = () => {
     );
   };
 
+  useEffect(() => {
+    if (resetKey === 0) {
+      return;
+    }
+
+    cancelAnimation(position);
+
+    position.value = 0;
+
+    setTapCount(0);
+    setTotalCount(0);
+
+    onCountChange(0, 0);
+  }, [resetKey, onCountChange, position]);
+
   return (
-    <Pressable
-      onPress={handlePress}
-      className="items-center justify-center"
+    <View
       style={{
         width: artworkWidth,
         height: artworkHeight,
       }}
     >
-      <View
+      <Pressable
+        onPress={handlePress}
+        className="items-center justify-center"
         style={{
-          width: DESIGN_WIDTH,
-          height: DESIGN_HEIGHT,
-          transform: [{ scale }],
+          width: artworkWidth,
+          height: artworkHeight,
         }}
       >
-        <TasbihCord width={DESIGN_WIDTH} height={520} />
-
         <View
           style={{
-            position: "absolute",
-            left: 122,
-            top: 555,
+            width: DESIGN_WIDTH,
+            height: DESIGN_HEIGHT,
+            transform: [{ scale }],
           }}
         >
-          <TasbihTassel />
-        </View>
+          <TasbihCord width={DESIGN_WIDTH} height={520} />
 
-        <TasbihBeads layout={layout} position={position} />
+          <View
+            style={{
+              position: "absolute",
+              left: 122,
+              top: 555,
+            }}
+          >
+            <TasbihTassel />
+          </View>
 
-        <View
-          style={{
-            position: "absolute",
-            left: 131,
-            top: 470,
-          }}
-        >
-          <TasbihImame />
+          <TasbihBeads layout={layout} position={position} />
+
+          <View
+            style={{
+              position: "absolute",
+              left: 131,
+              top: 470,
+            }}
+          >
+            <TasbihImame />
+          </View>
         </View>
-      </View>
-    </Pressable>
+      </Pressable>
+    </View>
   );
 };
 

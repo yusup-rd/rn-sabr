@@ -43,7 +43,7 @@ const TasbihImame = ({ width = 58, height = 96 }: TasbihImameProps) => {
       </Defs>
 
       {/* Soft shadow */}
-      <Ellipse cx="30" cy="87" rx="17" ry="4" fill="#000000" opacity={0.18} />
+      <Ellipse cx="30" cy="87" rx="17" ry="4" fill="#000000" opacity={0.05} />
 
       {/* Main elongated body */}
       <Path

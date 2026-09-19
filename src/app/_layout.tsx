@@ -62,7 +62,6 @@ const RootLayout = () => {
           name="tasbih"
           options={{
             presentation: "modal",
-            headerShown: false,
           }}
         />
       </Stack>
