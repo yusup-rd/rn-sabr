@@ -45,3 +45,6 @@ example
 # generated IDE folders
 .idea
 .vscode
+
+# generated files
+repomix-output.md
