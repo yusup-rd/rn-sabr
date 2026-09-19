@@ -1,7 +1,9 @@
 import { formatAmount } from "@/lib/format";
 import type { ZakatSummary } from "@/types/zakat";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
-import { Text, View } from "react-native";
+import * as Clipboard from "expo-clipboard";
+import { useState } from "react";
+import { Pressable, Share, Text, View } from "react-native";
 import ZakatSummaryRow from "./ZakatSummaryRow";
 
 interface ZakatResultCardProps {
@@ -9,6 +11,26 @@ interface ZakatResultCardProps {
 }
 
 const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const zakatAmount = formatAmount(summary.zakatAmount);
+
+  const handleCopy = async () => {
+    await Clipboard.setStringAsync(zakatAmount);
+
+    setIsCopied(true);
+
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1500);
+  };
+
+  const handleShare = async () => {
+    await Share.share({
+      message: `My Zakat amount is ${zakatAmount}.`,
+    });
+  };
+
   return (
     <View className="bg-card gap-5 rounded-2xl p-5 shadow-md">
       <View className="gap-1">
@@ -21,6 +43,7 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
             Zakat Summary
           </Text>
         </View>
+
         <Text className="font-sans-regular text-muted-foreground text-sm leading-5">
           Based on the values you entered.
         </Text>
@@ -58,7 +81,7 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
         </Text>
 
         <Text className="font-sans-bold text-primary mt-1 text-center text-3xl">
-          {formatAmount(summary.zakatAmount)}
+          {zakatAmount}
         </Text>
 
         <Text className="font-sans-regular text-muted-foreground mt-2 text-center text-xs leading-5">
@@ -66,6 +89,40 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
             ? "Your net wealth meets the selected Nisab threshold. Hawl eligibility is not assessed by this calculator."
             : "Your net wealth is below the selected Nisab threshold."}
         </Text>
+
+        <View className="mt-4 flex-row gap-3">
+          <Pressable
+            onPress={handleCopy}
+            accessibilityRole="button"
+            accessibilityLabel="Copy Zakat amount"
+            accessibilityHint="Copies the Zakat amount to the clipboard"
+            className="border-border bg-background flex-1 flex-row items-center justify-center gap-2 rounded-xl border px-4 py-3 active:opacity-70"
+          >
+            <Fa
+              name={isCopied ? "check" : "copy"}
+              size={14}
+              className="text-primary"
+            />
+
+            <Text className="font-sans-semibold text-foreground text-sm">
+              {isCopied ? "Copied" : "Copy Zakat"}
+            </Text>
+          </Pressable>
+
+          <Pressable
+            onPress={handleShare}
+            accessibilityRole="button"
+            accessibilityLabel="Share Zakat amount"
+            accessibilityHint="Shares the Zakat amount"
+            className="bg-primary flex-1 flex-row items-center justify-center gap-2 rounded-xl px-4 py-3 active:opacity-70"
+          >
+            <Fa name="share-nodes" size={14} color="white" />
+
+            <Text className="font-sans-semibold text-sm text-white">
+              Share Zakat
+            </Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
