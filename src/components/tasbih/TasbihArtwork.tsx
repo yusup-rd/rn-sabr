@@ -3,6 +3,7 @@ import TasbihCord from "@/components/tasbih/TasbihCord";
 import TasbihImame from "@/components/tasbih/TasbihImame";
 import TasbihTassel from "@/components/tasbih/TasbihTassel";
 import { getTasbihLayout } from "@/components/tasbih/tasbih-geometry";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, useWindowDimensions, View } from "react-native";
 import {
@@ -29,6 +30,13 @@ const HORIZONTAL_PADDING = 24;
 const VERTICAL_PADDING = 32;
 const MAX_SCALE = 1.15;
 
+const TASBIH_STORAGE_KEY = "@app/tasbih";
+
+interface TasbihStorage {
+  currentCount: number;
+  totalCount: number;
+}
+
 interface TasbihArtworkProps {
   resetKey: number;
   onCountChange: (currentCount: number, totalCount: number) => void;
@@ -39,6 +47,7 @@ const TasbihArtwork = ({ resetKey, onCountChange }: TasbihArtworkProps) => {
 
   const [tapCount, setTapCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const layout = useMemo(() => getTasbihLayout(), []);
 
@@ -57,6 +66,86 @@ const TasbihArtwork = ({ resetKey, onCountChange }: TasbihArtworkProps) => {
 
   const artworkWidth = DESIGN_WIDTH * scale;
   const artworkHeight = DESIGN_HEIGHT * scale;
+
+  /*
+   * Restore the saved logical state.
+   *
+   * position is restored to the same count so the beads
+   * visually match the saved counter.
+   */
+  useEffect(() => {
+    let cancelled = false;
+
+    const restoreTasbih = async () => {
+      try {
+        const storedValue = await AsyncStorage.getItem(TASBIH_STORAGE_KEY);
+
+        if (cancelled) {
+          return;
+        }
+
+        if (!storedValue) {
+          setIsHydrated(true);
+          return;
+        }
+
+        const stored: TasbihStorage = JSON.parse(storedValue);
+
+        const restoredCount = Math.max(
+          0,
+          Math.min(BEAD_COUNT, stored.currentCount),
+        );
+
+        const restoredTotal = Math.max(0, stored.totalCount);
+
+        setTapCount(restoredCount);
+        setTotalCount(restoredTotal);
+
+        position.value = restoredCount;
+
+        onCountChange(restoredCount, restoredTotal);
+      } catch {
+        // Ignore corrupted/missing storage and start from zero.
+      } finally {
+        if (!cancelled) {
+          setIsHydrated(true);
+        }
+      }
+    };
+
+    restoreTasbih();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [onCountChange, position]);
+
+  /*
+   * Save the logical count after every change.
+   *
+   * We don't save animation progress — only the actual
+   * user-facing count.
+   */
+  useEffect(() => {
+    if (!isHydrated) {
+      return;
+    }
+
+    const saveTasbih = async () => {
+      try {
+        const value: TasbihStorage = {
+          currentCount: tapCount,
+          totalCount,
+        };
+
+        await AsyncStorage.setItem(TASBIH_STORAGE_KEY, JSON.stringify(value));
+      } catch {
+        // Ignore storage failures.
+      }
+    };
+
+    saveTasbih();
+  }, [tapCount, totalCount, isHydrated]);
 
   const handlePress = () => {
     if (tapCount >= BEAD_COUNT) {
@@ -109,6 +198,11 @@ const TasbihArtwork = ({ resetKey, onCountChange }: TasbihArtworkProps) => {
     );
   };
 
+  /*
+   * Manual reset only.
+   *
+   * This is the ONLY place where persisted data is removed.
+   */
   useEffect(() => {
     if (resetKey === 0) {
       return;
@@ -122,7 +216,19 @@ const TasbihArtwork = ({ resetKey, onCountChange }: TasbihArtworkProps) => {
     setTotalCount(0);
 
     onCountChange(0, 0);
+
+    AsyncStorage.removeItem(TASBIH_STORAGE_KEY).catch(() => {
+      // Ignore storage failures.
+    });
   }, [resetKey, onCountChange, position]);
+
+  /*
+   * Don't render the artwork until the persisted state has
+   * been restored. This prevents a visible 0 -> savedCount jump.
+   */
+  if (!isHydrated) {
+    return null;
+  }
 
   return (
     <View
