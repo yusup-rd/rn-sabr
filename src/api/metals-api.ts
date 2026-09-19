@@ -2,6 +2,7 @@ import type { ZakatMarketPrices } from "@/types/zakat";
 
 const METALS_API_URL = "https://api.metals.dev/v1/latest";
 const METALS_API_KEY = process.env.EXPO_PUBLIC_METALS_API_KEY;
+const METALS_API_TIMEOUT = 10_000;
 
 interface MetalsApiResponse {
   status: "success" | "failure";
@@ -19,6 +20,10 @@ interface MetalsApiResponse {
   error_message?: string;
 }
 
+// TODO: Move market-price requests behind the NestJS API.
+// The Metals.Dev API key must be stored server-side and never exposed
+// through EXPO_PUBLIC_* environment variables.
+
 export const fetchZakatMarketPrices = async (): Promise<ZakatMarketPrices> => {
   if (!METALS_API_KEY) {
     throw new Error("Metals.Dev API key is not configured.");
@@ -30,21 +35,32 @@ export const fetchZakatMarketPrices = async (): Promise<ZakatMarketPrices> => {
   url.searchParams.set("currency", "USD");
   url.searchParams.set("unit", "g");
 
-  const response = await fetch(url.toString(), {
-    headers: {
-      Accept: "application/json",
-    },
-  });
+  const controller = new AbortController();
 
-  const data: MetalsApiResponse = await response.json();
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, METALS_API_TIMEOUT);
 
-  if (!response.ok || data.status !== "success" || !data.metals) {
-    throw new Error(data.error_message ?? "Failed to fetch metal prices.");
+  try {
+    const response = await fetch(url.toString(), {
+      headers: {
+        Accept: "application/json",
+      },
+      signal: controller.signal,
+    });
+
+    const data: MetalsApiResponse = await response.json();
+
+    if (!response.ok || data.status !== "success" || !data.metals) {
+      throw new Error(data.error_message ?? "Failed to fetch metal prices.");
+    }
+
+    return {
+      goldPerGram: data.metals.gold,
+      silverPerGram: data.metals.silver,
+      updatedAt: data.timestamps?.metal ?? new Date().toISOString(),
+    };
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  return {
-    goldPerGram: data.metals.gold,
-    silverPerGram: data.metals.silver,
-    updatedAt: data.timestamps?.metal ?? new Date().toISOString(),
-  };
 };
