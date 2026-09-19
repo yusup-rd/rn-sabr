@@ -1,5 +1,5 @@
-import TasbihArtwork from "@/components/tasbih/TasbihArtwork";
-import TasbihCounter from "@/components/tasbih/TasbihCounter";
+import TasbihArtwork from "@/components/tasbih/artwork/TasbihArtwork";
+import TasbihCounter from "@/components/tasbih/counter/TasbihCounter";
 import { useTheme } from "@/providers/ThemeProvider";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { Stack } from "expo-router";

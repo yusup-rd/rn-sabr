@@ -1,6 +1,6 @@
 import Svg, { Path } from "react-native-svg";
 
-import { TASBIH_PATH } from "./tasbih-path";
+import { TASBIH_PATH } from "../geometry/tasbih-path";
 
 interface TasbihCordProps {
   width?: number;

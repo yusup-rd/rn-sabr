@@ -1,10 +1,13 @@
-import TasbihBead from "@/components/tasbih/TasbihBead";
-import { TasbihLayout, TasbihPoint } from "@/components/tasbih/tasbih-geometry";
+import TasbihBead from "@/components/tasbih/artwork/TasbihBead";
+import {
+    TasbihLayout,
+    TasbihPoint,
+} from "@/components/tasbih/geometry/tasbih-geometry";
 import { memo } from "react";
 import { View } from "react-native";
 import Animated, {
-  SharedValue,
-  useAnimatedStyle,
+    SharedValue,
+    useAnimatedStyle,
 } from "react-native-reanimated";
 
 interface TasbihBeadsProps {

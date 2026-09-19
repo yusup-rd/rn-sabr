@@ -1,8 +1,8 @@
-import TasbihBeads from "@/components/tasbih/TasbihBeads";
-import TasbihCord from "@/components/tasbih/TasbihCord";
-import TasbihImame from "@/components/tasbih/TasbihImame";
-import TasbihTassel from "@/components/tasbih/TasbihTassel";
-import { getTasbihLayout } from "@/components/tasbih/tasbih-geometry";
+import TasbihBeads from "@/components/tasbih/artwork/TasbihBeads";
+import TasbihCord from "@/components/tasbih/artwork/TasbihCord";
+import TasbihImame from "@/components/tasbih/artwork/TasbihImame";
+import TasbihTassel from "@/components/tasbih/artwork/TasbihTassel";
+import { getTasbihLayout } from "@/components/tasbih/geometry/tasbih-geometry";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, useWindowDimensions, View } from "react-native";
