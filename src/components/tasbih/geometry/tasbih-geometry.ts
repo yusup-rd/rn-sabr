@@ -1,3 +1,4 @@
+import { BEAD_COUNT, SAMPLES_PER_SEGMENT } from "@/constants/tasbih";
 import { BezierSegment, TASBIH_SEGMENTS } from "./tasbih-path";
 
 export interface TasbihPoint {
@@ -8,9 +9,6 @@ export interface TasbihPoint {
 interface SamplePoint extends TasbihPoint {
   distance: number;
 }
-
-const BEAD_COUNT = 33;
-const SAMPLES_PER_SEGMENT = 80;
 
 const cubicPoint = (segment: BezierSegment, t: number): [number, number] => {
   const { p0, p1, p2, p3 } = segment;

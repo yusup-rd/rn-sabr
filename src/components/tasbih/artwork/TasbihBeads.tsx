@@ -1,23 +1,20 @@
 import TasbihBead from "@/components/tasbih/artwork/TasbihBead";
 import {
-    TasbihLayout,
-    TasbihPoint,
+  TasbihLayout,
+  TasbihPoint,
 } from "@/components/tasbih/geometry/tasbih-geometry";
+import { BEAD_COUNT, BEAD_SIZE, CYCLE_LENGTH } from "@/constants/tasbih";
 import { memo } from "react";
 import { View } from "react-native";
 import Animated, {
-    SharedValue,
-    useAnimatedStyle,
+  SharedValue,
+  useAnimatedStyle,
 } from "react-native-reanimated";
 
 interface TasbihBeadsProps {
   layout: TasbihLayout;
   position: SharedValue<number>;
 }
-
-const BEAD_SIZE = 38;
-const BEAD_COUNT = 33;
-const CYCLE_LENGTH = BEAD_COUNT + 1;
 
 const TasbihBeads = ({ layout, position }: TasbihBeadsProps) => {
   return (

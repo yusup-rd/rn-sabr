@@ -3,6 +3,19 @@ import TasbihCord from "@/components/tasbih/artwork/TasbihCord";
 import TasbihImame from "@/components/tasbih/artwork/TasbihImame";
 import TasbihTassel from "@/components/tasbih/artwork/TasbihTassel";
 import { getTasbihLayout } from "@/components/tasbih/geometry/tasbih-geometry";
+import {
+  BEAD_COUNT,
+  COUNT_DURATION,
+  CYCLE_LENGTH,
+  DESIGN_HEIGHT,
+  DESIGN_WIDTH,
+  HORIZONTAL_PADDING,
+  MAX_SCALE,
+  RESET_DELAY,
+  RESET_DURATION,
+  TASBIH_STORAGE_KEY,
+  VERTICAL_PADDING,
+} from "@/constants/tasbih";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, useWindowDimensions, View } from "react-native";
@@ -15,22 +28,6 @@ import {
   withTiming,
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
-
-const DESIGN_WIDTH = 320;
-const DESIGN_HEIGHT = 680;
-
-const BEAD_COUNT = 33;
-const CYCLE_LENGTH = BEAD_COUNT + 1;
-
-const COUNT_DURATION = 420;
-const RESET_DELAY = 200;
-const RESET_DURATION = 700;
-
-const HORIZONTAL_PADDING = 24;
-const VERTICAL_PADDING = 32;
-const MAX_SCALE = 1.15;
-
-const TASBIH_STORAGE_KEY = "@app/tasbih";
 
 interface TasbihStorage {
   currentCount: number;
