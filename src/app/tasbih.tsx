@@ -1,5 +1,6 @@
 import TasbihArtwork from "@/components/tasbih/artwork/TasbihArtwork";
 import TasbihCounter from "@/components/tasbih/counter/TasbihCounter";
+import { BEAD_COUNT } from "@/constants/tasbih";
 import { useTasbih } from "@/hooks/useTasbih";
 import { useTheme } from "@/providers/ThemeProvider";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
@@ -15,7 +16,7 @@ const Tasbih = () => {
 
   const [resetKey, setResetKey] = useState(0);
 
-  const rounds = Math.floor(totalCount / 33);
+  const rounds = Math.floor(totalCount / BEAD_COUNT);
 
   const handleReset = () => {
     Alert.alert(
@@ -31,7 +32,6 @@ const Tasbih = () => {
           style: "destructive",
           onPress: () => {
             reset();
-
             setResetKey((value) => value + 1);
           },
         },
@@ -61,12 +61,13 @@ const Tasbih = () => {
 
       <View className="bg-card flex-1">
         <View className="flex-1 items-center justify-center">
-          <TasbihArtwork
-            resetKey={resetKey}
-            initialCount={currentCount}
-            isHydrated={isHydrated}
-            onTap={recordTap}
-          />
+          {isHydrated && (
+            <TasbihArtwork
+              key={resetKey}
+              initialCount={currentCount}
+              onTap={recordTap}
+            />
+          )}
         </View>
 
         <View pointerEvents="none" className="absolute bottom-8 left-5">

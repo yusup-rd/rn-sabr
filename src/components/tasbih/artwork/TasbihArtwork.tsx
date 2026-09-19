@@ -15,10 +15,9 @@ import {
   RESET_DURATION,
   VERTICAL_PADDING,
 } from "@/constants/tasbih";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, useWindowDimensions, View } from "react-native";
 import {
-  cancelAnimation,
   Easing,
   useSharedValue,
   withDelay,
@@ -28,43 +27,37 @@ import {
 import { scheduleOnRN } from "react-native-worklets";
 
 interface TasbihArtworkProps {
-  resetKey: number;
   initialCount: number;
-  isHydrated: boolean;
   onTap: (count: number) => void;
 }
 
-const TasbihArtwork = ({
-  resetKey,
-  initialCount,
-  isHydrated,
-  onTap,
-}: TasbihArtworkProps) => {
+const TasbihArtwork = ({ initialCount, onTap }: TasbihArtworkProps) => {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   /*
-   * Animation-local count.
+   * If the persisted count is 33, the previous round has
+   * already completed and the artwork should be ready for
+   * the next tap.
    *
-   * This controls the logical bead animation cycle.
-   * It is intentionally separate from the persisted
-   * screen state managed by useTasbih.
+   * The screen counter can still display 33/33.
+   * Animation-local state starts from 0.
    */
-  const [tapCount, setTapCount] = useState(0);
+  const animationInitialCount = initialCount >= BEAD_COUNT ? 0 : initialCount;
+
+  const [tapCount, setTapCount] = useState(animationInitialCount);
 
   /*
-   * Prevent the hydration value from being applied
-   * repeatedly after the animation has started.
-   */
-  const hasInitialized = useRef(false);
-
-  /*
-   * IMPORTANT:
-   *
    * position is the sole source of truth for bead animation.
    *
-   * TasbihBeads derives every bead position from this value.
+   * Example:
+   *
+   * saved count = 17
+   * position = 17
+   *
+   * saved count = 33
+   * position = 0
    */
-  const position = useSharedValue(0);
+  const position = useSharedValue(animationInitialCount);
 
   const layout = useMemo(() => getTasbihLayout(), []);
 
@@ -83,46 +76,6 @@ const TasbihArtwork = ({
   const artworkWidth = DESIGN_WIDTH * scale;
   const artworkHeight = DESIGN_HEIGHT * scale;
 
-  /*
-   * Restore the animation position AFTER the persisted
-   * state has been hydrated.
-   *
-   * This fixes the previous bug:
-   *
-   * Counter = 17
-   * Beads   = position 0
-   *
-   * because useSharedValue(initialCount) only uses its
-   * initial value once.
-   */
-  useEffect(() => {
-    if (!isHydrated || hasInitialized.current) {
-      return;
-    }
-
-    hasInitialized.current = true;
-
-    setTapCount(initialCount);
-    position.value = initialCount;
-  }, [isHydrated, initialCount, position]);
-
-  /*
-   * Manual reset.
-   *
-   * This explicitly resets both the animation and its
-   * local logical count.
-   */
-  useEffect(() => {
-    if (resetKey === 0) {
-      return;
-    }
-
-    cancelAnimation(position);
-
-    position.value = 0;
-    setTapCount(0);
-  }, [resetKey, position]);
-
   const handlePress = () => {
     if (tapCount >= BEAD_COUNT) {
       return;
@@ -131,12 +84,13 @@ const TasbihArtwork = ({
     const nextTap = tapCount + 1;
 
     /*
-     * Persist the logical count.
-     *
-     * This does not control the bead animation.
+     * Update persisted logical state.
      */
     onTap(nextTap);
 
+    /*
+     * Update animation-local state.
+     */
     setTapCount(nextTap);
 
     /*
@@ -147,8 +101,7 @@ const TasbihArtwork = ({
     const nextPosition = cycleStart + nextTap;
 
     /*
-     * Normal tap:
-     * move the beads one position.
+     * Normal tap.
      */
     if (nextTap < BEAD_COUNT) {
       position.value = withTiming(nextPosition, {
@@ -162,11 +115,10 @@ const TasbihArtwork = ({
     /*
      * 33rd tap:
      *
-     * 1. Move final bead into position.
+     * 1. Move final bead into place.
      * 2. Pause.
      * 3. Reset the whole string.
-     * 4. Only after the animation finishes,
-     *    reset the animation-local tap count.
+     * 4. Reset animation-local count to 0.
      */
     position.value = withSequence(
       withTiming(nextPosition, {
@@ -192,16 +144,6 @@ const TasbihArtwork = ({
       ),
     );
   };
-
-  /*
-   * The screen itself is rendered immediately.
-   * Only the artwork waits for hydration.
-   *
-   * This prevents the previous white-screen flicker.
-   */
-  if (!isHydrated) {
-    return null;
-  }
 
   return (
     <View

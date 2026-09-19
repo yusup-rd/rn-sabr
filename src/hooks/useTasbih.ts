@@ -21,7 +21,7 @@ export const useTasbih = (): UseTasbihReturn => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   /*
-   * Restore the persisted logical state.
+   * Restore the persisted Tasbih state.
    */
   useEffect(() => {
     let cancelled = false;
@@ -35,7 +35,6 @@ export const useTasbih = (): UseTasbihReturn => {
         }
 
         if (!storedValue) {
-          setIsHydrated(true);
           return;
         }
 
@@ -67,9 +66,9 @@ export const useTasbih = (): UseTasbihReturn => {
   }, []);
 
   /*
-   * Persist logical state whenever it changes.
+   * Persist the logical state whenever it changes.
    *
-   * Animation state is intentionally NOT stored here.
+   * Animation state is intentionally not stored here.
    */
   useEffect(() => {
     if (!isHydrated) {
@@ -93,7 +92,7 @@ export const useTasbih = (): UseTasbihReturn => {
   }, [currentCount, totalCount, isHydrated]);
 
   /*
-   * Called once for every physical tap.
+   * Record one user tap.
    */
   const recordTap = useCallback((count: number) => {
     setCurrentCount(count);
@@ -101,9 +100,7 @@ export const useTasbih = (): UseTasbihReturn => {
   }, []);
 
   /*
-   * Manual reset.
-   *
-   * This is the only place that removes persisted data.
+   * Reset the persisted logical state.
    */
   const reset = useCallback(() => {
     setCurrentCount(0);
