@@ -51,7 +51,15 @@ export const fetchZakatMarketPrices = async (): Promise<ZakatMarketPrices> => {
 
     const data: MetalsApiResponse = await response.json();
 
-    if (!response.ok || data.status !== "success" || !data.metals) {
+    if (
+      !response.ok ||
+      data.status !== "success" ||
+      !data.metals ||
+      !Number.isFinite(data.metals.gold) ||
+      data.metals.gold <= 0 ||
+      !Number.isFinite(data.metals.silver) ||
+      data.metals.silver <= 0
+    ) {
       throw new Error(data.error_message ?? "Failed to fetch metal prices.");
     }
 
