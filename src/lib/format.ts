@@ -158,3 +158,18 @@ export function formatDurationClock(milliseconds: number) {
     seconds.toString().padStart(2, "0"),
   ].join(":");
 }
+
+/**
+ * Formats a number into a localized currency string.
+ *
+ * Example:
+ * 1234.56 → "$1,234.56"
+ */
+export const formatAmount = (amount: number, currency = "USD"): string => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+};
