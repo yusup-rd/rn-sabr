@@ -3,8 +3,8 @@ import type { ZakatMarketPrices } from "@/types/zakat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
-const CACHE_KEY = "@sabr/zakat-market-prices"; // Key used to store the cached market prices in AsyncStorage
-const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+const CACHE_KEY = "@sabr/zakat-market-prices";
+const CACHE_TTL = 24 * 60 * 60 * 1000;
 
 interface CachedZakatMarketPrices {
   prices: ZakatMarketPrices;
@@ -40,7 +40,13 @@ const useZakatMarketPrices = (): UseZakatMarketPricesResult => {
         setIsLoading(true);
         setError(null);
 
-        const cachedValue = await AsyncStorage.getItem(CACHE_KEY);
+        let cachedValue: string | null = null;
+
+        try {
+          cachedValue = await AsyncStorage.getItem(CACHE_KEY);
+        } catch {
+          // Cache is best-effort. Continue with the live request.
+        }
 
         if (cachedValue) {
           try {
@@ -67,29 +73,41 @@ const useZakatMarketPrices = (): UseZakatMarketPricesResult => {
               }
             }
           } catch {
-            await AsyncStorage.removeItem(CACHE_KEY);
+            try {
+              await AsyncStorage.removeItem(CACHE_KEY);
+            } catch {
+              // Cache cleanup is best-effort.
+            }
           }
         }
 
+        let freshPrices: ZakatMarketPrices;
+
         try {
-          const freshPrices = await fetchZakatMarketPrices();
-
-          const newCache: CachedZakatMarketPrices = {
-            prices: freshPrices,
-            cachedAt: Date.now(),
-          };
-
-          await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(newCache));
-
-          if (isMounted) {
-            setPrices(freshPrices);
-            setIsStale(false);
-            setError(null);
-          }
+          freshPrices = await fetchZakatMarketPrices();
         } catch {
           if (isMounted) {
             setError("Unable to update market prices.");
           }
+
+          return;
+        }
+
+        if (isMounted) {
+          setPrices(freshPrices);
+          setIsStale(false);
+          setError(null);
+        }
+
+        const newCache: CachedZakatMarketPrices = {
+          prices: freshPrices,
+          cachedAt: Date.now(),
+        };
+
+        try {
+          await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(newCache));
+        } catch {
+          // Cache persistence is best-effort.
         }
       } catch {
         if (isMounted) {
