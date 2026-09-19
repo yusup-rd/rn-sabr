@@ -2,18 +2,20 @@ import { formatAmount } from "@/lib/format";
 import type { ZakatNisabStandard } from "@/types/zakat";
 import { Pressable, Text, View } from "react-native";
 
-interface NisabProps {
+interface NisabSelectorProps {
   value: ZakatNisabStandard;
   onChange: (value: ZakatNisabStandard) => void;
   amount: number;
 }
 
-const Nisab = ({ value, onChange, amount }: NisabProps) => {
+const NisabSelector = ({ value, onChange, amount }: NisabSelectorProps) => {
   return (
     <View className="gap-3">
       <View className="flex-row gap-3">
         <Pressable
           onPress={() => onChange("silver")}
+          accessibilityRole="radio"
+          accessibilityState={{ checked: value === "silver" }}
           className={
             value === "silver"
               ? "border-primary bg-primary-muted flex-1 rounded-2xl border-2 p-4"
@@ -31,6 +33,8 @@ const Nisab = ({ value, onChange, amount }: NisabProps) => {
 
         <Pressable
           onPress={() => onChange("gold")}
+          accessibilityRole="radio"
+          accessibilityState={{ checked: value === "gold" }}
           className={
             value === "gold"
               ? "border-primary bg-primary-muted flex-1 rounded-2xl border-2 p-4"
@@ -60,4 +64,4 @@ const Nisab = ({ value, onChange, amount }: NisabProps) => {
   );
 };
 
-export default Nisab;
+export default NisabSelector;

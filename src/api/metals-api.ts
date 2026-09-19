@@ -1,3 +1,5 @@
+import type { ZakatMarketPrices } from "@/types/zakat";
+
 const METALS_API_URL = "https://api.metals.dev/v1/latest";
 const METALS_API_KEY = process.env.EXPO_PUBLIC_METALS_API_KEY;
 
@@ -15,12 +17,6 @@ interface MetalsApiResponse {
   };
   error_code?: number;
   error_message?: string;
-}
-
-export interface ZakatMarketPrices {
-  goldPerGram: number;
-  silverPerGram: number;
-  updatedAt: string;
 }
 
 export const fetchZakatMarketPrices = async (): Promise<ZakatMarketPrices> => {

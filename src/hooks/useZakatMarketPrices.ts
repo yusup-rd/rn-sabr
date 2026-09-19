@@ -1,7 +1,5 @@
-import {
-  fetchZakatMarketPrices,
-  type ZakatMarketPrices,
-} from "@/api/metals-api";
+import { fetchZakatMarketPrices } from "@/api/metals-api";
+import type { ZakatMarketPrices } from "@/types/zakat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 

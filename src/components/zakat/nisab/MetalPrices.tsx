@@ -1,4 +1,4 @@
-import type { ZakatMarketPrices } from "@/api/metals-api";
+import type { ZakatMarketPrices } from "@/types/zakat";
 import { Text, View } from "react-native";
 
 interface MetalPricesProps {

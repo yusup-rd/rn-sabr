@@ -1,7 +1,6 @@
-import type { ZakatMarketPrices } from "@/api/metals-api";
 import MetalPrices from "@/components/zakat/nisab/MetalPrices";
-import Nisab from "@/components/zakat/nisab/Nisab";
-import type { ZakatNisabStandard } from "@/types/zakat";
+import NisabSelector from "@/components/zakat/nisab/NisabSelector";
+import type { ZakatMarketPrices, ZakatNisabStandard } from "@/types/zakat";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { ActivityIndicator, Text, View } from "react-native";
 
@@ -65,7 +64,7 @@ const NisabCard = ({
 
           <View className="bg-border h-px" />
 
-          <Nisab
+          <NisabSelector
             value={nisabStandard}
             onChange={onNisabStandardChange}
             amount={nisabAmount ?? 0}

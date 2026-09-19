@@ -23,6 +23,7 @@ export interface ZakatFormData {
 export interface ZakatMarketPrices {
   goldPerGram: number;
   silverPerGram: number;
+  updatedAt: string;
 }
 
 export interface ZakatSummary {
