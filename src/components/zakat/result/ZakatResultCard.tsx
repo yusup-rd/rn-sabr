@@ -75,7 +75,7 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
         />
       </View>
 
-      <View className="bg-card rounded-2xl p-5">
+      <View className="bg-muted rounded-2xl p-5">
         <Text className="font-sans-medium text-muted-foreground text-center text-sm">
           Zakat Amount
         </Text>
@@ -101,7 +101,7 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
             <Fa
               name={isCopied ? "check" : "copy"}
               size={14}
-              className="text-primary"
+              className={isCopied ? "text-success" : "text-foreground"}
             />
 
             <Text className="font-sans-semibold text-foreground text-sm">
@@ -116,7 +116,11 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
             accessibilityHint="Shares the Zakat amount"
             className="bg-primary flex-1 flex-row items-center justify-center gap-2 rounded-xl px-4 py-3 active:opacity-70"
           >
-            <Fa name="share-nodes" size={14} color="white" />
+            <Fa
+              name="share-nodes"
+              size={14}
+              className="text-primary-foreground"
+            />
 
             <Text className="font-sans-semibold text-primary-foreground text-sm">
               Share Zakat

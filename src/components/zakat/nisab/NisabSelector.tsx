@@ -51,7 +51,7 @@ const NisabSelector = ({ value, onChange, amount }: NisabSelectorProps) => {
         </Pressable>
       </View>
 
-      <View className="bg-background rounded-xl p-4">
+      <View className="bg-muted rounded-xl p-4">
         <Text className="font-sans-regular text-muted-foreground text-sm">
           Current Nisab
         </Text>
