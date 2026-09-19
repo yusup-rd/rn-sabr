@@ -5,40 +5,44 @@ import TasbihTassel from "@/components/tasbih/TasbihTassel";
 import { getTasbihLayout } from "@/components/tasbih/tasbih-geometry";
 import { useMemo, useState } from "react";
 import { Pressable, useWindowDimensions, View } from "react-native";
-import { Easing, useSharedValue, withTiming } from "react-native-reanimated";
+import {
+  Easing,
+  useSharedValue,
+  withDelay,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 
 const DESIGN_WIDTH = 320;
 const DESIGN_HEIGHT = 680;
+
+const BEAD_COUNT = 33;
+const COUNT_DURATION = 420;
+const RESET_DELAY = 200;
+const RESET_DURATION = 700;
+
+const HORIZONTAL_PADDING = 24;
+const VERTICAL_PADDING = 32;
+const MAX_SCALE = 1.15;
 
 const TasbihArtwork = () => {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
   const [tapCount, setTapCount] = useState(0);
-
   const layout = useMemo(() => getTasbihLayout(), []);
 
-  /*
-   * This is the ONLY value that controls the bead animation.
-   *
-   * 0 = initial state
-   * 1 = bead 1 has moved
-   * 2 = bead 2 has moved
-   * 3 = bead 3 has moved
-   * ...
-   */
+  // Position stays continuous between cycles to prevent a visual jump after reset.
   const position = useSharedValue(0);
 
   const scale = useMemo(() => {
-    const horizontalPadding = 24;
-    const verticalPadding = 32;
-
-    const availableWidth = screenWidth - horizontalPadding * 2;
-
-    const availableHeight = screenHeight - verticalPadding * 2;
+    const availableWidth = screenWidth - HORIZONTAL_PADDING * 2;
+    const availableHeight = screenHeight - VERTICAL_PADDING * 2;
 
     return Math.min(
       availableWidth / DESIGN_WIDTH,
       availableHeight / DESIGN_HEIGHT,
+      MAX_SCALE,
     );
   }, [screenWidth, screenHeight]);
 
@@ -46,42 +50,56 @@ const TasbihArtwork = () => {
   const artworkHeight = DESIGN_HEIGHT * scale;
 
   const handlePress = () => {
-    if (tapCount >= 33) {
+    if (tapCount >= BEAD_COUNT) {
       return;
     }
 
     const nextTap = tapCount + 1;
-
-    /*
-     * React state is only used for the tap count / app state.
-     *
-     * The actual visual animation is controlled exclusively
-     * by the shared value.
-     */
     setTapCount(nextTap);
 
-    /*
-     * IMPORTANT:
-     *
-     * We do NOT reset progress to 0.
-     * We do NOT change the current bead's position manually.
-     *
-     * We simply move the single shared position:
-     *
-     * 0 → 1
-     * 1 → 2
-     * 2 → 3
-     * ...
-     */
-    position.value = withTiming(nextTap, {
-      duration: 420,
-      easing: Easing.out(Easing.cubic),
-    });
+    const cycleStart =
+      Math.floor(position.value / (BEAD_COUNT + 1)) * (BEAD_COUNT + 1);
+
+    const nextPosition = cycleStart + nextTap;
+
+    if (nextTap < BEAD_COUNT) {
+      position.value = withTiming(nextPosition, {
+        duration: COUNT_DURATION,
+        easing: Easing.out(Easing.cubic),
+      });
+
+      return;
+    }
+
+    position.value = withSequence(
+      withTiming(nextPosition, {
+        duration: COUNT_DURATION,
+        easing: Easing.out(Easing.cubic),
+      }),
+      withDelay(
+        RESET_DELAY,
+        withTiming(
+          cycleStart + BEAD_COUNT + 1,
+          {
+            duration: RESET_DURATION,
+            easing: Easing.inOut(Easing.cubic),
+          },
+          (finished) => {
+            if (!finished) {
+              return;
+            }
+
+            scheduleOnRN(setTapCount, 0);
+          },
+        ),
+      ),
+    );
   };
 
   return (
     <Pressable
       onPress={handlePress}
+      className="items-center justify-center"
       style={{
         width: artworkWidth,
         height: artworkHeight,

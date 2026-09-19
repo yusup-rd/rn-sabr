@@ -13,6 +13,8 @@ interface TasbihBeadsProps {
 }
 
 const BEAD_SIZE = 38;
+const BEAD_COUNT = 33;
+const CYCLE_LENGTH = BEAD_COUNT + 1;
 
 const TasbihBeads = ({ layout, position }: TasbihBeadsProps) => {
   return (
@@ -56,55 +58,78 @@ interface AnimatedBeadProps {
 const AnimatedBead = memo(
   ({ beadNumber, originalPoint, target, position }: AnimatedBeadProps) => {
     const animatedStyle = useAnimatedStyle(() => {
-      /*
-       * Convert the global position into this bead's
-       * local animation progress.
-       *
-       * Example for bead 4:
-       *
-       * position < 3:
-       *   bead 4 stays at original position
-       *
-       * position 3 → 4:
-       *   bead 4 moves
-       *
-       * position >= 4:
-       *   bead 4 stays at target
-       */
-      const localProgress = position.value - (beadNumber - 1);
+      // Keep the animation position continuous across cycles.
+      const cycleStart =
+        Math.floor(position.value / CYCLE_LENGTH) * CYCLE_LENGTH;
 
-      let x = originalPoint.x;
-      let y = originalPoint.y;
+      const localPosition = position.value - cycleStart;
 
-      if (localProgress <= 0) {
-        /*
-         * This bead has not started moving yet.
-         */
-        x = originalPoint.x;
-        y = originalPoint.y;
-      } else if (localProgress >= 1) {
-        /*
-         * This bead has already completed its movement.
-         */
-        x = target.x;
-        y = target.y;
-      } else {
-        /*
-         * This bead is currently moving.
-         */
-        x = originalPoint.x + (target.x - originalPoint.x) * localProgress;
+      if (localPosition < BEAD_COUNT) {
+        const localProgress = localPosition - (beadNumber - 1);
 
-        y = originalPoint.y + (target.y - originalPoint.y) * localProgress;
+        let x = originalPoint.x;
+        let y = originalPoint.y;
+
+        if (localProgress <= 0) {
+          x = originalPoint.x;
+          y = originalPoint.y;
+        } else if (localProgress >= 1) {
+          x = target.x;
+          y = target.y;
+        } else {
+          x = originalPoint.x + (target.x - originalPoint.x) * localProgress;
+
+          y = originalPoint.y + (target.y - originalPoint.y) * localProgress;
+        }
+
+        return {
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: BEAD_SIZE,
+          height: BEAD_SIZE,
+          transform: [
+            {
+              translateX: x - BEAD_SIZE / 2,
+            },
+            {
+              translateY: y - BEAD_SIZE / 2,
+            },
+          ],
+        };
       }
+
+      if (localPosition === BEAD_COUNT) {
+        return {
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: BEAD_SIZE,
+          height: BEAD_SIZE,
+          transform: [
+            {
+              translateX: target.x - BEAD_SIZE / 2,
+            },
+            {
+              translateY: target.y - BEAD_SIZE / 2,
+            },
+          ],
+        };
+      }
+
+      // During reset, all beads move from their targets back to their originals.
+      const resetProgress = localPosition - BEAD_COUNT;
+
+      const x = target.x + (originalPoint.x - target.x) * resetProgress;
+
+      const y = target.y + (originalPoint.y - target.y) * resetProgress;
 
       return {
         position: "absolute",
         left: 0,
         top: 0,
-
         width: BEAD_SIZE,
         height: BEAD_SIZE,
-
         transform: [
           {
             translateX: x - BEAD_SIZE / 2,

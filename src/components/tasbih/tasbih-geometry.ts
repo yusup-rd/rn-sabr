@@ -12,21 +12,6 @@ interface SamplePoint extends TasbihPoint {
 const BEAD_COUNT = 33;
 const SAMPLES_PER_SEGMENT = 80;
 
-/**
- * Distance along the path where bead 1 starts.
- *
- * This is on the bottom-right side of the Imame.
- */
-const BEAD_1_DISTANCE = 545;
-
-/**
- * Opening between bead 33 and bead 1.
- *
- * This is intentionally kept small so the opening visually
- * reads as the space around the Imame.
- */
-const IMAME_GAP = 30;
-
 const cubicPoint = (segment: BezierSegment, t: number): [number, number] => {
   const { p0, p1, p2, p3 } = segment;
   const mt = 1 - t;
@@ -84,7 +69,6 @@ const getPointAtDistance = (
 
     if (current.distance >= normalizedDistance) {
       const previous = samples[i - 1];
-
       const segmentLength = current.distance - previous.distance;
 
       if (segmentLength === 0) {
@@ -98,7 +82,6 @@ const getPointAtDistance = (
 
       return {
         x: previous.x + (current.x - previous.x) * progress,
-
         y: previous.y + (current.y - previous.y) * progress,
       };
     }
@@ -119,15 +102,14 @@ export const getTasbihLayout = (): TasbihLayout => {
   const samples = buildSamples();
   const totalLength = samples[samples.length - 1].distance;
 
-  /*
-   * The Imame sits at the bottom-center of the cord.
-   */
+  // The Imame sits at the bottom-center of the cord.
   const imameDistance = totalLength / 2;
 
   /*
-   * 33 real beads + 1 invisible bead (gap) + 1 Imame.
+   * 33 real beads + 1 invisible gap + 1 Imame.
    *
-   * The gap occupies exactly one normal bead spacing.
+   * All positions use the same spacing so the gap behaves
+   * exactly like one normal bead position.
    */
   const spacing = totalLength / (BEAD_COUNT + 2);
 
@@ -135,24 +117,11 @@ export const getTasbihLayout = (): TasbihLayout => {
    * Initial layout:
    *
    * Imame → GAP → bead 1 → bead 2 → ... → bead 33
-   *
-   * We preserve the ORIGINAL movement/path direction.
    */
   const gapDistance = imameDistance - spacing;
 
   const gap = getPointAtDistance(samples, gapDistance);
 
-  /*
-   * Bead 1 is one spacing after the gap.
-   *
-   * Therefore:
-   *
-   * gap   = 1 spacing from Imame
-   * bead 1 = 2 spacings from Imame
-   * bead 2 = 3 spacings from Imame
-   * ...
-   * bead 33 = 34 spacings from Imame
-   */
   const beads = Array.from({ length: BEAD_COUNT }, (_, index) => {
     const distance = imameDistance - spacing * (index + 2);
 
