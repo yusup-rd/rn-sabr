@@ -3,7 +3,7 @@ import { Href, router } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
 interface QuickAccessButtonProps {
-  type: "quran" | "mosques" | "prayer" | "zakat";
+  type: "quran" | "mosques" | "prayer" | "zakat" | "tasbih";
 }
 
 interface QuickAccessItem {
@@ -68,6 +68,18 @@ const quickAccessConfig: Record<
     title: "Zakat",
     description: "Quick Calculator",
     route: "/zakat",
+  },
+
+  tasbih: {
+    icon: "praying-hands",
+    iconClassName: "text-muted-foreground",
+    iconContainerClassName: "bg-muted",
+    badge: "100",
+    badgeClassName: "",
+    badgeTextClassName: "text-muted-foreground",
+    title: "Tasbih",
+    description: "Count your prayers",
+    route: "/tasbih",
   },
 };
 

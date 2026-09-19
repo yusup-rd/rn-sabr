@@ -16,6 +16,9 @@ const QuickAccess = () => {
       <View className="flex-1 basis-[45%]">
         <QuickAccessButton type="zakat" />
       </View>
+      <View className="flex-1 basis-[45%]">
+        <QuickAccessButton type="tasbih" />
+      </View>
     </View>
   );
 };
