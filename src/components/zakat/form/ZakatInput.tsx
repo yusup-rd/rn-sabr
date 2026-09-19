@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 
 interface ZakatInputProps {
@@ -13,8 +14,23 @@ const ZakatInput = ({
   value,
   onChange,
 }: ZakatInputProps) => {
-  const handleChange = (text: string) => {
-    const normalized = text.replace(",", ".");
+  const [text, setText] = useState(value === 0 ? "" : String(value));
+  const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => {
+    if (!isFocused) {
+      setText(value === 0 ? "" : String(value));
+    }
+  }, [value, isFocused]);
+
+  const handleChange = (input: string) => {
+    const normalized = input.replace(",", ".");
+
+    if (!/^\d*\.?\d*$/.test(normalized)) {
+      return;
+    }
+
+    setText(normalized);
 
     if (normalized === "") {
       onChange(0);
@@ -26,6 +42,15 @@ const ZakatInput = ({
     if (!Number.isNaN(parsed) && parsed >= 0) {
       onChange(parsed);
     }
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    setText(value === 0 ? "" : String(value));
   };
 
   return (
@@ -43,7 +68,9 @@ const ZakatInput = ({
       </View>
 
       <TextInput
-        value={value === 0 ? "" : String(value)}
+        value={text}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         onChangeText={handleChange}
         keyboardType="decimal-pad"
         placeholder="0"
