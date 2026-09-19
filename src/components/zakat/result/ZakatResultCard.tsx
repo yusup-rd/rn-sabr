@@ -4,11 +4,11 @@ import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 import ZakatSummaryRow from "./ZakatSummaryRow";
 
-interface ZakatResultProps {
+interface ZakatResultCardProps {
   summary: ZakatSummary;
 }
 
-const ZakatResult = ({ summary }: ZakatResultProps) => {
+const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
   return (
     <View className="bg-card gap-5 rounded-2xl p-5 shadow-md">
       <View className="gap-1">
@@ -71,4 +71,4 @@ const ZakatResult = ({ summary }: ZakatResultProps) => {
   );
 };
 
-export default ZakatResult;
+export default ZakatResultCard;

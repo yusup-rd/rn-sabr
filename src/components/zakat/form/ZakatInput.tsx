@@ -30,7 +30,7 @@ const ZakatInput = ({
 
   return (
     <View className="gap-2">
-      <View className="flex-1 gap-1">
+      <View className="gap-1">
         <Text className="font-sans-medium text-foreground text-base">
           {label}
         </Text>

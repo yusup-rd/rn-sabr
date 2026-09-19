@@ -1,11 +1,11 @@
-import ZakatInfo from "@/components/zakat/ZakatInfo";
-import ZakatInput from "@/components/zakat/ZakatInput";
-import ZakatResult from "@/components/zakat/ZakatResult";
-import ZakatSection from "@/components/zakat/ZakatSection";
-import { DUMMY_ZAKAT_PRICES } from "@/constants/zakat";
+import ZakatInput from "@/components/zakat/form/ZakatInput";
+import ZakatSection from "@/components/zakat/form/ZakatSection";
+import NisabCard from "@/components/zakat/nisab/NisabCard";
+import ZakatResultCard from "@/components/zakat/result/ZakatResultCard";
+import useZakatMarketPrices from "@/hooks/useZakatMarketPrices";
 import { calculateZakatSummary } from "@/lib/zakat-calculations";
 import { useZakatStore } from "@/store/zakatStore";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text } from "react-native";
 
 const Zakat = () => {
   const {
@@ -24,24 +24,31 @@ const Zakat = () => {
     reset,
   } = useZakatStore();
 
-  const marketPrices = DUMMY_ZAKAT_PRICES;
+  const {
+    prices: marketPrices,
+    isLoading: isMarketPricesLoading,
+    error: marketPricesError,
+    isStale: areMarketPricesStale,
+  } = useZakatMarketPrices();
 
-  const summary = calculateZakatSummary(
-    {
-      nisabStandard,
-      gold,
-      silver,
-      cashAndBank,
-      futurePurposeSavings,
-      moneyOwed,
-      investments,
-      businessStock,
-      shortTermDebt,
-      immediateBills,
-      wagesDue,
-    },
-    marketPrices,
-  );
+  const summary = marketPrices
+    ? calculateZakatSummary(
+        {
+          nisabStandard,
+          gold,
+          silver,
+          cashAndBank,
+          futurePurposeSavings,
+          moneyOwed,
+          investments,
+          businessStock,
+          shortTermDebt,
+          immediateBills,
+          wagesDue,
+        },
+        marketPrices,
+      )
+    : null;
 
   return (
     <ScrollView
@@ -51,56 +58,16 @@ const Zakat = () => {
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets
     >
-      <View className="gap-2">
-        <Text className="font-sans-bold text-foreground text-3xl">Zakat</Text>
-
-        <Text className="font-sans-regular text-muted-foreground text-base leading-6">
-          Enter the value of your zakatable wealth to calculate your Zakat.
-        </Text>
-      </View>
-
       {/* Nisab */}
-      <ZakatSection
-        title="Nisab"
-        description="Choose the standard used to determine the Nisab threshold."
-        icon="scale-balanced"
-      >
-        <View className="flex-row gap-3">
-          <Pressable
-            onPress={() => setField("nisabStandard", "silver")}
-            className={
-              nisabStandard === "silver"
-                ? "border-primary bg-primary-muted flex-1 rounded-2xl border-2 p-4"
-                : "border-border bg-card flex-1 rounded-2xl border p-4"
-            }
-          >
-            <Text className="font-sans-semibold text-foreground text-base">
-              Silver
-            </Text>
-
-            <Text className="font-sans-regular text-muted-foreground mt-1 text-sm">
-              612.36 g
-            </Text>
-          </Pressable>
-
-          <Pressable
-            onPress={() => setField("nisabStandard", "gold")}
-            className={
-              nisabStandard === "gold"
-                ? "border-primary bg-primary-muted flex-1 rounded-2xl border-2 p-4"
-                : "border-border bg-card flex-1 rounded-2xl border p-4"
-            }
-          >
-            <Text className="font-sans-semibold text-foreground text-base">
-              Gold
-            </Text>
-
-            <Text className="font-sans-regular text-muted-foreground mt-1 text-sm">
-              87.48 g
-            </Text>
-          </Pressable>
-        </View>
-      </ZakatSection>
+      <NisabCard
+        prices={marketPrices}
+        isLoading={isMarketPricesLoading}
+        error={marketPricesError}
+        isStale={areMarketPricesStale}
+        nisabStandard={nisabStandard}
+        nisabAmount={summary?.nisabAmount ?? null}
+        onNisabStandardChange={(value) => setField("nisabStandard", value)}
+      />
 
       {/* Precious metals */}
       <ZakatSection
@@ -192,7 +159,7 @@ const Zakat = () => {
       </ZakatSection>
 
       {/* Result */}
-      <ZakatResult summary={summary} />
+      {summary ? <ZakatResultCard summary={summary} /> : null}
 
       {/* Reset */}
       <Pressable
@@ -204,7 +171,12 @@ const Zakat = () => {
         </Text>
       </Pressable>
 
-      <ZakatInfo />
+      {/* Info */}
+      <Text className="font-sans-regular text-muted-foreground px-2 text-center text-xs leading-5">
+        Zakat is generally calculated at 2.5% of zakatable wealth once it
+        reaches the Nisab threshold and the applicable Hawl period has passed.
+        For personal religious circumstances, consult a qualified scholar.
+      </Text>
     </ScrollView>
   );
 };
