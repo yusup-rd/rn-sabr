@@ -118,7 +118,7 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
           >
             <Fa name="share-nodes" size={14} color="white" />
 
-            <Text className="font-sans-semibold text-sm text-white">
+            <Text className="font-sans-semibold text-primary-foreground text-sm">
               Share Zakat
             </Text>
           </Pressable>
