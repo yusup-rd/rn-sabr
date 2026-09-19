@@ -34,7 +34,7 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
 
         <ZakatSummaryRow
           label="Deductible liabilities"
-          value={`−${formatAmount(summary.totalLiabilities)}`}
+          value={`-${formatAmount(summary.totalLiabilities)}`}
           color="destructive"
         />
 
@@ -54,7 +54,7 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
 
       <View className="bg-card rounded-2xl p-5">
         <Text className="font-sans-medium text-muted-foreground text-center text-sm">
-          Zakat due
+          Zakat Amount
         </Text>
 
         <Text className="font-sans-bold text-primary mt-1 text-center text-3xl">
@@ -63,7 +63,7 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
 
         <Text className="font-sans-regular text-muted-foreground mt-2 text-center text-xs leading-5">
           {summary.meetsNisab
-            ? "Your net wealth meets the selected Nisab threshold."
+            ? "Your net wealth meets the selected Nisab threshold. Hawl eligibility is not assessed by this calculator."
             : "Your net wealth is below the selected Nisab threshold."}
         </Text>
       </View>
