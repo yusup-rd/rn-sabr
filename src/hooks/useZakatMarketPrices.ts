@@ -104,10 +104,12 @@ const useZakatMarketPrices = (): UseZakatMarketPricesResult => {
           cachedAt: Date.now(),
         };
 
-        try {
-          await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(newCache));
-        } catch {
-          // Cache persistence is best-effort.
+        if (isMounted) {
+          try {
+            await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(newCache));
+          } catch {
+            // Cache persistence is best-effort.
+          }
         }
       } catch {
         if (isMounted) {
