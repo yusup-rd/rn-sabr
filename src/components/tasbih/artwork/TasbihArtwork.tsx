@@ -13,11 +13,9 @@ import {
   MAX_SCALE,
   RESET_DELAY,
   RESET_DURATION,
-  TASBIH_STORAGE_KEY,
   VERTICAL_PADDING,
 } from "@/constants/tasbih";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, useWindowDimensions, View } from "react-native";
 import {
   cancelAnimation,
@@ -29,29 +27,50 @@ import {
 } from "react-native-reanimated";
 import { scheduleOnRN } from "react-native-worklets";
 
-interface TasbihStorage {
-  currentCount: number;
-  totalCount: number;
-}
-
 interface TasbihArtworkProps {
   resetKey: number;
-  onCountChange: (currentCount: number, totalCount: number) => void;
+  initialCount: number;
+  isHydrated: boolean;
+  onTap: (count: number) => void;
 }
 
-const TasbihArtwork = ({ resetKey, onCountChange }: TasbihArtworkProps) => {
+const TasbihArtwork = ({
+  resetKey,
+  initialCount,
+  isHydrated,
+  onTap,
+}: TasbihArtworkProps) => {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
+  /*
+   * Animation-local count.
+   *
+   * This controls the logical bead animation cycle.
+   * It is intentionally separate from the persisted
+   * screen state managed by useTasbih.
+   */
   const [tapCount, setTapCount] = useState(0);
-  const [totalCount, setTotalCount] = useState(0);
-  const [isHydrated, setIsHydrated] = useState(false);
+
+  /*
+   * Prevent the hydration value from being applied
+   * repeatedly after the animation has started.
+   */
+  const hasInitialized = useRef(false);
+
+  /*
+   * IMPORTANT:
+   *
+   * position is the sole source of truth for bead animation.
+   *
+   * TasbihBeads derives every bead position from this value.
+   */
+  const position = useSharedValue(0);
 
   const layout = useMemo(() => getTasbihLayout(), []);
 
-  const position = useSharedValue(0);
-
   const scale = useMemo(() => {
     const availableWidth = screenWidth - HORIZONTAL_PADDING * 2;
+
     const availableHeight = screenHeight - VERTICAL_PADDING * 2;
 
     return Math.min(
@@ -65,84 +84,44 @@ const TasbihArtwork = ({ resetKey, onCountChange }: TasbihArtworkProps) => {
   const artworkHeight = DESIGN_HEIGHT * scale;
 
   /*
-   * Restore the saved logical state.
+   * Restore the animation position AFTER the persisted
+   * state has been hydrated.
    *
-   * position is restored to the same count so the beads
-   * visually match the saved counter.
+   * This fixes the previous bug:
+   *
+   * Counter = 17
+   * Beads   = position 0
+   *
+   * because useSharedValue(initialCount) only uses its
+   * initial value once.
    */
   useEffect(() => {
-    let cancelled = false;
-
-    const restoreTasbih = async () => {
-      try {
-        const storedValue = await AsyncStorage.getItem(TASBIH_STORAGE_KEY);
-
-        if (cancelled) {
-          return;
-        }
-
-        if (!storedValue) {
-          setIsHydrated(true);
-          return;
-        }
-
-        const stored: TasbihStorage = JSON.parse(storedValue);
-
-        const restoredCount = Math.max(
-          0,
-          Math.min(BEAD_COUNT, stored.currentCount),
-        );
-
-        const restoredTotal = Math.max(0, stored.totalCount);
-
-        setTapCount(restoredCount);
-        setTotalCount(restoredTotal);
-
-        position.value = restoredCount;
-
-        onCountChange(restoredCount, restoredTotal);
-      } catch {
-        // Ignore corrupted/missing storage and start from zero.
-      } finally {
-        if (!cancelled) {
-          setIsHydrated(true);
-        }
-      }
-    };
-
-    restoreTasbih();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [onCountChange, position]);
-
-  /*
-   * Save the logical count after every change.
-   *
-   * We don't save animation progress — only the actual
-   * user-facing count.
-   */
-  useEffect(() => {
-    if (!isHydrated) {
+    if (!isHydrated || hasInitialized.current) {
       return;
     }
 
-    const saveTasbih = async () => {
-      try {
-        const value: TasbihStorage = {
-          currentCount: tapCount,
-          totalCount,
-        };
+    hasInitialized.current = true;
 
-        await AsyncStorage.setItem(TASBIH_STORAGE_KEY, JSON.stringify(value));
-      } catch {
-        // Ignore storage failures.
-      }
-    };
+    setTapCount(initialCount);
+    position.value = initialCount;
+  }, [isHydrated, initialCount, position]);
 
-    saveTasbih();
-  }, [tapCount, totalCount, isHydrated]);
+  /*
+   * Manual reset.
+   *
+   * This explicitly resets both the animation and its
+   * local logical count.
+   */
+  useEffect(() => {
+    if (resetKey === 0) {
+      return;
+    }
+
+    cancelAnimation(position);
+
+    position.value = 0;
+    setTapCount(0);
+  }, [resetKey, position]);
 
   const handlePress = () => {
     if (tapCount >= BEAD_COUNT) {
@@ -150,17 +129,27 @@ const TasbihArtwork = ({ resetKey, onCountChange }: TasbihArtworkProps) => {
     }
 
     const nextTap = tapCount + 1;
-    const nextTotal = totalCount + 1;
+
+    /*
+     * Persist the logical count.
+     *
+     * This does not control the bead animation.
+     */
+    onTap(nextTap);
 
     setTapCount(nextTap);
-    setTotalCount(nextTotal);
 
-    onCountChange(nextTap, nextTotal);
-
+    /*
+     * Keep animation position continuous across cycles.
+     */
     const cycleStart = Math.floor(position.value / CYCLE_LENGTH) * CYCLE_LENGTH;
 
     const nextPosition = cycleStart + nextTap;
 
+    /*
+     * Normal tap:
+     * move the beads one position.
+     */
     if (nextTap < BEAD_COUNT) {
       position.value = withTiming(nextPosition, {
         duration: COUNT_DURATION,
@@ -170,6 +159,15 @@ const TasbihArtwork = ({ resetKey, onCountChange }: TasbihArtworkProps) => {
       return;
     }
 
+    /*
+     * 33rd tap:
+     *
+     * 1. Move final bead into position.
+     * 2. Pause.
+     * 3. Reset the whole string.
+     * 4. Only after the animation finishes,
+     *    reset the animation-local tap count.
+     */
     position.value = withSequence(
       withTiming(nextPosition, {
         duration: COUNT_DURATION,
@@ -196,32 +194,10 @@ const TasbihArtwork = ({ resetKey, onCountChange }: TasbihArtworkProps) => {
   };
 
   /*
-   * Manual reset only.
+   * The screen itself is rendered immediately.
+   * Only the artwork waits for hydration.
    *
-   * This is the ONLY place where persisted data is removed.
-   */
-  useEffect(() => {
-    if (resetKey === 0) {
-      return;
-    }
-
-    cancelAnimation(position);
-
-    position.value = 0;
-
-    setTapCount(0);
-    setTotalCount(0);
-
-    onCountChange(0, 0);
-
-    AsyncStorage.removeItem(TASBIH_STORAGE_KEY).catch(() => {
-      // Ignore storage failures.
-    });
-  }, [resetKey, onCountChange, position]);
-
-  /*
-   * Don't render the artwork until the persisted state has
-   * been restored. This prevents a visible 0 -> savedCount jump.
+   * This prevents the previous white-screen flicker.
    */
   if (!isHydrated) {
     return null;

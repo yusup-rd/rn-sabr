@@ -1,5 +1,6 @@
 import TasbihArtwork from "@/components/tasbih/artwork/TasbihArtwork";
 import TasbihCounter from "@/components/tasbih/counter/TasbihCounter";
+import { useTasbih } from "@/hooks/useTasbih";
 import { useTheme } from "@/providers/ThemeProvider";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { Stack } from "expo-router";
@@ -9,8 +10,9 @@ import { Alert, Pressable, View } from "react-native";
 const Tasbih = () => {
   const { colors } = useTheme();
 
-  const [currentCount, setCurrentCount] = useState(0);
-  const [totalCount, setTotalCount] = useState(0);
+  const { currentCount, totalCount, isHydrated, recordTap, reset } =
+    useTasbih();
+
   const [resetKey, setResetKey] = useState(0);
 
   const rounds = Math.floor(totalCount / 33);
@@ -28,8 +30,8 @@ const Tasbih = () => {
           text: "Reset",
           style: "destructive",
           onPress: () => {
-            setCurrentCount(0);
-            setTotalCount(0);
+            reset();
+
             setResetKey((value) => value + 1);
           },
         },
@@ -46,7 +48,7 @@ const Tasbih = () => {
           headerTitle: "",
           headerShadowVisible: false,
           headerRight: () => (
-            <Pressable onPress={handleReset} hitSlop={12} className="">
+            <Pressable onPress={handleReset} hitSlop={12}>
               <Fa
                 name="arrow-rotate-left"
                 size={17}
@@ -61,10 +63,9 @@ const Tasbih = () => {
         <View className="flex-1 items-center justify-center">
           <TasbihArtwork
             resetKey={resetKey}
-            onCountChange={(count, total) => {
-              setCurrentCount(count);
-              setTotalCount(total);
-            }}
+            initialCount={currentCount}
+            isHydrated={isHydrated}
+            onTap={recordTap}
           />
         </View>
 
