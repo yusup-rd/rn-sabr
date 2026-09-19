@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
 import { Text, TextInput, View } from "react-native";
 
 interface ZakatInputProps {
@@ -16,9 +17,12 @@ const ZakatInput = ({
 }: ZakatInputProps) => {
   const [text, setText] = useState(value === 0 ? "" : String(value));
   const [isFocused, setIsFocused] = useState(false);
+  const lastEmittedValue = useRef(value);
 
   useEffect(() => {
-    if (!isFocused) {
+    const isLocalUpdate = value === lastEmittedValue.current;
+
+    if (!isFocused || !isLocalUpdate) {
       setText(value === 0 ? "" : String(value));
     }
   }, [value, isFocused]);
@@ -33,13 +37,15 @@ const ZakatInput = ({
     setText(normalized);
 
     if (normalized === "") {
+      lastEmittedValue.current = 0;
       onChange(0);
       return;
     }
 
     const parsed = Number(normalized);
 
-    if (!Number.isNaN(parsed) && parsed >= 0) {
+    if (Number.isFinite(parsed) && parsed >= 0) {
+      lastEmittedValue.current = parsed;
       onChange(parsed);
     }
   };
