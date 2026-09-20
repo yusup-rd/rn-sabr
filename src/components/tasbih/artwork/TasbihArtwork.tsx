@@ -154,7 +154,6 @@ const TasbihArtwork = ({ initialCount, onTap }: TasbihArtworkProps) => {
     >
       <Pressable
         onPress={handlePress}
-        className="items-center justify-center"
         style={{
           width: artworkWidth,
           height: artworkHeight,
@@ -164,6 +163,7 @@ const TasbihArtwork = ({ initialCount, onTap }: TasbihArtworkProps) => {
           style={{
             width: DESIGN_WIDTH,
             height: DESIGN_HEIGHT,
+            transformOrigin: "top left",
             transform: [{ scale }],
           }}
         >
