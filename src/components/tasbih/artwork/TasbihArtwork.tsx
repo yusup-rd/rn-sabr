@@ -15,7 +15,7 @@ import {
   RESET_DURATION,
   VERTICAL_PADDING,
 } from "@/constants/tasbih";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Pressable, useWindowDimensions, View } from "react-native";
 import {
   Easing,
@@ -28,7 +28,7 @@ import { scheduleOnRN } from "react-native-worklets";
 
 interface TasbihArtworkProps {
   initialCount: number;
-  onTap: (count: number) => void;
+  onTap: (count: number) => Promise<boolean>;
 }
 
 const TasbihArtwork = ({ initialCount, onTap }: TasbihArtworkProps) => {
@@ -47,6 +47,12 @@ const TasbihArtwork = ({ initialCount, onTap }: TasbihArtworkProps) => {
   const [tapCount, setTapCount] = useState(animationInitialCount);
 
   /*
+   * Prevent multiple presses from starting persistence
+   * operations before the previous one has completed.
+   */
+  const isPressPending = useRef(false);
+
+  /*
    * position is the sole source of truth for bead animation.
    *
    * Example:
@@ -63,7 +69,6 @@ const TasbihArtwork = ({ initialCount, onTap }: TasbihArtworkProps) => {
 
   const scale = useMemo(() => {
     const availableWidth = screenWidth - HORIZONTAL_PADDING * 2;
-
     const availableHeight = screenHeight - VERTICAL_PADDING * 2;
 
     return Math.min(
@@ -76,73 +81,103 @@ const TasbihArtwork = ({ initialCount, onTap }: TasbihArtworkProps) => {
   const artworkWidth = DESIGN_WIDTH * scale;
   const artworkHeight = DESIGN_HEIGHT * scale;
 
-  const handlePress = () => {
+  const handlePress = async () => {
+    /*
+     * This ref is synchronous, so a second physical press
+     * cannot enter while the first persistence operation
+     * is still pending.
+     */
+    if (isPressPending.current) {
+      return;
+    }
+
     if (tapCount >= BEAD_COUNT) {
       return;
     }
 
+    isPressPending.current = true;
+
     const nextTap = tapCount + 1;
 
-    /*
-     * Update persisted logical state.
-     */
-    onTap(nextTap);
+    try {
+      /*
+       * Persist the logical state first.
+       *
+       * Do not advance the animation unless persistence
+       * succeeds.
+       */
+      const persisted = await onTap(nextTap);
 
-    /*
-     * Update animation-local state.
-     */
-    setTapCount(nextTap);
+      if (!persisted) {
+        return;
+      }
 
-    /*
-     * Keep animation position continuous across cycles.
-     */
-    const cycleStart = Math.floor(position.value / CYCLE_LENGTH) * CYCLE_LENGTH;
+      /*
+       * Update animation-local state only after persistence
+       * succeeds.
+       */
+      setTapCount(nextTap);
 
-    const nextPosition = cycleStart + nextTap;
+      /*
+       * Keep animation position continuous across cycles.
+       */
+      const cycleStart =
+        Math.floor(position.value / CYCLE_LENGTH) * CYCLE_LENGTH;
 
-    /*
-     * Normal tap.
-     */
-    if (nextTap < BEAD_COUNT) {
-      position.value = withTiming(nextPosition, {
-        duration: COUNT_DURATION,
-        easing: Easing.out(Easing.cubic),
-      });
+      const nextPosition = cycleStart + nextTap;
 
-      return;
-    }
+      /*
+       * Normal tap.
+       */
+      if (nextTap < BEAD_COUNT) {
+        position.value = withTiming(nextPosition, {
+          duration: COUNT_DURATION,
+          easing: Easing.out(Easing.cubic),
+        });
 
-    /*
-     * 33rd tap:
-     *
-     * 1. Move final bead into place.
-     * 2. Pause.
-     * 3. Reset the whole string.
-     * 4. Reset animation-local count to 0.
-     */
-    position.value = withSequence(
-      withTiming(nextPosition, {
-        duration: COUNT_DURATION,
-        easing: Easing.out(Easing.cubic),
-      }),
-      withDelay(
-        RESET_DELAY,
-        withTiming(
-          cycleStart + CYCLE_LENGTH,
-          {
-            duration: RESET_DURATION,
-            easing: Easing.inOut(Easing.cubic),
-          },
-          (finished) => {
-            if (!finished) {
-              return;
-            }
+        return;
+      }
 
-            scheduleOnRN(setTapCount, 0);
-          },
+      /*
+       * 33rd tap:
+       *
+       * 1. Move final bead into place.
+       * 2. Pause.
+       * 3. Reset the whole string.
+       * 4. Reset animation-local count to 0.
+       */
+      position.value = withSequence(
+        withTiming(nextPosition, {
+          duration: COUNT_DURATION,
+          easing: Easing.out(Easing.cubic),
+        }),
+        withDelay(
+          RESET_DELAY,
+          withTiming(
+            cycleStart + CYCLE_LENGTH,
+            {
+              duration: RESET_DURATION,
+              easing: Easing.inOut(Easing.cubic),
+            },
+            (finished) => {
+              if (!finished) {
+                return;
+              }
+
+              scheduleOnRN(setTapCount, 0);
+            },
+          ),
         ),
-      ),
-    );
+      );
+    } catch {
+      /*
+       * Persistence failed unexpectedly.
+       *
+       * Keep the animation and local count unchanged.
+       */
+    } finally {
+      isPressPending.current = false;
+    }
   };
 
   return (
