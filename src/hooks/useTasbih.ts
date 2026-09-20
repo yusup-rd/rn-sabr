@@ -40,6 +40,17 @@ export const useTasbih = (): UseTasbihReturn => {
 
         const stored: TasbihStorage = JSON.parse(storedValue);
 
+        if (
+          typeof stored.currentCount !== "number" ||
+          !Number.isFinite(stored.currentCount) ||
+          stored.currentCount < 0 ||
+          typeof stored.totalCount !== "number" ||
+          !Number.isFinite(stored.totalCount) ||
+          stored.totalCount < 0
+        ) {
+          return;
+        }
+
         const restoredCount = Math.max(
           0,
           Math.min(BEAD_COUNT, stored.currentCount),
