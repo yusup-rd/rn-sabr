@@ -1,5 +1,7 @@
 import { memo, useMemo } from "react";
+
 import Svg, { Circle, Line, Text as SvgText } from "react-native-svg";
+
 import QiblaMarker from "./QiblaMarker";
 
 interface CompassDialProps {
@@ -44,24 +46,21 @@ const CompassDial = ({
   const center = size / 2;
   const radius = center - 12;
   const labelRadius = radius - 32;
+  const tickInnerRadius = radius - 18;
 
   const ticks = useMemo(
     () =>
-      Array.from({ length: 72 }, (_, index) => {
-        const angle = index * 5;
+      DIRECTIONS.map(({ angle }) => {
         const radians = (angle * Math.PI) / 180;
-        const isMajor = angle % 45 === 0;
-        const innerRadius = radius - (isMajor ? 18 : 10);
 
         return {
-          x1: center + Math.sin(radians) * innerRadius,
-          y1: center - Math.cos(radians) * innerRadius,
+          x1: center + Math.sin(radians) * tickInnerRadius,
+          y1: center - Math.cos(radians) * tickInnerRadius,
           x2: center + Math.sin(radians) * radius,
           y2: center - Math.cos(radians) * radius,
-          isMajor,
         };
       }),
-    [center, radius],
+    [center, radius, tickInnerRadius],
   );
 
   return (
@@ -82,8 +81,8 @@ const CompassDial = ({
           y1={tick.y1}
           x2={tick.x2}
           y2={tick.y2}
-          stroke={tick.isMajor ? color : mutedColor}
-          strokeWidth={tick.isMajor ? 2 : 1}
+          stroke={color}
+          strokeWidth={2}
           strokeLinecap="round"
         />
       ))}
