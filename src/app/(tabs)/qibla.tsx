@@ -1,4 +1,4 @@
-import QiblaCompass from "@/components/qibla/QiblaCompass";
+import QiblaCompass from "@/components/qibla/compass/QiblaCompass";
 import { styled } from "nativewind";
 import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-context";
 

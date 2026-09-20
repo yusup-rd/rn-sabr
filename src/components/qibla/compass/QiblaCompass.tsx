@@ -5,16 +5,16 @@ import { useTheme } from "@/providers/ThemeProvider";
 import { useCallback, useRef } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
 import Animated, {
-  useAnimatedStyle,
-  useFrameCallback,
-  useSharedValue,
+    useAnimatedStyle,
+    useFrameCallback,
+    useSharedValue,
 } from "react-native-reanimated";
-import CalibrationBanner from "./CalibrationBanner";
+import FacingReadout from "../readouts/FacingReadout";
+import QiblaReadout from "../readouts/QiblaReadout";
+import CalibrationBanner from "../status/CalibrationBanner";
+import NoSensorFallback from "../status/NoSensorFallback";
 import CompassDial from "./CompassDial";
 import CompassIndicator from "./CompassIndicator";
-import FacingReadout from "./FacingReadout";
-import NoSensorFallback from "./NoSensorFallback";
-import QiblaReadout from "./QiblaReadout";
 
 const SPRING_STIFFNESS = 320;
 const SPRING_DAMPING = 36;
