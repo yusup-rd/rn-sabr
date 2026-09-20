@@ -50,6 +50,14 @@ export const normalizeDegrees = (degrees: number): number => {
   return ((degrees % 360) + 360) % 360;
 };
 
+export const getAngularDifference = (first: number, second: number): number => {
+  const normalizedFirst = normalizeDegrees(first);
+  const normalizedSecond = normalizeDegrees(second);
+  const difference = Math.abs(normalizedFirst - normalizedSecond);
+
+  return Math.min(difference, 360 - difference);
+};
+
 export const shortestRotationPath = (from: number, to: number): number => {
   const normalizedFrom = normalizeDegrees(from);
   const normalizedTo = normalizeDegrees(to);

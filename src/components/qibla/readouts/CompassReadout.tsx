@@ -22,12 +22,12 @@ const CompassReadout = ({
           Qibla
         </Text>
 
-        <View className="flex-row items-center gap-2">
+        <View className="flex-row items-center gap-1">
           <Text className="font-sans-medium text-muted-foreground text-sm">
             {Math.round(bearing)}° {qiblaDirection}
           </Text>
 
-          <Text className="text-muted-foreground text-xs">·</Text>
+          <Text className="text-muted-foreground text-sm">•</Text>
 
           <Text className="font-sans-medium text-muted-foreground text-sm">
             {Math.round(distance).toLocaleString()} km
