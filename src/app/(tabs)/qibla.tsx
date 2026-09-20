@@ -1,21 +1,16 @@
 import QiblaCompass from "@/components/qibla/compass/QiblaCompass";
-import QiblaMenu from "@/components/qibla/QiblaMenu";
 import CompassReadout from "@/components/qibla/readouts/CompassReadout";
 import CalibrationCard from "@/components/qibla/status/CalibrationCard";
 import NoSensorFallback from "@/components/qibla/status/NoSensorFallback";
 import QiblaAlignmentStatus from "@/components/qibla/status/QiblaAlignmentStatus";
 import useQiblaCompass from "@/hooks/useQiblaCompass";
-import { Stack } from "expo-router";
 import { styled } from "nativewind";
-import { useState } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(NativeSafeAreaView);
 
 const Qibla = () => {
-  const [hapticsEnabled, setHapticsEnabled] = useState(true);
-
   const {
     heading,
     qibla,
@@ -24,28 +19,10 @@ const Qibla = () => {
     showCalibration,
     isFacingQibla,
     rotation,
-  } = useQiblaCompass({
-    hapticsEnabled,
-  });
+  } = useQiblaCompass();
 
   return (
     <SafeAreaView className="bg-background flex-1 p-5">
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          headerTransparent: true,
-          headerTitle: "",
-          headerShadowVisible: false,
-          headerBackVisible: false,
-          headerRight: () => (
-            <QiblaMenu
-              hapticsEnabled={hapticsEnabled}
-              onHapticsChange={setHapticsEnabled}
-            />
-          ),
-        }}
-      />
-
       {qibla === null ? (
         <View className="flex-1 items-center justify-center gap-3">
           <Text className="font-sans-semibold text-foreground text-lg">

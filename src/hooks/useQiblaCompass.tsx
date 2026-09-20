@@ -16,6 +16,7 @@ interface UseQiblaCompassOptions {
   hapticsEnabled?: boolean;
 }
 
+// TODO: Implement haptic feedback switch
 const useQiblaCompass = ({
   hapticsEnabled = true,
 }: UseQiblaCompassOptions = {}) => {
