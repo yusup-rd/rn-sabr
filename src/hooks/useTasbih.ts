@@ -11,16 +11,21 @@ interface UseTasbihReturn {
   currentCount: number;
   totalCount: number;
   isHydrated: boolean;
-  recordTap: (count: number) => void;
-  reset: () => void;
+  persistenceError: string | null;
+  recordTap: (count: number) => Promise<boolean>;
+  reset: () => Promise<boolean>;
 }
 
 export const useTasbih = (): UseTasbihReturn => {
   const [currentCount, setCurrentCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [persistenceError, setPersistenceError] = useState<string | null>(null);
 
+  const currentCountRef = useRef(0);
+  const totalCountRef = useRef(0);
   const mutationVersion = useRef(0);
+  const mutationQueue = useRef(Promise.resolve());
 
   /*
    * Restore the persisted Tasbih state.
@@ -62,10 +67,18 @@ export const useTasbih = (): UseTasbihReturn => {
 
         const restoredTotal = Math.max(0, stored.totalCount);
 
+        currentCountRef.current = restoredCount;
+        totalCountRef.current = restoredTotal;
+
         setCurrentCount(restoredCount);
         setTotalCount(restoredTotal);
-      } catch {
-        // Ignore corrupted or unavailable storage.
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to restore Tasbih state.";
+
+        setPersistenceError(message);
       } finally {
         if (!cancelled) {
           setIsHydrated(true);
@@ -81,57 +94,97 @@ export const useTasbih = (): UseTasbihReturn => {
   }, []);
 
   /*
-   * Persist the logical state whenever it changes.
-   *
-   * Animation state is intentionally not stored here.
+   * Serialize all persistence mutations.
    */
-  useEffect(() => {
-    if (!isHydrated) {
-      return;
-    }
+  const enqueueMutation = useCallback(
+    <T>(mutation: () => Promise<T>): Promise<T> => {
+      const nextMutation = mutationQueue.current.then(mutation);
 
-    const saveTasbih = async () => {
-      try {
-        const value: TasbihStorage = {
-          currentCount,
-          totalCount,
-        };
+      mutationQueue.current = nextMutation.then(
+        () => undefined,
+        () => undefined,
+      );
 
-        await AsyncStorage.setItem(TASBIH_STORAGE_KEY, JSON.stringify(value));
-      } catch {
-        // Ignore storage failures.
-      }
-    };
-
-    saveTasbih();
-  }, [currentCount, totalCount, isHydrated]);
+      return nextMutation;
+    },
+    [],
+  );
 
   /*
    * Record one user tap.
    */
-  const recordTap = useCallback((count: number) => {
-    setCurrentCount(count);
-    setTotalCount((value) => value + 1);
-  }, []);
+  const recordTap = useCallback(
+    (count: number): Promise<boolean> => {
+      return enqueueMutation(async () => {
+        const nextTotal = totalCountRef.current + 1;
+
+        const value: TasbihStorage = {
+          currentCount: count,
+          totalCount: nextTotal,
+        };
+
+        try {
+          await AsyncStorage.setItem(TASBIH_STORAGE_KEY, JSON.stringify(value));
+
+          currentCountRef.current = count;
+          totalCountRef.current = nextTotal;
+
+          setCurrentCount(count);
+          setTotalCount(nextTotal);
+          setPersistenceError(null);
+
+          return true;
+        } catch (error) {
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Failed to save Tasbih state.";
+
+          setPersistenceError(message);
+
+          return false;
+        }
+      });
+    },
+    [enqueueMutation],
+  );
 
   /*
    * Reset the persisted logical state.
    */
-  const reset = useCallback(() => {
+  const reset = useCallback((): Promise<boolean> => {
     mutationVersion.current += 1;
 
-    setCurrentCount(0);
-    setTotalCount(0);
+    return enqueueMutation(async () => {
+      try {
+        await AsyncStorage.removeItem(TASBIH_STORAGE_KEY);
 
-    AsyncStorage.removeItem(TASBIH_STORAGE_KEY).catch(() => {
-      // Ignore storage failures.
+        currentCountRef.current = 0;
+        totalCountRef.current = 0;
+
+        setCurrentCount(0);
+        setTotalCount(0);
+        setPersistenceError(null);
+
+        return true;
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Failed to reset Tasbih state.";
+
+        setPersistenceError(message);
+
+        return false;
+      }
     });
-  }, []);
+  }, [enqueueMutation]);
 
   return {
     currentCount,
     totalCount,
     isHydrated,
+    persistenceError,
     recordTap,
     reset,
   };

@@ -11,8 +11,14 @@ import { Alert, Pressable, View } from "react-native";
 const Tasbih = () => {
   const { colors } = useTheme();
 
-  const { currentCount, totalCount, isHydrated, recordTap, reset } =
-    useTasbih();
+  const {
+    currentCount,
+    totalCount,
+    isHydrated,
+    persistenceError,
+    recordTap,
+    reset,
+  } = useTasbih();
 
   const [resetKey, setResetKey] = useState(0);
 
@@ -30,9 +36,18 @@ const Tasbih = () => {
         {
           text: "Reset",
           style: "destructive",
-          onPress: () => {
-            reset();
-            setResetKey((value) => value + 1);
+          onPress: async () => {
+            const success = await reset();
+
+            if (success) {
+              setResetKey((value) => value + 1);
+            } else {
+              Alert.alert(
+                "Reset Failed",
+                persistenceError ??
+                  "Unable to reset the Tasbih. Please try again.",
+              );
+            }
           },
         },
       ],
