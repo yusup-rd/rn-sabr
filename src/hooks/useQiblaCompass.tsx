@@ -4,6 +4,7 @@ import {
   getAngularDifference,
   shortestRotationPath,
 } from "@/lib/qibla-calculations";
+import * as Haptics from "expo-haptics";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFrameCallback, useSharedValue } from "react-native-reanimated";
 
@@ -11,7 +12,13 @@ const SPRING_STIFFNESS = 320;
 const SPRING_DAMPING = 36;
 const QIBLA_ALIGNMENT_THRESHOLD = 5;
 
-const useQiblaCompass = () => {
+interface UseQiblaCompassOptions {
+  hapticsEnabled?: boolean;
+}
+
+const useQiblaCompass = ({
+  hapticsEnabled = true,
+}: UseQiblaCompassOptions = {}) => {
   const targetRotation = useSharedValue(0);
   const rotation = useSharedValue(0);
   const velocity = useSharedValue(0);
@@ -64,6 +71,18 @@ const useQiblaCompass = () => {
 
   const isFacingQibla =
     qiblaDifference !== null && qiblaDifference <= QIBLA_ALIGNMENT_THRESHOLD;
+
+  const wasFacingQibla = useRef(false);
+
+  useEffect(() => {
+    if (isFacingQibla && !wasFacingQibla.current) {
+      if (hapticsEnabled) {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
+    }
+
+    wasFacingQibla.current = isFacingQibla;
+  }, [hapticsEnabled, isFacingQibla]);
 
   useEffect(() => {
     if (accuracy === null) {

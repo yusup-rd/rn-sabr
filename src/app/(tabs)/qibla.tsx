@@ -1,16 +1,21 @@
 import QiblaCompass from "@/components/qibla/compass/QiblaCompass";
+import QiblaMenu from "@/components/qibla/QiblaMenu";
 import CompassReadout from "@/components/qibla/readouts/CompassReadout";
 import CalibrationCard from "@/components/qibla/status/CalibrationCard";
 import NoSensorFallback from "@/components/qibla/status/NoSensorFallback";
 import QiblaAlignmentStatus from "@/components/qibla/status/QiblaAlignmentStatus";
 import useQiblaCompass from "@/hooks/useQiblaCompass";
+import { Stack } from "expo-router";
 import { styled } from "nativewind";
+import { useState } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(NativeSafeAreaView);
 
 const Qibla = () => {
+  const [hapticsEnabled, setHapticsEnabled] = useState(true);
+
   const {
     heading,
     qibla,
@@ -19,11 +24,29 @@ const Qibla = () => {
     showCalibration,
     isFacingQibla,
     rotation,
-  } = useQiblaCompass();
+  } = useQiblaCompass({
+    hapticsEnabled,
+  });
 
-  if (qibla === null) {
-    return (
-      <SafeAreaView className="bg-background flex-1 p-5">
+  return (
+    <SafeAreaView className="bg-background flex-1 p-5">
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          headerTitle: "",
+          headerShadowVisible: false,
+          headerBackVisible: false,
+          headerRight: () => (
+            <QiblaMenu
+              hapticsEnabled={hapticsEnabled}
+              onHapticsChange={setHapticsEnabled}
+            />
+          ),
+        }}
+      />
+
+      {qibla === null ? (
         <View className="flex-1 items-center justify-center gap-3">
           <Text className="font-sans-semibold text-foreground text-lg">
             Location unavailable
@@ -33,25 +56,13 @@ const Qibla = () => {
             Set your location to calculate the Qibla direction.
           </Text>
         </View>
-      </SafeAreaView>
-    );
-  }
-
-  if (permissionStatus === "checking") {
-    return (
-      <SafeAreaView className="bg-background flex-1 p-5">
+      ) : permissionStatus === "checking" ? (
         <View className="flex-1 items-center justify-center">
           <Text className="text-muted-foreground font-sans text-sm">
             Starting compass…
           </Text>
         </View>
-      </SafeAreaView>
-    );
-  }
-
-  if (permissionStatus === "denied") {
-    return (
-      <SafeAreaView className="bg-background flex-1 p-5">
+      ) : permissionStatus === "denied" ? (
         <View className="flex-1 items-center justify-center gap-3 px-8">
           <Text className="font-sans-semibold text-foreground text-lg">
             Compass permission required
@@ -61,55 +72,39 @@ const Qibla = () => {
             Allow location access to use the Qibla compass.
           </Text>
         </View>
-      </SafeAreaView>
-    );
-  }
-
-  if (heading === null && !hasSensor) {
-    return (
-      <SafeAreaView className="bg-background flex-1 p-5">
+      ) : heading === null && !hasSensor ? (
         <View className="flex-1 items-center justify-center">
           <NoSensorFallback />
         </View>
-      </SafeAreaView>
-    );
-  }
-
-  if (heading === null) {
-    return (
-      <SafeAreaView className="bg-background flex-1 p-5">
+      ) : heading === null ? (
         <View className="flex-1 items-center justify-center">
           <Text className="text-muted-foreground font-sans text-sm">
             Finding your direction…
           </Text>
         </View>
-      </SafeAreaView>
-    );
-  }
+      ) : (
+        <View className="flex-1">
+          <View className="h-28 items-center justify-start gap-4">
+            <QiblaAlignmentStatus isFacingQibla={isFacingQibla} />
 
-  return (
-    <SafeAreaView className="bg-background flex-1 p-5">
-      <View className="flex-1">
-        <View className="h-28 items-center justify-start gap-4">
-          <QiblaAlignmentStatus isFacingQibla={isFacingQibla} />
+            <View className="w-full">
+              <CalibrationCard visible={showCalibration} />
+            </View>
+          </View>
 
-          <View className="w-full">
-            <CalibrationCard visible={showCalibration} />
+          <View className="flex-1 items-center justify-center">
+            <QiblaCompass bearing={qibla.bearing} rotation={rotation} />
+          </View>
+
+          <View className="h-24 w-full justify-end">
+            <CompassReadout
+              bearing={qibla.bearing}
+              distance={qibla.distance}
+              heading={heading}
+            />
           </View>
         </View>
-
-        <View className="flex-1 items-center justify-center">
-          <QiblaCompass bearing={qibla.bearing} rotation={rotation} />
-        </View>
-
-        <View className="h-24 w-full justify-end">
-          <CompassReadout
-            bearing={qibla.bearing}
-            distance={qibla.distance}
-            heading={heading}
-          />
-        </View>
-      </View>
+      )}
     </SafeAreaView>
   );
 };
