@@ -133,7 +133,7 @@ const Zakat = () => {
       {/* Liabilities */}
       <ZakatSection
         title="Deductible Liabilities"
-        description="Include debts and payments that are currently deductible under the selected calculation methodology."
+        description="Include debts and payments that may be deductible from your zakatable wealth."
         icon="file-invoice-dollar"
       >
         <ZakatInput

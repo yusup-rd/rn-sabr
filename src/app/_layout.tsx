@@ -57,6 +57,13 @@ const RootLayout = () => {
             headerShown: false,
           }}
         />
+
+        <Stack.Screen
+          name="tasbih"
+          options={{
+            presentation: "modal",
+          }}
+        />
       </Stack>
     </ThemeProvider>
   );

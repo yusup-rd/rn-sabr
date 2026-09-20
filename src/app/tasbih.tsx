@@ -1,0 +1,100 @@
+import TasbihArtwork from "@/components/tasbih/artwork/TasbihArtwork";
+import TasbihCounter from "@/components/tasbih/counter/TasbihCounter";
+import { BEAD_COUNT } from "@/constants/tasbih";
+import { useTasbih } from "@/hooks/useTasbih";
+import { useTheme } from "@/providers/ThemeProvider";
+import { FontAwesome6 as Fa } from "@expo/vector-icons";
+import { Stack } from "expo-router";
+import { useState } from "react";
+import { Alert, Pressable, View } from "react-native";
+
+const Tasbih = () => {
+  const { colors } = useTheme();
+
+  const {
+    currentCount,
+    totalCount,
+    isHydrated,
+    persistenceError,
+    recordTap,
+    reset,
+  } = useTasbih();
+
+  const [resetKey, setResetKey] = useState(0);
+
+  const rounds = Math.floor(totalCount / BEAD_COUNT);
+
+  const handleReset = () => {
+    Alert.alert(
+      "Reset Tasbih?",
+      "This will reset your current count, rounds, and total count.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Reset",
+          style: "destructive",
+          onPress: async () => {
+            const success = await reset();
+
+            if (success) {
+              setResetKey((value) => value + 1);
+            } else {
+              Alert.alert(
+                "Reset Failed",
+                persistenceError ??
+                  "Unable to reset the Tasbih. Please try again.",
+              );
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  return (
+    <>
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          headerTransparent: true,
+          headerTitle: "",
+          headerShadowVisible: false,
+          headerRight: () => (
+            <Pressable onPress={handleReset} hitSlop={12}>
+              <Fa
+                name="arrow-rotate-left"
+                size={17}
+                color={colors.foreground}
+              />
+            </Pressable>
+          ),
+        }}
+      />
+
+      <View className="bg-card flex-1">
+        <View className="flex-1 items-center justify-center">
+          {isHydrated && (
+            <TasbihArtwork
+              key={resetKey}
+              initialCount={currentCount}
+              onTap={recordTap}
+            />
+          )}
+        </View>
+
+        <View pointerEvents="none" className="absolute bottom-8 left-5">
+          <TasbihCounter
+            currentCount={currentCount}
+            rounds={rounds}
+            totalCount={totalCount}
+          />
+        </View>
+      </View>
+    </>
+  );
+};
+
+export default Tasbih;
