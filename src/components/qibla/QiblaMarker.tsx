@@ -1,4 +1,4 @@
-import { G, Rect } from "react-native-svg";
+import { Circle, G, Rect } from "react-native-svg";
 
 interface QiblaMarkerProps {
   center: number;
@@ -51,6 +51,9 @@ const QiblaMarker = ({
         stroke={accentColor}
         strokeWidth={2}
       />
+
+      {/* Kaaba background */}
+      <Circle cx={x} cy={y} r={13} fill={accentColor} opacity={0.3} />
 
       {/* Kaaba */}
       <G transform={`rotate(-135 ${x} ${y})`}>
