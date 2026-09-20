@@ -2,16 +2,16 @@ import useDeviceHeading from "@/hooks/useDeviceHeading";
 import useQiblaBearing from "@/hooks/useQiblaBearing";
 import { shortestRotationPath } from "@/lib/qibla-calculations";
 import { useTheme } from "@/providers/ThemeProvider";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
 import Animated, {
-    useAnimatedStyle,
-    useFrameCallback,
-    useSharedValue,
+  useAnimatedStyle,
+  useFrameCallback,
+  useSharedValue,
 } from "react-native-reanimated";
 import FacingReadout from "../readouts/FacingReadout";
 import QiblaReadout from "../readouts/QiblaReadout";
-import CalibrationBanner from "../status/CalibrationBanner";
+import CalibrationCard from "../status/CalibrationCard";
 import NoSensorFallback from "../status/NoSensorFallback";
 import CompassDial from "./CompassDial";
 import CompassIndicator from "./CompassIndicator";
@@ -24,19 +24,21 @@ const QiblaCompass = () => {
   const { width } = useWindowDimensions();
 
   const dialSize = Math.min(width - 48, 340);
+
   const targetRotation = useSharedValue(0);
   const rotation = useSharedValue(0);
   const velocity = useSharedValue(0);
   const initialized = useSharedValue(false);
+
   const targetRotationRef = useRef<number | null>(null);
+
+  const [showCalibration, setShowCalibration] = useState(false);
 
   const handleHeading = useCallback(
     (heading: number) => {
       if (!initialized.value) {
         initialized.value = true;
-
         targetRotationRef.current = heading;
-
         targetRotation.value = heading;
         rotation.value = heading;
         velocity.value = 0;
@@ -67,6 +69,21 @@ const QiblaCompass = () => {
 
   const qibla = useQiblaBearing();
 
+  useEffect(() => {
+    if (accuracy === null) {
+      setShowCalibration(false);
+      return;
+    }
+
+    const shouldShow = accuracy <= 1;
+
+    const timeout = setTimeout(() => {
+      setShowCalibration(shouldShow);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [accuracy]);
+
   const frameCallback = useCallback(
     (frame: { timeSincePreviousFrame: number | null }) => {
       "worklet";
@@ -82,7 +99,9 @@ const QiblaCompass = () => {
       }
 
       const dt = Math.min(frameTime / 1000, 0.032);
+
       const displacement = targetRotation.value - rotation.value;
+
       const acceleration =
         displacement * SPRING_STIFFNESS - velocity.value * SPRING_DAMPING;
 
@@ -163,7 +182,7 @@ const QiblaCompass = () => {
 
   return (
     <View className="flex-1 items-center justify-center">
-      <View className="items-center">
+      <View className="items-center gap-10">
         <View
           style={{
             width: dialSize,
@@ -198,12 +217,10 @@ const QiblaCompass = () => {
           />
         </View>
 
-        <View className="mt-8 items-center gap-5">
+        <View className="items-center gap-5">
           <QiblaReadout bearing={qibla.bearing} distance={qibla.distance} />
-
           <FacingReadout heading={heading} />
-
-          <CalibrationBanner accuracy={accuracy} />
+          <CalibrationCard visible={showCalibration} />
         </View>
       </View>
     </View>
