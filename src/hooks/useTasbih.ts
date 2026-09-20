@@ -1,6 +1,6 @@
 import { BEAD_COUNT, TASBIH_STORAGE_KEY } from "@/constants/tasbih";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface TasbihStorage {
   currentCount: number;
@@ -20,6 +20,8 @@ export const useTasbih = (): UseTasbihReturn => {
   const [totalCount, setTotalCount] = useState(0);
   const [isHydrated, setIsHydrated] = useState(false);
 
+  const mutationVersion = useRef(0);
+
   /*
    * Restore the persisted Tasbih state.
    */
@@ -27,10 +29,12 @@ export const useTasbih = (): UseTasbihReturn => {
     let cancelled = false;
 
     const restoreTasbih = async () => {
+      const version = mutationVersion.current;
+
       try {
         const storedValue = await AsyncStorage.getItem(TASBIH_STORAGE_KEY);
 
-        if (cancelled) {
+        if (cancelled || version !== mutationVersion.current) {
           return;
         }
 
@@ -114,6 +118,8 @@ export const useTasbih = (): UseTasbihReturn => {
    * Reset the persisted logical state.
    */
   const reset = useCallback(() => {
+    mutationVersion.current += 1;
+
     setCurrentCount(0);
     setTotalCount(0);
 
