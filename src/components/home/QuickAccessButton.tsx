@@ -71,14 +71,14 @@ const quickAccessConfig: Record<
   },
 
   tasbih: {
-    icon: "praying-hands",
-    iconClassName: "text-muted-foreground",
-    iconContainerClassName: "bg-muted",
-    badge: "100",
-    badgeClassName: "",
-    badgeTextClassName: "text-muted-foreground",
+    icon: "hands-praying",
+    iconClassName: "text-primary-soft-foreground",
+    iconContainerClassName: "bg-primary-soft",
+    badge: "33",
+    badgeClassName: "bg-primary-soft",
+    badgeTextClassName: "text-primary-soft-foreground",
     title: "Tasbih",
-    description: "Count your prayers",
+    description: "Count your dhikr",
     route: "/tasbih",
   },
 };
