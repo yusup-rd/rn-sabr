@@ -9,8 +9,7 @@ import Animated, {
   useFrameCallback,
   useSharedValue,
 } from "react-native-reanimated";
-import FacingReadout from "../readouts/FacingReadout";
-import QiblaReadout from "../readouts/QiblaReadout";
+import CompassReadout from "../readouts/CompassReadout";
 import CalibrationCard from "../status/CalibrationCard";
 import NoSensorFallback from "../status/NoSensorFallback";
 import CompassDial from "./CompassDial";
@@ -217,9 +216,13 @@ const QiblaCompass = () => {
           />
         </View>
 
-        <View className="items-center gap-5">
-          <QiblaReadout bearing={qibla.bearing} distance={qibla.distance} />
-          <FacingReadout heading={heading} />
+        <View className="w-full items-center gap-5">
+          <CompassReadout
+            bearing={qibla.bearing}
+            distance={qibla.distance}
+            heading={heading}
+          />
+
           <CalibrationCard visible={showCalibration} />
         </View>
       </View>
