@@ -153,11 +153,10 @@ export const useTasbih = (): UseTasbihReturn => {
    * Reset the persisted logical state.
    */
   const reset = useCallback((): Promise<boolean> => {
-    mutationVersion.current += 1;
-
     return enqueueMutation(async () => {
       try {
         await AsyncStorage.removeItem(TASBIH_STORAGE_KEY);
+        mutationVersion.current += 1;
 
         currentCountRef.current = 0;
         totalCountRef.current = 0;
