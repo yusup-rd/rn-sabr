@@ -5,6 +5,7 @@ import {
   shortestRotationPath,
 } from "@/lib/qibla-calculations";
 import * as Haptics from "expo-haptics";
+import { useIsFocused } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useFrameCallback, useSharedValue } from "react-native-reanimated";
 
@@ -20,6 +21,8 @@ interface UseQiblaCompassOptions {
 const useQiblaCompass = ({
   hapticsEnabled = true,
 }: UseQiblaCompassOptions = {}) => {
+  const isFocused = useIsFocused();
+
   const targetRotation = useSharedValue(0);
   const rotation = useSharedValue(0);
   const velocity = useSharedValue(0);
@@ -76,6 +79,11 @@ const useQiblaCompass = ({
   const wasFacingQibla = useRef(false);
 
   useEffect(() => {
+    if (!isFocused) {
+      wasFacingQibla.current = false;
+      return;
+    }
+
     if (isFacingQibla && !wasFacingQibla.current) {
       if (hapticsEnabled) {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
