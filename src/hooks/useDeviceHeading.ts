@@ -11,7 +11,7 @@ const DISPLAY_UPDATE_INTERVAL = 100;
 const useDeviceHeading = (options?: UseDeviceHeadingOptions): DeviceHeading => {
   const [heading, setHeading] = useState<number | null>(null);
   const [accuracy, setAccuracy] = useState(-1);
-  const [hasSensor, setHasSensor] = useState(true);
+  const [hasSensor, setHasSensor] = useState(false);
   const [permissionStatus, setPermissionStatus] =
     useState<HeadingPermissionStatus>("checking");
 
@@ -19,6 +19,7 @@ const useDeviceHeading = (options?: UseDeviceHeadingOptions): DeviceHeading => {
   onHeadingRef.current = options?.onHeading;
 
   const lastDisplayUpdate = useRef(0);
+  const servicesEnabledRef = useRef(true);
 
   useEffect(() => {
     let mounted = true;
@@ -34,15 +35,9 @@ const useDeviceHeading = (options?: UseDeviceHeadingOptions): DeviceHeading => {
         return;
       }
 
-      const available = await Location.hasServicesEnabledAsync();
+      servicesEnabledRef.current = await Location.hasServicesEnabledAsync();
 
       if (!mounted) return;
-
-      if (!available) {
-        setHasSensor(false);
-        setPermissionStatus("granted");
-        return;
-      }
 
       setPermissionStatus("granted");
 
@@ -52,29 +47,22 @@ const useDeviceHeading = (options?: UseDeviceHeadingOptions): DeviceHeading => {
             if (!mounted) return;
 
             const rawHeading = headingData.magHeading;
+
             onHeadingRef.current?.(rawHeading);
+
             const now = Date.now();
 
             if (now - lastDisplayUpdate.current >= DISPLAY_UPDATE_INTERVAL) {
               lastDisplayUpdate.current = now;
-
               setHeading(rawHeading);
               setAccuracy(headingData.accuracy);
             }
 
             setHasSensor(true);
           },
-          () => {
-            if (mounted) {
-              setHasSensor(false);
-            }
-          },
+          () => {},
         );
-      } catch {
-        if (mounted) {
-          setHasSensor(false);
-        }
-      }
+      } catch {}
     };
 
     startWatching();
