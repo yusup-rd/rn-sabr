@@ -1,6 +1,5 @@
-import { Pressable, Text, View } from "react-native";
-
 import { useTheme } from "@/providers/ThemeProvider";
+import { Pressable, Text, View } from "react-native";
 
 const options = [
   { value: "light", label: "Light" },
