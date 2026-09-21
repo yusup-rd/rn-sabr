@@ -42,7 +42,7 @@ const useDeviceHeading = (options?: UseDeviceHeadingOptions): DeviceHeading => {
       setPermissionStatus("granted");
 
       try {
-        subscription = await Location.watchHeadingAsync(
+        const nextSubscription = await Location.watchHeadingAsync(
           (headingData) => {
             if (!mounted) return;
 
@@ -62,6 +62,13 @@ const useDeviceHeading = (options?: UseDeviceHeadingOptions): DeviceHeading => {
           },
           () => {},
         );
+
+        if (!mounted) {
+          nextSubscription.remove();
+          return;
+        }
+
+        subscription = nextSubscription;
       } catch {}
     };
 
