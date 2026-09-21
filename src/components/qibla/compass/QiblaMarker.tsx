@@ -19,7 +19,7 @@ const QiblaMarker = ({
   badgeColor,
 }: QiblaMarkerProps) => {
   const radians = (bearing * Math.PI) / 180;
-  const markerRadius = radius + 20;
+  const markerRadius = radius + 25;
 
   const x = center + Math.sin(radians) * markerRadius;
   const y = center - Math.cos(radians) * markerRadius;

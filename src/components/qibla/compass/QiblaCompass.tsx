@@ -16,7 +16,10 @@ const QiblaCompass = ({ bearing, rotation }: QiblaCompassProps) => {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
 
-  const dialSize = Math.min(width - 48, 340);
+  const MAX_DIAL_SIZE = 300;
+  const SIDE_PADDING = 48;
+
+  const dialSize = Math.min(width - SIDE_PADDING, MAX_DIAL_SIZE);
 
   const dialAnimatedStyle = useAnimatedStyle(
     () => ({
