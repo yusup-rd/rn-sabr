@@ -21,10 +21,14 @@ const Qibla = () => {
 
   useEffect(() => {
     const loadHapticsSetting = async () => {
-      const value = await AsyncStorage.getItem(HAPTICS_STORAGE_KEY);
-
-      setHapticsEnabled(value === null ? true : value === "true");
-      setHapticsLoaded(true);
+      try {
+        const value = await AsyncStorage.getItem(HAPTICS_STORAGE_KEY);
+        setHapticsEnabled(value === null ? true : value === "true");
+      } catch {
+        setHapticsEnabled(true);
+      } finally {
+        setHapticsLoaded(true);
+      }
     };
 
     loadHapticsSetting();
@@ -32,7 +36,10 @@ const Qibla = () => {
 
   const handleHapticsChange = useCallback(async (enabled: boolean) => {
     setHapticsEnabled(enabled);
-    await AsyncStorage.setItem(HAPTICS_STORAGE_KEY, String(enabled));
+
+    try {
+      await AsyncStorage.setItem(HAPTICS_STORAGE_KEY, String(enabled));
+    } catch {}
   }, []);
 
   const {
