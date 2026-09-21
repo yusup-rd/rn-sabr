@@ -1,39 +1,19 @@
 import { useTheme } from "@/providers/ThemeProvider";
 import { MaterialCommunityIcons as Mi } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
 import { Switch, Text, View } from "react-native";
 
-const HAPTICS_STORAGE_KEY = "@app/compass-haptics";
-
 interface CompassControlsProps {
+  hapticsEnabled: boolean;
+  hapticsLoaded: boolean;
   onHapticsChange: (enabled: boolean) => void;
 }
 
-const CompassControls = ({ onHapticsChange }: CompassControlsProps) => {
-  const [hapticsEnabled, setHapticsEnabled] = useState(true);
-
+const CompassControls = ({
+  hapticsEnabled,
+  hapticsLoaded,
+  onHapticsChange,
+}: CompassControlsProps) => {
   const { colors } = useTheme();
-
-  useEffect(() => {
-    const loadHapticsSetting = async () => {
-      const value = await AsyncStorage.getItem(HAPTICS_STORAGE_KEY);
-
-      if (value !== null) {
-        setHapticsEnabled(value === "true");
-        onHapticsChange(value === "true");
-      }
-    };
-
-    loadHapticsSetting();
-  }, [onHapticsChange]);
-
-  const handleHapticsChange = async (enabled: boolean) => {
-    setHapticsEnabled(enabled);
-    onHapticsChange(enabled);
-
-    await AsyncStorage.setItem(HAPTICS_STORAGE_KEY, String(enabled));
-  };
 
   return (
     <View className="bg-card w-full flex-row items-center justify-between gap-2 rounded-xl p-4 shadow-md">
@@ -52,7 +32,8 @@ const CompassControls = ({ onHapticsChange }: CompassControlsProps) => {
       <View>
         <Switch
           value={hapticsEnabled}
-          onValueChange={handleHapticsChange}
+          onValueChange={onHapticsChange}
+          disabled={!hapticsLoaded}
           trackColor={{
             false: colors.border,
             true: colors.primary,

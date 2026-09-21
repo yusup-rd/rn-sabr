@@ -5,18 +5,34 @@ import CalibrationCard from "@/components/qibla/status/CalibrationCard";
 import NoSensorFallback from "@/components/qibla/status/NoSensorFallback";
 import QiblaAlignmentStatus from "@/components/qibla/status/QiblaAlignmentStatus";
 import useQiblaCompass from "@/hooks/useQiblaCompass";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styled } from "nativewind";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(NativeSafeAreaView);
 
-const Qibla = () => {
-  const [hapticsEnabled, setHapticsEnabled] = useState(true);
+const HAPTICS_STORAGE_KEY = "@app/compass-haptics";
 
-  const handleHapticsChange = useCallback((enabled: boolean) => {
+const Qibla = () => {
+  const [hapticsEnabled, setHapticsEnabled] = useState(false);
+  const [hapticsLoaded, setHapticsLoaded] = useState(false);
+
+  useEffect(() => {
+    const loadHapticsSetting = async () => {
+      const value = await AsyncStorage.getItem(HAPTICS_STORAGE_KEY);
+
+      setHapticsEnabled(value === null ? true : value === "true");
+      setHapticsLoaded(true);
+    };
+
+    loadHapticsSetting();
+  }, []);
+
+  const handleHapticsChange = useCallback(async (enabled: boolean) => {
     setHapticsEnabled(enabled);
+    await AsyncStorage.setItem(HAPTICS_STORAGE_KEY, String(enabled));
   }, []);
 
   const {
@@ -28,7 +44,7 @@ const Qibla = () => {
     isFacingQibla,
     rotation,
   } = useQiblaCompass({
-    hapticsEnabled,
+    hapticsEnabled: hapticsLoaded && hapticsEnabled,
   });
 
   return (
@@ -38,7 +54,6 @@ const Qibla = () => {
           <Text className="font-sans-semibold text-foreground text-lg">
             Location unavailable
           </Text>
-
           <Text className="text-muted-foreground px-8 text-center font-sans text-sm">
             Set your location to calculate the Qibla direction.
           </Text>
@@ -54,7 +69,6 @@ const Qibla = () => {
           <Text className="font-sans-semibold text-foreground text-lg">
             Compass permission required
           </Text>
-
           <Text className="text-muted-foreground text-center font-sans text-sm">
             Allow location access to use the Qibla compass.
           </Text>
@@ -73,7 +87,6 @@ const Qibla = () => {
         <View className="flex-1">
           <View className="h-28 items-center justify-start gap-4">
             <QiblaAlignmentStatus isFacingQibla={isFacingQibla} />
-
             <View className="w-full">
               <CalibrationCard visible={showCalibration} />
             </View>
@@ -84,7 +97,11 @@ const Qibla = () => {
           </View>
 
           <View className="w-full justify-end gap-2">
-            <CompassControls onHapticsChange={handleHapticsChange} />
+            <CompassControls
+              hapticsEnabled={hapticsEnabled}
+              hapticsLoaded={hapticsLoaded}
+              onHapticsChange={handleHapticsChange}
+            />
 
             <CompassReadout
               bearing={qibla.bearing}
