@@ -46,7 +46,10 @@ const useDeviceHeading = (options?: UseDeviceHeadingOptions): DeviceHeading => {
           (headingData) => {
             if (!mounted) return;
 
-            const rawHeading = headingData.magHeading;
+            const rawHeading =
+              headingData.trueHeading >= 0
+                ? headingData.trueHeading
+                : headingData.magHeading;
 
             onHeadingRef.current?.(rawHeading);
 
