@@ -1,16 +1,24 @@
 import QiblaCompass from "@/components/qibla/compass/QiblaCompass";
+import CompassControls from "@/components/qibla/controls/CompassControls";
 import CompassReadout from "@/components/qibla/readouts/CompassReadout";
 import CalibrationCard from "@/components/qibla/status/CalibrationCard";
 import NoSensorFallback from "@/components/qibla/status/NoSensorFallback";
 import QiblaAlignmentStatus from "@/components/qibla/status/QiblaAlignmentStatus";
 import useQiblaCompass from "@/hooks/useQiblaCompass";
 import { styled } from "nativewind";
+import { useCallback, useState } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(NativeSafeAreaView);
 
 const Qibla = () => {
+  const [hapticsEnabled, setHapticsEnabled] = useState(true);
+
+  const handleHapticsChange = useCallback((enabled: boolean) => {
+    setHapticsEnabled(enabled);
+  }, []);
+
   const {
     heading,
     qibla,
@@ -19,7 +27,9 @@ const Qibla = () => {
     showCalibration,
     isFacingQibla,
     rotation,
-  } = useQiblaCompass();
+  } = useQiblaCompass({
+    hapticsEnabled,
+  });
 
   return (
     <SafeAreaView className="bg-background flex-1 p-5">
@@ -73,7 +83,9 @@ const Qibla = () => {
             <QiblaCompass bearing={qibla.bearing} rotation={rotation} />
           </View>
 
-          <View className="h-24 w-full justify-end">
+          <View className="w-full justify-end gap-2">
+            <CompassControls onHapticsChange={handleHapticsChange} />
+
             <CompassReadout
               bearing={qibla.bearing}
               distance={qibla.distance}

@@ -3,7 +3,7 @@ import type { ZakatMarketPrices } from "@/types/zakat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 
-const CACHE_KEY = "@sabr/zakat-market-prices";
+const CACHE_KEY = "@app/zakat-market-prices";
 const CACHE_TTL = 24 * 60 * 60 * 1000;
 
 interface CachedZakatMarketPrices {

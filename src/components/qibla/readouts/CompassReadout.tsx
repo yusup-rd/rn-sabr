@@ -16,7 +16,7 @@ const CompassReadout = ({
   const facingDirection = degreesToCompassLabel(heading);
 
   return (
-    <View className="bg-card w-full flex-row items-center justify-between rounded-xl px-5 py-4 shadow-md">
+    <View className="bg-card w-full flex-row items-center justify-between rounded-xl p-4 shadow-md">
       <View className="flex-1 items-center gap-1">
         <Text className="font-sans-semibold text-foreground text-base">
           Qibla
