@@ -36,38 +36,7 @@ const TasbihTassel = ({ width = 76, height = 150 }: TasbihTasselProps) => {
         </LinearGradient>
       </Defs>
 
-      {/* Wrapped collar */}
-      <Path
-        d="
-          M21 18
-          C25 14 51 14 55 18
-          L58 28
-          C51 34 25 34 18 28
-          Z
-        "
-        fill="url(#tasselCollar)"
-      />
-
-      {/* Collar grooves */}
-      <Path
-        d="M21 21 C29 25 47 25 55 21"
-        stroke="#FFF4D6"
-        strokeOpacity={0.38}
-        strokeWidth={1.5}
-      />
-
-      <Path
-        d="M20 26 C29 30 47 30 56 26"
-        stroke="#76582E"
-        strokeOpacity={0.25}
-        strokeWidth={1.5}
-      />
-
-      {/* Connector */}
-      <Path d="M38 0 C34 8 34 13 38 19 C42 13 42 8 38 0Z" fill="#C29B59" />
-
       {/* Tassel strands */}
-
       <Path
         d="M24 31 C21 55 20 86 23 132"
         stroke="url(#tasselThread)"
@@ -134,6 +103,36 @@ const TasbihTassel = ({ width = 76, height = 150 }: TasbihTasselProps) => {
         strokeWidth={1}
         strokeLinecap="round"
       />
+
+      {/* Collar */}
+      <Path
+        d="
+          M21 18
+          C25 14 51 14 55 18
+          L58 28
+          C51 34 25 34 18 28
+          Z
+        "
+        fill="url(#tasselCollar)"
+      />
+
+      {/* Collar grooves */}
+      <Path
+        d="M21 21 C29 25 47 25 55 21"
+        stroke="#FFF4D6"
+        strokeOpacity={0.38}
+        strokeWidth={1.5}
+      />
+
+      <Path
+        d="M20 26 C29 30 47 30 56 26"
+        stroke="#76582E"
+        strokeOpacity={0.25}
+        strokeWidth={1.5}
+      />
+
+      {/* Connector */}
+      <Path d="M38 0 C34 8 34 13 38 19 C42 13 42 8 38 0Z" fill="#C29B59" />
     </Svg>
   );
 };

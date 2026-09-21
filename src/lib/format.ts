@@ -173,3 +173,13 @@ export const formatAmount = (amount: number, currency = "USD"): string => {
     maximumFractionDigits: 2,
   }).format(amount);
 };
+
+/**
+ * Formats a distance in kilometers into a localized string.
+ *
+ * Example:
+ * 1234.56 → "1,235"
+ */
+export const formatDistance = (distanceKm: number): string => {
+  return Math.round(distanceKm).toLocaleString();
+};
