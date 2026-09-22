@@ -6,7 +6,7 @@ import { BottomSheet, Host, RNHostView } from "@expo/ui";
 import { background } from "@expo/ui/jetpack-compose/modifiers";
 import { presentationBackground } from "@expo/ui/swift-ui/modifiers";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import CalendarMonthGrid from "./CalendarMonthGrid";
 
@@ -28,6 +28,18 @@ const CalendarSheet = ({
   const [visibleMonth, setVisibleMonth] = useState(
     () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
   );
+
+  const previousVisible = useRef(visible);
+
+  useEffect(() => {
+    if (visible && !previousVisible.current) {
+      setVisibleMonth(
+        new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
+      );
+    }
+
+    previousVisible.current = visible;
+  }, [visible, selectedDate]);
 
   const selectedEvent = getIslamicEventForDate(selectedDate);
 
