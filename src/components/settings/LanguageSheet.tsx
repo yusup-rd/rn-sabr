@@ -40,7 +40,9 @@ const LanguageSheet = ({
   onLanguageChange,
 }: LanguageSheetProps) => {
   const { colors } = useTheme();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(undefined, {
+    keyPrefix: "settings.section.appearance.language",
+  });
 
   const handleSelect = async (language: string) => {
     await changeLanguage(language);
@@ -69,11 +71,11 @@ const LanguageSheet = ({
           <View className="gap-5 px-1 py-6">
             <View className="gap-1">
               <Text className="text-foreground font-sans-bold text-xl">
-                {t("settings.language")}
+                {t("title")}
               </Text>
 
               <Text className="text-muted-foreground font-sans-medium text-sm">
-                {t("settings.languageDescription")}
+                {t("description")}
               </Text>
             </View>
 
