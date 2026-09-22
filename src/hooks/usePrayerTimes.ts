@@ -116,13 +116,27 @@ export function usePrayerTimes(selectedDate?: Date) {
       return null;
     }
 
-    const yesterday = new Date(now);
+    const [todayYear, todayMonth, todayDay] = todayKey.split("-").map(Number);
+
+    const [selectedYear, selectedMonth, selectedDay] = selectedKey
+      .split("-")
+      .map(Number);
+
+    const currentDate = new Date(todayYear, todayMonth, todayDay);
+
+    const selectedDateValue = new Date(
+      selectedYear,
+      selectedMonth,
+      selectedDay,
+    );
+
+    const yesterday = new Date(currentDate);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    const tomorrow = new Date(now);
+    const tomorrow = new Date(currentDate);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const selectedNextDay = new Date(selectedDate ?? now);
+    const selectedNextDay = new Date(selectedDateValue);
     selectedNextDay.setDate(selectedNextDay.getDate() + 1);
 
     return {
@@ -135,7 +149,7 @@ export function usePrayerTimes(selectedDate?: Date) {
       ),
 
       today: getPrayerData(
-        now,
+        currentDate,
         latitude,
         longitude,
         calculationMethod,
@@ -151,7 +165,7 @@ export function usePrayerTimes(selectedDate?: Date) {
       ),
 
       selected: getPrayerData(
-        selectedDate ?? now,
+        selectedDateValue,
         latitude,
         longitude,
         calculationMethod,
