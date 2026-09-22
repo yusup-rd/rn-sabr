@@ -74,6 +74,9 @@ export function useUserLocation() {
   }, []);
 
   useEffect(() => {
+    // Intentionally starts the native Expo Location request on mount.
+    // The resulting state updates happen asynchronously after the request resolves.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void getLocation();
   }, [getLocation]);
 

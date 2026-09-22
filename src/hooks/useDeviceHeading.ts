@@ -16,7 +16,10 @@ const useDeviceHeading = (options?: UseDeviceHeadingOptions): DeviceHeading => {
     useState<HeadingPermissionStatus>("checking");
 
   const onHeadingRef = useRef(options?.onHeading);
-  onHeadingRef.current = options?.onHeading;
+
+  useEffect(() => {
+    onHeadingRef.current = options?.onHeading;
+  }, [options?.onHeading]);
 
   const lastDisplayUpdate = useRef(0);
   const servicesEnabledRef = useRef(true);
