@@ -7,60 +7,67 @@ import { Pressable, Text, View } from "react-native";
 const options = [
   {
     value: "light",
-    label: "settings.lightMode",
     icon: "sunny",
   },
   {
     value: "dark",
-    label: "settings.darkMode",
     icon: "moon",
   },
   {
     value: "system",
-    label: "settings.systemMode",
     icon: "phone-portrait",
   },
 ] as const;
 
-export function ThemeSelector() {
+const ThemeSelector = () => {
   const { mode, setMode } = useTheme();
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "settings.section.appearance.theme",
+  });
 
   return (
-    <View className="bg-muted flex-row rounded-xl p-1">
-      {options.map((option) => {
-        const selected = mode === option.value;
+    <View className="gap-2">
+      <Text className="text-foreground font-sans-semibold text-sm">
+        {t("title")}
+      </Text>
 
-        return (
-          <Pressable
-            key={option.value}
-            onPress={() => setMode(option.value)}
-            accessibilityRole="radio"
-            accessibilityState={{ checked: selected }}
-            className={clsx(
-              "flex-1 items-center gap-1 rounded-lg px-3 py-2.5",
-              selected && "bg-card",
-            )}
-          >
-            <Io
-              name={option.icon}
-              size={15}
-              className={clsx(
-                selected ? "text-foreground" : "text-muted-foreground",
-              )}
-            />
+      <View className="bg-muted flex-row rounded-xl p-1">
+        {options.map((option) => {
+          const selected = mode === option.value;
 
-            <Text
+          return (
+            <Pressable
+              key={option.value}
+              onPress={() => setMode(option.value)}
+              accessibilityRole="radio"
+              accessibilityState={{ checked: selected }}
               className={clsx(
-                "font-sans-medium text-xs",
-                selected ? "text-foreground" : "text-muted-foreground",
+                "will-change-variable flex-1 items-center gap-1 rounded-lg px-2 py-2.5",
+                selected && "bg-card shadow-sm",
               )}
             >
-              {t(option.label)}
-            </Text>
-          </Pressable>
-        );
-      })}
+              <Io
+                name={option.icon}
+                size={15}
+                className={clsx(
+                  selected ? "text-foreground" : "text-muted-foreground",
+                )}
+              />
+
+              <Text
+                className={clsx(
+                  "font-sans-medium text-xs",
+                  selected ? "text-foreground" : "text-muted-foreground",
+                )}
+              >
+                {t(option.value)}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
-}
+};
+
+export default ThemeSelector;

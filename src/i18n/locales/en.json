@@ -7,15 +7,26 @@
     "settings": "Settings"
   },
   "settings": {
-    "title": "Settings",
-
-    "lightMode": "Light",
-    "darkMode": "Dark",
-    "systemMode": "System",
-
-    "language": "Language",
-    "languageDescription": "Choose your preferred language.",
-    "english": "English",
-    "russian": "Russian"
+    "header": {
+      "title": "Sanctuary Preferences",
+      "description": "Personalize your quiet companion for mindfulness, accurate timings, and sacred routines."
+    },
+    "section": {
+      "appearance": {
+        "title": "Appearance & Language",
+        "theme": {
+          "title": "Theme",
+          "light": "Light",
+          "dark": "Dark",
+          "system": "System"
+        },
+        "language": {
+          "title": "Language",
+          "description": "Choose your preferred language.",
+          "english": "English",
+          "russian": "Russian"
+        }
+      }
+    }
   }
 }
