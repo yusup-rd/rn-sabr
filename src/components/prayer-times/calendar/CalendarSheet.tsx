@@ -2,12 +2,16 @@ import { nextMonth, previousMonth } from "@/lib/date";
 import { formatHijriDate, formatMonthYear } from "@/lib/format";
 import { getIslamicEventForDate } from "@/lib/islamic-events";
 import { useTheme } from "@/providers/ThemeProvider";
+
 import { BottomSheet, Host, RNHostView } from "@expo/ui";
 import { background } from "@expo/ui/jetpack-compose/modifiers";
 import { presentationBackground } from "@expo/ui/swift-ui/modifiers";
+
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+
+import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
+
 import CalendarMonthGrid from "./CalendarMonthGrid";
 
 interface CalendarSheetProps {
@@ -26,21 +30,15 @@ const CalendarSheet = ({
   const { colors } = useTheme();
 
   const [visibleMonth, setVisibleMonth] = useState(
-    new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
+    () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
   );
-
-  useEffect(() => {
-    if (visible) {
-      setVisibleMonth(
-        new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
-      );
-    }
-  }, [visible, selectedDate]);
 
   const selectedEvent = getIslamicEventForDate(selectedDate);
 
   const handleSelectDate = (date: Date) => {
     onSelectDate(date);
+
+    setVisibleMonth(new Date(date.getFullYear(), date.getMonth(), 1));
   };
 
   const goToPreviousMonth = () => {
@@ -56,7 +54,7 @@ const CalendarSheet = ({
 
     setVisibleMonth(new Date(today.getFullYear(), today.getMonth(), 1));
 
-    handleSelectDate(today);
+    onSelectDate(today);
   };
 
   return (

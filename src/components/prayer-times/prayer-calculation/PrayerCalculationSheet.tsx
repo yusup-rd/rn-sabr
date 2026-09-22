@@ -4,7 +4,6 @@ import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 import { BottomSheet, Host, RNHostView } from "@expo/ui";
 import { background } from "@expo/ui/jetpack-compose/modifiers";
 import { presentationBackground } from "@expo/ui/swift-ui/modifiers";
-import { useEffect, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import PrayerCalculationOption from "./PrayerCalculationOption";
 
@@ -12,6 +11,8 @@ interface PrayerCalculationSheetProps {
   visible: boolean;
   calculationMethod: CalculationMethodId;
   asrMethod: AsrMethod;
+  onCalculationMethodChange: (method: CalculationMethodId) => void;
+  onAsrMethodChange: (method: AsrMethod) => void;
   onClose: () => void;
   onSave: (
     calculationMethod: CalculationMethodId,
@@ -23,26 +24,15 @@ const PrayerCalculationSheet = ({
   visible,
   calculationMethod,
   asrMethod,
+  onCalculationMethodChange,
+  onAsrMethodChange,
   onClose,
   onSave,
 }: PrayerCalculationSheetProps) => {
-  const [selectedMethod, setSelectedMethod] =
-    useState<CalculationMethodId>(calculationMethod);
-
-  const [selectedAsrMethod, setSelectedAsrMethod] =
-    useState<AsrMethod>(asrMethod);
-
   const { colors } = useTheme();
 
-  useEffect(() => {
-    if (visible) {
-      setSelectedMethod(calculationMethod);
-      setSelectedAsrMethod(asrMethod);
-    }
-  }, [visible, calculationMethod, asrMethod]);
-
   const handleSave = () => {
-    onSave(selectedMethod, selectedAsrMethod);
+    onSave(calculationMethod, asrMethod);
   };
 
   return (
@@ -66,6 +56,7 @@ const PrayerCalculationSheet = ({
             contentContainerClassName="gap-5 px-1 py-5"
             showsVerticalScrollIndicator={false}
           >
+            {/* Header */}
             <View className="gap-1">
               <Text className="text-foreground font-sans-bold text-xl">
                 Prayer Calculation
@@ -89,8 +80,8 @@ const PrayerCalculationSheet = ({
                       key={method.id}
                       title={method.label}
                       description={method.description}
-                      selected={selectedMethod === method.id}
-                      onPress={() => setSelectedMethod(method.id)}
+                      selected={calculationMethod === method.id}
+                      onPress={() => onCalculationMethodChange(method.id)}
                     />
                   ))}
                 </View>
@@ -108,8 +99,8 @@ const PrayerCalculationSheet = ({
                       key={method.id}
                       title={method.label}
                       description={method.description}
-                      selected={selectedAsrMethod === method.id}
-                      onPress={() => setSelectedAsrMethod(method.id)}
+                      selected={asrMethod === method.id}
+                      onPress={() => onAsrMethodChange(method.id)}
                     />
                   ))}
                 </View>

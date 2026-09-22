@@ -16,12 +16,12 @@ import { Linking, ScrollView } from "react-native";
 
 const PrayerTimes = () => {
   const [calculationSheetVisible, setCalculationSheetVisible] = useState(false);
-
   const [prayerSettingsVisible, setPrayerSettingsVisible] = useState(false);
-
   const [selectedDate, setSelectedDate] = useState(new Date());
-
   const [selectedPrayer, setSelectedPrayer] = useState<Prayer | null>(null);
+  const [draftCalculationMethod, setDraftCalculationMethod] =
+    useState<CalculationMethodId>("mwl");
+  const [draftAsrMethod, setDraftAsrMethod] = useState<AsrMethod>("standard");
 
   const { calculationMethod, asrMethod, setCalculationSettings } =
     usePrayerStore();
@@ -40,6 +40,12 @@ const PrayerTimes = () => {
   const isToday = selectedDate.toDateString() === new Date().toDateString();
 
   const hasLocation = latitude != null && longitude != null;
+
+  const handleCalculationOpen = () => {
+    setDraftCalculationMethod(calculationMethod);
+    setDraftAsrMethod(asrMethod);
+    setCalculationSheetVisible(true);
+  };
 
   const handleCalculationSave = (
     method: CalculationMethodId,
@@ -77,7 +83,7 @@ const PrayerTimes = () => {
         <PrayerCalculationSelector
           calculationMethod={calculationMethod}
           asrMethod={asrMethod}
-          onPress={() => setCalculationSheetVisible(true)}
+          onPress={handleCalculationOpen}
         />
 
         <CalendarPicker
@@ -88,7 +94,7 @@ const PrayerTimes = () => {
         {locationLoading ? (
           <LoadingCard
             title="Getting your location"
-            message="Please wait while we determine your location."
+            message="Please wait while we determine your current location."
           />
         ) : !hasLocation || locationError ? (
           <ErrorCard
@@ -139,8 +145,10 @@ const PrayerTimes = () => {
 
       <PrayerCalculationSheet
         visible={calculationSheetVisible}
-        calculationMethod={calculationMethod}
-        asrMethod={asrMethod}
+        calculationMethod={draftCalculationMethod}
+        asrMethod={draftAsrMethod}
+        onCalculationMethodChange={setDraftCalculationMethod}
+        onAsrMethodChange={setDraftAsrMethod}
         onClose={() => setCalculationSheetVisible(false)}
         onSave={handleCalculationSave}
       />
