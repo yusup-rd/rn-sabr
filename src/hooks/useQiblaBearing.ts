@@ -4,7 +4,6 @@ import { useMemo } from "react";
 
 const useQiblaBearing = () => {
   const latitude = useLocationStore((state) => state.latitude);
-
   const longitude = useLocationStore((state) => state.longitude);
 
   return useMemo(() => {

@@ -1,3 +1,5 @@
+import useQiblaBearing from "@/hooks/useQiblaBearing";
+import { degreesToCompassLabel } from "@/lib/qibla-calculations";
 import type { Prayer } from "@/types/prayer";
 import {
   FontAwesome6 as Fa,
@@ -23,6 +25,8 @@ const HeroCountdown = ({
   elapsedPercent,
   solarEvent,
 }: HeroCountdownProps) => {
+  const qibla = useQiblaBearing();
+
   if (!nextPrayer || !previousPrayer || !solarEvent) {
     return (
       <View className="bg-primary relative overflow-hidden rounded-xl p-6 shadow-md">
@@ -42,6 +46,10 @@ const HeroCountdown = ({
       </View>
     );
   }
+
+  const qiblaLabel = qibla
+    ? `${Math.round(qibla.bearing)}° ${degreesToCompassLabel(qibla.bearing)}`
+    : null;
 
   return (
     <View className="bg-primary relative overflow-hidden rounded-xl p-6 shadow-md">
@@ -108,10 +116,11 @@ const HeroCountdown = ({
             </Text>
           </View>
 
-          {/* TODO: Add Qibla direction once feature implemented */}
-          <Text className="font-sans-semibold text-primary-foreground text-xs">
-            Qibla: 118° SE
-          </Text>
+          {qiblaLabel && (
+            <Text className="font-sans-semibold text-primary-foreground text-xs">
+              Qibla: {qiblaLabel}
+            </Text>
+          )}
         </View>
       </View>
     </View>
