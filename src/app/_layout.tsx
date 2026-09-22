@@ -1,10 +1,15 @@
 import "@/global.css";
+import "@/i18n";
+import { initializeLanguage } from "@/i18n";
 import LocationInitializer from "@/initializers/LocationInitializer";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import { useEffect, useState } from "react";
 
 const RootLayout = () => {
+  const [languageLoaded, setLanguageLoaded] = useState(false);
+
   const [fontsLoaded, fontError] = useFonts({
     "sans-regular": require("@/assets/fonts/PlusJakartaSans-Regular.ttf"),
     "sans-extralight": require("@/assets/fonts/PlusJakartaSans-ExtraLight.ttf"),
@@ -21,6 +26,12 @@ const RootLayout = () => {
     "sans-bold-italic": require("@/assets/fonts/PlusJakartaSans-BoldItalic.ttf"),
     "sans-extrabold-italic": require("@/assets/fonts/PlusJakartaSans-ExtraBoldItalic.ttf"),
   });
+
+  useEffect(() => {
+    initializeLanguage().finally(() => {
+      setLanguageLoaded(true);
+    });
+  }, []);
 
   if (fontError) {
     throw fontError;

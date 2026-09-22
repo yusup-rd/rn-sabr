@@ -1,0 +1,21 @@
+{
+  "tabs": {
+    "home": "Главная",
+    "quran": "Коран",
+    "qibla": "Кибла",
+    "mosques": "Мечети",
+    "settings": "Настройки"
+  },
+  "settings": {
+    "title": "Настройки",
+
+    "lightMode": "Светлая",
+    "darkMode": "Тёмная",
+    "systemMode": "Системная",
+
+    "language": "Язык",
+    "languageDescription": "Выберите предпочитаемый язык.",
+    "english": "Английский",
+    "russian": "Русский"
+  }
+}
