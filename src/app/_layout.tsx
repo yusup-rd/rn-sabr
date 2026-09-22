@@ -1,5 +1,4 @@
 import "@/global.css";
-import "@/i18n";
 import { initializeLanguage } from "@/i18n";
 import LocationInitializer from "@/initializers/LocationInitializer";
 import { ThemeProvider } from "@/providers/ThemeProvider";
@@ -37,7 +36,7 @@ const RootLayout = () => {
     throw fontError;
   }
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || !languageLoaded) {
     return null;
   }
 

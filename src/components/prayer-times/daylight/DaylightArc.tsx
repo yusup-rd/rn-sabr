@@ -56,7 +56,7 @@ const DaylightArc = ({
           </Text>
 
           <Text className="text-muted-foreground font-sans text-xs">
-            Sun's journey across the sky
+            Sun&apos;s journey across the sky
           </Text>
         </View>
 
@@ -108,7 +108,7 @@ const DaylightArc = ({
           </Text>
 
           <Text className="text-muted-foreground font-sans text-xs">
-            Sun's journey across the sky
+            Sun&apos;s journey across the sky
           </Text>
         </View>
 

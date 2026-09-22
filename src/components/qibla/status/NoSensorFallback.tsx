@@ -14,8 +14,8 @@ const NoSensorFallback = () => {
         </Text>
 
         <Text className="text-muted-foreground max-w-sm text-center font-sans text-sm">
-          This device doesn't have a compass sensor, so your facing direction
-          can't be determined automatically.
+          This device doesn&apos;t have a compass sensor, so your facing
+          direction can&apos;t be determined automatically.
         </Text>
       </View>
 
