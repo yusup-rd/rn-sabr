@@ -2,16 +2,12 @@ import { nextMonth, previousMonth } from "@/lib/date";
 import { formatHijriDate, formatMonthYear } from "@/lib/format";
 import { getIslamicEventForDate } from "@/lib/islamic-events";
 import { useTheme } from "@/providers/ThemeProvider";
-
 import { BottomSheet, Host, RNHostView } from "@expo/ui";
 import { background } from "@expo/ui/jetpack-compose/modifiers";
 import { presentationBackground } from "@expo/ui/swift-ui/modifiers";
-
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
-
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
-
 import CalendarMonthGrid from "./CalendarMonthGrid";
 
 interface CalendarSheetProps {

@@ -22,9 +22,18 @@ const PrayerTimes = () => {
   const [draftCalculationMethod, setDraftCalculationMethod] =
     useState<CalculationMethodId>("mwl");
   const [draftAsrMethod, setDraftAsrMethod] = useState<AsrMethod>("standard");
+  const [draftNotificationEnabled, setDraftNotificationEnabled] =
+    useState(false);
+  const [draftNotificationMinutesBefore, setDraftNotificationMinutesBefore] =
+    useState(10);
 
-  const { calculationMethod, asrMethod, setCalculationSettings } =
-    usePrayerStore();
+  const {
+    calculationMethod,
+    asrMethod,
+    prayerNotifications,
+    setCalculationSettings,
+    setPrayerNotification,
+  } = usePrayerStore();
 
   const {
     latitude,
@@ -56,11 +65,30 @@ const PrayerTimes = () => {
   };
 
   const handlePrayerPress = (prayer: Prayer) => {
+    const settings = prayerNotifications[prayer.name];
+
     setSelectedPrayer(prayer);
+
+    setDraftNotificationEnabled(settings.enabled);
+    setDraftNotificationMinutesBefore(settings.minutesBefore);
+
     setPrayerSettingsVisible(true);
   };
 
   const handlePrayerSettingsClose = () => {
+    setPrayerSettingsVisible(false);
+  };
+
+  const handlePrayerSettingsSave = () => {
+    if (!selectedPrayer) {
+      return;
+    }
+
+    setPrayerNotification(selectedPrayer.name, {
+      enabled: draftNotificationEnabled,
+      minutesBefore: draftNotificationMinutesBefore,
+    });
+
     setPrayerSettingsVisible(false);
   };
 
@@ -156,7 +184,12 @@ const PrayerTimes = () => {
       <PrayerTimeSettingsSheet
         visible={prayerSettingsVisible}
         prayer={selectedPrayer}
+        enabled={draftNotificationEnabled}
+        minutesBefore={draftNotificationMinutesBefore}
+        onEnabledChange={setDraftNotificationEnabled}
+        onMinutesBeforeChange={setDraftNotificationMinutesBefore}
         onClose={handlePrayerSettingsClose}
+        onSave={handlePrayerSettingsSave}
       />
     </>
   );
