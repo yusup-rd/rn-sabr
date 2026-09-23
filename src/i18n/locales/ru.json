@@ -96,6 +96,36 @@
       "title": "Намазы сегодня",
       "info": "Это расчётное время для Азана (призыва к молитве). Фактическое время коллективного намаза (Икамата) зависит от правил вашей местной мечети.",
       "nextIn": "Следующий через {{time}}"
+    },
+    "quickAccess": {
+      "quran": {
+        "title": "Коран",
+        "description": {
+          "default": "Читать Коран",
+          "continue": "Читать суру {{surahName}}"
+        },
+        "badge": "Сура"
+      },
+      "mosques": {
+        "title": "Мечети",
+        "description": "{{count}} открыто рядом",
+        "badge": "{{distance}} км"
+      },
+      "prayerTimes": {
+        "title": "Время намаза",
+        "description": "Время и уведомления",
+        "badge": "Ежедневно"
+      },
+      "zakat": {
+        "title": "Закят",
+        "description": "Быстрый расчёт",
+        "badge": "Нисаб"
+      },
+      "tasbih": {
+        "title": "Тасбих",
+        "description": "Подсчёт зикра",
+        "badge": "33"
+      }
     }
   },
   "settings": {

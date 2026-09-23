@@ -94,6 +94,36 @@
       "title": "Today's Prayers",
       "info": "These are calculated times for the Adhan (call to prayer). Actual congregational (Iqamah) times vary depending on your local mosque.",
       "nextIn": "Next in {{time}}"
+    },
+    "quickAccess": {
+      "quran": {
+        "title": "Quran",
+        "description": {
+          "default": "Read Quran",
+          "continue": "Read Surah {{surahName}}"
+        },
+        "badge": "Surah"
+      },
+      "mosques": {
+        "title": "Mosques",
+        "description": "{{count}} open nearby",
+        "badge": "{{distance}} km"
+      },
+      "prayerTimes": {
+        "title": "Prayer Times",
+        "description": "Times & notifications",
+        "badge": "Daily"
+      },
+      "zakat": {
+        "title": "Zakat",
+        "description": "Quick Calculator",
+        "badge": "Nisab"
+      },
+      "tasbih": {
+        "title": "Tasbih",
+        "description": "Count your dhikr",
+        "badge": "33"
+      }
     }
   },
   "settings": {
