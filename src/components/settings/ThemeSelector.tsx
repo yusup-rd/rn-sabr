@@ -22,7 +22,7 @@ const options = [
 const ThemeSelector = () => {
   const { mode, setMode } = useTheme();
   const { t } = useTranslation(undefined, {
-    keyPrefix: "settings.section.appearance.theme",
+    keyPrefix: "settings.sections.appearance.theme",
   });
 
   return (

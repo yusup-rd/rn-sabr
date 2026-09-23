@@ -9,7 +9,7 @@ interface LanguageSelectorProps {
 
 const LanguageSelector = ({ onPress }: LanguageSelectorProps) => {
   const { t } = useTranslation(undefined, {
-    keyPrefix: "settings.section.appearance.language",
+    keyPrefix: "settings.sections.appearance.language",
   });
 
   const languageKey = i18n.language === "ru" ? "russian" : "english";

@@ -46,7 +46,7 @@
     "hero": {
       "unavailable": {
         "title": "Prayer times unavailable",
-        "description": " Set your location to calculate prayer times."
+        "description": "Set your location to calculate prayer times."
       },
       "nextPrayer": "Next Prayer",
       "timeRemaining": "Time Remaining",
@@ -64,7 +64,7 @@
       "title": "Sanctuary Preferences",
       "description": "Personalize your quiet companion for mindfulness, accurate timings, and sacred routines."
     },
-    "section": {
+    "sections": {
       "appearance": {
         "title": "Appearance & Language",
         "theme": {

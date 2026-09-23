@@ -41,7 +41,7 @@ const LanguageSheet = ({
 }: LanguageSheetProps) => {
   const { colors } = useTheme();
   const { t, i18n } = useTranslation(undefined, {
-    keyPrefix: "settings.section.appearance.language",
+    keyPrefix: "settings.sections.appearance.language",
   });
 
   const handleSelect = async (language: string) => {

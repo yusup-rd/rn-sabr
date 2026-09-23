@@ -9,7 +9,7 @@ import { Text, View } from "react-native";
 
 const SettingsSection = () => {
   const { t } = useTranslation(undefined, {
-    keyPrefix: "settings.section.appearance",
+    keyPrefix: "settings.sections.appearance",
   });
 
   const [languageSheetVisible, setLanguageSheetVisible] = useState(false);
