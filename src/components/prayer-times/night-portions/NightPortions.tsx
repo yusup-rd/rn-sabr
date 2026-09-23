@@ -1,8 +1,4 @@
-import {
-  formatDuration,
-  formatRemainingDuration,
-  formatTime,
-} from "@/lib/format";
+import { formatDuration, formatTime } from "@/lib/format";
 import { Text, View } from "react-native";
 import NightPortionsHeader from "./NightPortionsHeader";
 import NightSummary from "./NightSummary";
@@ -165,7 +161,7 @@ const NightPortions = ({
         <Text className="text-muted-foreground text-center font-sans text-xs">
           {isLastThird
             ? "You are currently in the last third of the night."
-            : `Last third begins in ${formatRemainingDuration(
+            : `Last third begins in ${formatDuration(
                 lastThirdStart - nowTime,
               )}.`}
         </Text>

@@ -1,9 +1,4 @@
-import {
-  formatDayMonth,
-  formatDuration,
-  formatRemainingDuration,
-  formatTime,
-} from "@/lib/format";
+import { formatDayMonth, formatDuration, formatTime } from "@/lib/format";
 import { Text, View } from "react-native";
 import DayScene from "./scenes/DayScene";
 import NightScene from "./scenes/NightScene";
@@ -174,7 +169,7 @@ const DaylightArc = ({
 
           {isDaytime || isBeforeSunrise ? (
             <Text className="font-sans-semibold text-primary text-sm">
-              {formatRemainingDuration(
+              {formatDuration(
                 isBeforeSunrise ? sunriseTime - nowTime : remainingDaylight,
               )}
             </Text>

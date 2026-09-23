@@ -1,15 +1,55 @@
+import i18n from "@/i18n";
+
+type LocaleConfig = {
+  intlLocale: string;
+  hour12: boolean;
+};
+
+type MonthFormat = "short" | "long";
+
+const LOCALE_CONFIGS: Record<string, LocaleConfig> = {
+  en: { intlLocale: "en-US", hour12: true },
+  ru: { intlLocale: "ru-RU", hour12: false },
+};
+
+const fallbackLanguage =
+  typeof i18n.options.fallbackLng === "string"
+    ? i18n.options.fallbackLng
+    : "en";
+
+const DEFAULT_LOCALE_CONFIG =
+  LOCALE_CONFIGS[fallbackLanguage] ?? LOCALE_CONFIGS.en;
+
+function getLocaleConfig(language: string): LocaleConfig {
+  return LOCALE_CONFIGS[language] ?? DEFAULT_LOCALE_CONFIG;
+}
+
+function capitalizeFirst(text: string, locale: string) {
+  if (!text) return text;
+  return text.charAt(0).toLocaleUpperCase(locale) + text.slice(1);
+}
+
 /**
  * Formats a Date into a localized weekday, day, and month string.
  *
  * Example:
  * "Thursday, 13 Feb"
  */
-export function formatDate(date: Date) {
-  return date.toLocaleDateString([], {
+export function formatDate(
+  date: Date,
+  language = i18n.language,
+  monthFormat: MonthFormat = "short",
+) {
+  const { intlLocale } = getLocaleConfig(language);
+  const isEnglish = language === "en";
+
+  const formatted = date.toLocaleDateString(intlLocale, {
     weekday: "long",
     day: "numeric",
-    month: "short",
+    month: isEnglish ? "short" : monthFormat,
   });
+
+  return capitalizeFirst(formatted, intlLocale);
 }
 
 /**
@@ -18,8 +58,10 @@ export function formatDate(date: Date) {
  * Example:
  * "13 Feb"
  */
-export function formatDayMonth(date: Date) {
-  return date.toLocaleDateString([], {
+export function formatDayMonth(date: Date, language = i18n.language) {
+  const { intlLocale } = getLocaleConfig(language);
+
+  return date.toLocaleDateString(intlLocale, {
     day: "numeric",
     month: "short",
   });
@@ -31,8 +73,10 @@ export function formatDayMonth(date: Date) {
  * Example:
  * "Thu"
  */
-export function formatWeekday(date: Date) {
-  return date.toLocaleDateString([], {
+export function formatWeekday(date: Date, language = i18n.language) {
+  const { intlLocale } = getLocaleConfig(language);
+
+  return date.toLocaleDateString(intlLocale, {
     weekday: "short",
   });
 }
@@ -43,11 +87,15 @@ export function formatWeekday(date: Date) {
  * Example:
  * "September 2026"
  */
-export function formatMonthYear(date: Date) {
-  return date.toLocaleDateString([], {
+export function formatMonthYear(date: Date, language = i18n.language) {
+  const { intlLocale } = getLocaleConfig(language);
+
+  const formatted = date.toLocaleDateString(intlLocale, {
     month: "long",
     year: "numeric",
   });
+
+  return capitalizeFirst(formatted, intlLocale);
 }
 
 /**
@@ -58,12 +106,28 @@ export function formatMonthYear(date: Date) {
  * Example:
  * "14 Sha'ban 1446 AH"
  */
-export function formatHijriDate(date: Date) {
-  return new Intl.DateTimeFormat("en-US-u-ca-islamic", {
+export function formatHijriDate(date: Date, language = i18n.language) {
+  const { intlLocale } = getLocaleConfig(language);
+
+  const formatted = new Intl.DateTimeFormat(`${intlLocale}-u-ca-islamic`, {
     day: "numeric",
     month: "long",
     year: "numeric",
   }).format(date);
+
+  const withoutEra = formatted.replace(/(\s*(AH|г\.))+\s*$/i, "").trim();
+
+  const match = withoutEra.match(/^(\d+)\s+(.+?)\s+(\d+)$/);
+
+  if (!match) {
+    // Unexpected shape - return as-is rather than risk mangling it.
+    return `${withoutEra} ${i18n.t("hijri.era")}`;
+  }
+
+  const [, day, month, year] = match;
+  const capitalizedMonth = capitalizeFirst(month, intlLocale);
+
+  return `${day} ${capitalizedMonth} ${year} ${i18n.t("hijri.era")}`;
 }
 
 /**
@@ -72,38 +136,14 @@ export function formatHijriDate(date: Date) {
  * Example:
  * "5:42 AM"
  */
-export function formatTime(date: Date) {
-  return date.toLocaleTimeString([], {
+export function formatTime(date: Date, language = i18n.language) {
+  const { intlLocale, hour12 } = getLocaleConfig(language);
+
+  return date.toLocaleTimeString(intlLocale, {
     hour: "numeric",
     minute: "2-digit",
-    hour12: true,
+    hour12,
   });
-}
-
-/**
- * Formats a duration in milliseconds into a human-readable
- * hours and minutes string.
- *
- * Examples:
- * 45 minutes → "45 mins"
- * 2 hours → "2 hrs"
- * 2 hours 30 minutes → "2 hrs 30 mins"
- */
-export function formatDuration(milliseconds: number) {
-  const totalMinutes = Math.max(0, Math.floor(milliseconds / 60_000));
-
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-
-  if (hours === 0) {
-    return `${minutes} min${minutes === 1 ? "" : "s"}`;
-  }
-
-  if (minutes === 0) {
-    return `${hours} hr${hours === 1 ? "" : "s"}`;
-  }
-
-  return `${hours} hr${hours === 1 ? "" : "s"} ${minutes} min`;
 }
 
 /**
@@ -120,23 +160,15 @@ export function formatDuration(milliseconds: number) {
  * 2 hours → "2 hrs"
  * 2 hours 30 minutes → "2 hrs 30 mins"
  */
-export function formatRemainingDuration(milliseconds: number) {
+export function formatDuration(milliseconds: number) {
   const totalMinutes = Math.max(0, Math.ceil(milliseconds / 60_000));
-
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
 
-  if (hours === 0) {
-    return `${minutes} min${minutes === 1 ? "" : "s"}`;
-  }
+  if (hours === 0) return i18n.t("duration.minute", { count: minutes });
+  if (minutes === 0) return i18n.t("duration.hour", { count: hours });
 
-  if (minutes === 0) {
-    return `${hours} hr${hours === 1 ? "" : "s"}`;
-  }
-
-  return `${hours} hr${hours === 1 ? "" : "s"} ${minutes} min${
-    minutes === 1 ? "" : "s"
-  }`;
+  return `${i18n.t("duration.hour", { count: hours })} ${i18n.t("duration.minute", { count: minutes })}`;
 }
 
 /**

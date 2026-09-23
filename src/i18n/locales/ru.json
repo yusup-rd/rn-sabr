@@ -6,6 +6,61 @@
     "mosques": "Мечети",
     "settings": "Настройки"
   },
+  "prayerTimes": {
+    "fajr": "Фаджр",
+    "dawn": "Рассвет",
+    "sunrise": "Восход",
+    "dhuhr": "Зухр",
+    "noon": "Полдень",
+    "asr": "Аср",
+    "afternoon": "После полудня",
+    "maghrib": "Магриб",
+    "sunset": "Закат",
+    "isha": "Иша",
+    "night": "Ночь"
+  },
+  "duration": {
+    "hour_one": "{{count}} ч",
+    "hour_few": "{{count}} ч",
+    "hour_other": "{{count}} ч",
+    "minute_one": "{{count}} мин",
+    "minute_few": "{{count}} мин",
+    "minute_other": "{{count}} мин"
+  },
+  "compass": {
+    "n": "С",
+    "ne": "СВ",
+    "e": "В",
+    "se": "ЮВ",
+    "s": "Ю",
+    "sw": "ЮЗ",
+    "w": "З",
+    "nw": "СЗ"
+  },
+  "hijri": {
+    "era": "г.х."
+  },
+  "home": {
+    "dateLocation": {
+      "loading": "Определение местоположения...",
+      "unavailable": "Местоположение недоступно"
+    },
+    "hero": {
+      "unavailable": {
+        "title": "Время намаза недоступно",
+        "description": "Укажите местоположение, чтобы рассчитать время намаза."
+      },
+      "nextPrayer": "Следующий намаз",
+      "timeRemaining": "Осталось времени",
+      "percentElapsed": "Прошло {{percent}}%",
+      "solarEventIn": "{{label}} через {{time}}",
+      "qiblaAt": "Кибла: {{degrees}}° {{direction}}"
+    },
+    "prayersToday": {
+      "title": "Намазы сегодня",
+      "nextIn": "Следующий через {{time}}"
+    }
+  },
   "settings": {
     "header": {
       "title": "Духовное пространство",

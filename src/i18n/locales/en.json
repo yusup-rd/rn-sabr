@@ -6,6 +6,59 @@
     "mosques": "Mosques",
     "settings": "Settings"
   },
+  "prayerTimes": {
+    "fajr": "Fajr",
+    "dawn": "Dawn",
+    "sunrise": "Sunrise",
+    "dhuhr": "Dhuhr",
+    "noon": "Noon",
+    "asr": "Asr",
+    "afternoon": "Afternoon",
+    "maghrib": "Maghrib",
+    "sunset": "Sunset",
+    "isha": "Isha",
+    "night": "Night"
+  },
+  "duration": {
+    "hour_one": "{{count}} hr",
+    "hour_other": "{{count}} hrs",
+    "minute_one": "{{count}} min",
+    "minute_other": "{{count}} mins"
+  },
+  "compass": {
+    "n": "N",
+    "ne": "NE",
+    "e": "E",
+    "se": "SE",
+    "s": "S",
+    "sw": "SW",
+    "w": "W",
+    "nw": "NW"
+  },
+  "hijri": {
+    "era": "AH"
+  },
+  "home": {
+    "dateLocation": {
+      "loading": "Locating...",
+      "unavailable": "Location unavailable"
+    },
+    "hero": {
+      "unavailable": {
+        "title": "Prayer times unavailable",
+        "description": " Set your location to calculate prayer times."
+      },
+      "nextPrayer": "Next Prayer",
+      "timeRemaining": "Time Remaining",
+      "percentElapsed": "{{percent}}% elapsed",
+      "solarEventIn": "{{label}} in {{time}}",
+      "qiblaAt": "Qibla: {{degrees}}° {{direction}}"
+    },
+    "prayersToday": {
+      "title": "Today's Prayers",
+      "nextIn": "Next in {{time}}"
+    }
+  },
   "settings": {
     "header": {
       "title": "Sanctuary Preferences",

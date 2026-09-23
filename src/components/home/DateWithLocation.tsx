@@ -1,10 +1,15 @@
 import { formatDate, formatHijriDate } from "@/lib/format";
 import { useLocationStore } from "@/store/locationStore";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
+import { memo } from "react";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 
 const DateWithLocation = () => {
   const today = new Date();
+  const { t, i18n } = useTranslation(undefined, {
+    keyPrefix: "home.dateLocation",
+  });
 
   const locationName = useLocationStore((state) => state.locationName);
   const locationNameStatus = useLocationStore(
@@ -21,22 +26,22 @@ const DateWithLocation = () => {
           numberOfLines={1}
         >
           {locationNameStatus === "loading"
-            ? "Locating..."
-            : (locationName ?? "Location unavailable")}
+            ? t("loading")
+            : (locationName ?? t("unavailable"))}
         </Text>
 
         <View className="bg-muted-foreground/50 size-1 rounded-full" />
 
         <Text className="font-sans-semibold text-secondary text-xs">
-          {formatHijriDate(today)}
+          {formatHijriDate(today, i18n.language)}
         </Text>
       </View>
 
       <Text className="font-sans-semibold text-foreground text-lg">
-        {formatDate(today)}
+        {formatDate(today, i18n.language, "long")}
       </Text>
     </View>
   );
 };
 
-export default DateWithLocation;
+export default memo(DateWithLocation);
