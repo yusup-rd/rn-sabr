@@ -38,7 +38,43 @@
   "hijri": {
     "era": "AH"
   },
+  "prayerCalculationMethods": {
+    "short": {
+      "mwl": "MWL",
+      "isna": "ISNA",
+      "egyptian": "Egyptian",
+      "karachi": "Karachi",
+      "ummAlQura": "Umm al-Qura"
+    },
+    "full": {
+      "mwl": "Muslim World League",
+      "isna": "Islamic Society of North America",
+      "egyptian": "Egyptian General Authority",
+      "karachi": "University of Islamic Sciences, Karachi",
+      "ummAlQura": "Umm al-Qura University"
+    }
+  },
+  "asrMethods": {
+    "short": {
+      "standard": "Standard",
+      "hanafi": "Hanafi"
+    },
+    "full": {
+      "standard": "Shafi'i, Maliki & Hanbali",
+      "hanafi": "Hanafi"
+    }
+  },
   "home": {
+    "loading": {
+      "title": "Getting your location...",
+      "message": "We need your location to calculate prayer times."
+    },
+    "locationError": {
+      "permissionBlockedTitle": "Location permission is disabled",
+      "unavailableTitle": "Location unavailable",
+      "openSettings": "Open Settings",
+      "tryAgain": "Try Again"
+    },
     "dateLocation": {
       "loading": "Locating...",
       "unavailable": "Location unavailable"
@@ -56,6 +92,7 @@
     },
     "prayersToday": {
       "title": "Today's Prayers",
+      "info": "These are calculated times for the Adhan (call to prayer). Actual congregational (Iqamah) times vary depending on your local mosque.",
       "nextIn": "Next in {{time}}"
     }
   },

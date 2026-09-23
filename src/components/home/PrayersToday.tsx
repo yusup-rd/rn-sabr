@@ -1,7 +1,10 @@
 import { calculationMethods } from "@/constants/prayer-calculation";
 import { usePrayerStore } from "@/store/prayerStore";
 import type { Prayer } from "@/types/prayer";
-import { Text, View } from "react-native";
+import { FontAwesome6 as Fa } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
+import { Pressable, Text, View } from "react-native";
 import PrayerCard from "./PrayerCard";
 
 interface PrayersTodayProps {
@@ -9,23 +12,54 @@ interface PrayersTodayProps {
 }
 
 const PrayersToday = ({ prayers }: PrayersTodayProps) => {
+  const { t } = useTranslation(undefined, { keyPrefix: "home.prayersToday" });
+  const { t: tAsr } = useTranslation(undefined, {
+    keyPrefix: "asrMethods.short",
+  });
+  const { t: tMethod } = useTranslation(undefined, {
+    keyPrefix: "prayerCalculationMethods.short",
+  });
+
   const { calculationMethod, asrMethod } = usePrayerStore();
 
-  const calculationMethodLabel =
-    calculationMethods.find((method) => method.id === calculationMethod)
-      ?.description ?? calculationMethod;
+  const calculationMethodOption = calculationMethods.find(
+    (method) => method.id === calculationMethod,
+  );
 
-  const asrLabel = asrMethod === "hanafi" ? "Hanafi" : "Standard";
+  const calculationMethodLabel = calculationMethodOption
+    ? tMethod(calculationMethodOption.key)
+    : calculationMethod;
+
+  const asrLabel = tAsr(asrMethod);
+
+  const handleSettingsPress = () => {
+    router.push("/prayer-times");
+  };
 
   return (
-    <View className="gap-2">
+    <View className="gap-1">
       <View className="flex-row items-center justify-between gap-2">
         <Text className="font-sans-semibold text-foreground text-lg">
-          Today&apos;s Prayers
+          {t("title")}
         </Text>
 
-        <Text className="font-sans-semibold text-muted-foreground text-xs">
-          {asrLabel} ({calculationMethodLabel})
+        <Pressable
+          onPress={handleSettingsPress}
+          className="flex-row items-center gap-1.5 rounded-md p-1 active:opacity-75"
+          accessibilityLabel={`Prayer settings. Method: ${asrLabel}, ${calculationMethodLabel}`}
+        >
+          <Text className="font-sans-semibold text-muted-foreground text-xs">
+            {asrLabel} ({calculationMethodLabel})
+          </Text>
+
+          <Fa name="sliders" size={13} className="text-muted-foreground" />
+        </Pressable>
+      </View>
+
+      <View className="border-border flex-row items-center gap-2 rounded-lg border p-2">
+        <Fa name="circle-info" size={16} className="text-muted-foreground" />
+        <Text className="text-muted-foreground flex-1 font-sans text-xs">
+          {t("info")}
         </Text>
       </View>
 

@@ -2,6 +2,7 @@ import { calculationMethods } from "@/constants/prayer-calculation";
 import { useLocationStore } from "@/store/locationStore";
 import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 
 interface PrayerCalculationSelectorProps {
@@ -15,6 +16,13 @@ const PrayerCalculationSelector = ({
   asrMethod,
   onPress,
 }: PrayerCalculationSelectorProps) => {
+  const { t: tMethod } = useTranslation(undefined, {
+    keyPrefix: "prayerCalculationMethods.short",
+  });
+  const { t: tAsr } = useTranslation(undefined, {
+    keyPrefix: "asrMethods.short",
+  });
+
   const locationName = useLocationStore((state) => state.locationName);
   const locationNameStatus = useLocationStore(
     (state) => state.locationNameStatus,
@@ -24,7 +32,9 @@ const PrayerCalculationSelector = ({
     (item) => item.id === calculationMethod,
   );
 
-  const asrLabel = asrMethod === "hanafi" ? "Hanafi" : "Standard";
+  const calculationMethodLabel = method ? tMethod(method.key) : "Unknown";
+
+  const asrLabel = tAsr(asrMethod);
 
   return (
     <Pressable
@@ -61,7 +71,7 @@ const PrayerCalculationSelector = ({
             className="text-foreground font-sans-semibold mt-1 text-sm"
             numberOfLines={1}
           >
-            {method?.description ?? "Unknown"}
+            {calculationMethodLabel}
           </Text>
         </View>
 

@@ -4,6 +4,7 @@ import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 import { BottomSheet, Host, RNHostView } from "@expo/ui";
 import { background } from "@expo/ui/jetpack-compose/modifiers";
 import { presentationBackground } from "@expo/ui/swift-ui/modifiers";
+import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import PrayerCalculationOption from "./PrayerCalculationOption";
 
@@ -30,6 +31,13 @@ const PrayerCalculationSheet = ({
   onSave,
 }: PrayerCalculationSheetProps) => {
   const { colors } = useTheme();
+
+  const { t: tMethod } = useTranslation(undefined, {
+    keyPrefix: "prayerCalculationMethods",
+  });
+  const { t: tAsr } = useTranslation(undefined, {
+    keyPrefix: "asrMethods",
+  });
 
   const handleSave = () => {
     onSave(calculationMethod, asrMethod);
@@ -78,8 +86,8 @@ const PrayerCalculationSheet = ({
                   {calculationMethods.map((method) => (
                     <PrayerCalculationOption
                       key={method.id}
-                      title={method.label}
-                      description={method.description}
+                      title={tMethod(`short.${method.key}`)}
+                      description={tMethod(`full.${method.key}`)}
                       selected={calculationMethod === method.id}
                       onPress={() => onCalculationMethodChange(method.id)}
                     />
@@ -97,8 +105,8 @@ const PrayerCalculationSheet = ({
                   {asrMethods.map((method) => (
                     <PrayerCalculationOption
                       key={method.id}
-                      title={method.label}
-                      description={method.description}
+                      title={tAsr(`short.${method.key}`)}
+                      description={tAsr(`full.${method.key}`)}
                       selected={asrMethod === method.id}
                       onPress={() => onAsrMethodChange(method.id)}
                     />

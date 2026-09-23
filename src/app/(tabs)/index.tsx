@@ -10,6 +10,7 @@ import { usePrayerTimes } from "@/hooks/usePrayerTimes";
 import { useLocationStore } from "@/store/locationStore";
 import { styled } from "nativewind";
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   AppState,
   type AppStateStatus,
@@ -21,6 +22,8 @@ import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-conte
 const SafeAreaView = styled(NativeSafeAreaView);
 
 const Index = () => {
+  const { t } = useTranslation(undefined, { keyPrefix: "home" });
+
   const prayerTimes = usePrayerTimes();
   const locationLoading = useLocationStore((state) => state.locationLoading);
   const locationError = useLocationStore((state) => state.locationError);
@@ -55,8 +58,8 @@ const Index = () => {
     if (locationLoading) {
       return (
         <LoadingCard
-          title="Getting your location..."
-          message="We need your location to calculate prayer times."
+          title={t("loading.title")}
+          message={t("loading.message")}
         />
       );
     }
@@ -77,11 +80,15 @@ const Index = () => {
         <ErrorCard
           title={
             isBlocked
-              ? "Location permission is disabled"
-              : "Location unavailable"
+              ? t("locationError.permissionBlockedTitle")
+              : t("locationError.unavailableTitle")
           }
           message={locationError}
-          actionLabel={isBlocked ? "Open Settings" : "Try Again"}
+          actionLabel={
+            isBlocked
+              ? t("locationError.openSettings")
+              : t("locationError.tryAgain")
+          }
           onActionPress={handleLocationAction}
         />
       );
