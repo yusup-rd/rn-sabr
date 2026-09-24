@@ -26,7 +26,6 @@ const CalendarSheet = ({
   onSelectDate,
 }: CalendarSheetProps) => {
   const { colors } = useTheme();
-
   const { t } = useTranslation(undefined, {
     keyPrefix: "prayerTimes.calendar",
   });
@@ -38,6 +37,7 @@ const CalendarSheet = ({
   const previousVisible = useRef(visible);
 
   const { events: islamicEvents } = useIslamicEvents(visibleMonth);
+  const { events: selectedMonthEvents } = useIslamicEvents(selectedDate);
 
   useEffect(() => {
     if (visible && !previousVisible.current) {
@@ -49,7 +49,10 @@ const CalendarSheet = ({
     previousVisible.current = visible;
   }, [visible, selectedDate]);
 
-  const selectedEvents = getIslamicEventsForDate(selectedDate, islamicEvents);
+  const selectedEvents = getIslamicEventsForDate(
+    selectedDate,
+    selectedMonthEvents,
+  );
 
   const handleSelectDate = (date: Date) => {
     onSelectDate(date);
