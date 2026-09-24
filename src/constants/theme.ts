@@ -1,3 +1,5 @@
+import { DynamicColorIOS } from "react-native";
+
 export const lightColors = {
   // Neutrals
   background: "#F8F9FA",
@@ -60,30 +62,18 @@ export type ThemeColors = typeof lightColors | typeof darkColors;
 
 export type ThemeMode = "light" | "dark" | "system";
 
-export const spacing = {
-  0: 0,
-  1: 4,
-  2: 8,
-  3: 12,
-  4: 16,
-  5: 20,
-  6: 24,
-  7: 28,
-  8: 32,
-  9: 36,
-  10: 40,
-  11: 44,
-  12: 48,
-  14: 56,
-  16: 64,
-  18: 72,
-  20: 80,
-  24: 96,
-  30: 120,
-} as const;
-
 export const theme = {
   light: lightColors,
   dark: darkColors,
-  spacing,
 } as const;
+
+export const nativeTabColors = {
+  foreground: DynamicColorIOS({
+    light: lightColors.foreground,
+    dark: darkColors.foreground,
+  }),
+  primary: DynamicColorIOS({
+    light: lightColors.primary,
+    dark: darkColors.primary,
+  }),
+};

@@ -1,3 +1,4 @@
+import { nativeTabColors } from "@/constants/theme";
 import { useTheme } from "@/providers/ThemeProvider";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
@@ -12,10 +13,9 @@ const TabsLayout = () => {
   if (Platform.OS === "ios") {
     return (
       <NativeTabs
-        tintColor={colors.primary}
         iconColor={{
-          default: colors.foreground,
-          selected: colors.primary,
+          default: nativeTabColors.foreground,
+          selected: nativeTabColors.primary,
         }}
       >
         <NativeTabs.Trigger name="index">
