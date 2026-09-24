@@ -11,7 +11,13 @@ const TabsLayout = () => {
 
   if (Platform.OS === "ios") {
     return (
-      <NativeTabs tintColor={colors.primary}>
+      <NativeTabs
+        tintColor={colors.primary}
+        iconColor={{
+          default: colors.foreground,
+          selected: colors.primary,
+        }}
+      >
         <NativeTabs.Trigger name="index">
           <NativeTabs.Trigger.Label>{t("tabs.home")}</NativeTabs.Trigger.Label>
           <NativeTabs.Trigger.Icon
