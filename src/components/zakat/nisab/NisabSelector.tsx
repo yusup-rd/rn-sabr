@@ -1,5 +1,6 @@
 import { formatAmount } from "@/lib/format";
 import type { ZakatNisabStandard } from "@/types/zakat";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 
 interface NisabSelectorProps {
@@ -9,6 +10,10 @@ interface NisabSelectorProps {
 }
 
 const NisabSelector = ({ value, onChange, amount }: NisabSelectorProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "zakat.nisab",
+  });
+
   return (
     <View className="gap-3">
       <View className="flex-row gap-3">
@@ -23,11 +28,11 @@ const NisabSelector = ({ value, onChange, amount }: NisabSelectorProps) => {
           }
         >
           <Text className="font-sans-semibold text-foreground text-base">
-            Silver
+            {t("silver")}
           </Text>
 
           <Text className="font-sans-regular text-muted-foreground mt-1 text-sm">
-            612.36 g
+            {t("silverAmount")}
           </Text>
         </Pressable>
 
@@ -42,18 +47,18 @@ const NisabSelector = ({ value, onChange, amount }: NisabSelectorProps) => {
           }
         >
           <Text className="font-sans-semibold text-foreground text-base">
-            Gold
+            {t("gold")}
           </Text>
 
           <Text className="font-sans-regular text-muted-foreground mt-1 text-sm">
-            87.48 g
+            {t("goldAmount")}
           </Text>
         </Pressable>
       </View>
 
       <View className="bg-muted rounded-xl p-4">
         <Text className="font-sans-regular text-muted-foreground text-sm">
-          Current Nisab
+          {t("currentNisab")}
         </Text>
 
         <Text className="font-sans-bold text-foreground mt-1 text-xl">

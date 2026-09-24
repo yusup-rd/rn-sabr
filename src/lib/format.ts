@@ -120,7 +120,6 @@ export function formatHijriDate(date: Date, language = i18n.language) {
   const match = withoutEra.match(/^(\d+)\s+(.+?)\s+(\d+)$/);
 
   if (!match) {
-    // Unexpected shape - return as-is rather than risk mangling it.
     return `${withoutEra} ${i18n.t("hijri.era")}`;
   }
 
@@ -131,7 +130,7 @@ export function formatHijriDate(date: Date, language = i18n.language) {
 }
 
 /**
- * Formats a Date into a localized 12-hour time string.
+ * Formats a Date into a localized 12-hour/24-hour time string.
  *
  * Example:
  * "5:42 AM"
@@ -147,28 +146,56 @@ export function formatTime(date: Date, language = i18n.language) {
 }
 
 /**
+ * Formats a timestamp for UI metadata such as "Updated ..."
+ *
+ * Returns the translated fallback when the timestamp is invalid.
+ */
+export function formatUpdatedAt(
+  updatedAt: string,
+  recentlyText: string,
+  updatedText: (date: string) => string,
+  language = i18n.language,
+) {
+  const date = new Date(updatedAt);
+
+  if (Number.isNaN(date.getTime())) {
+    return recentlyText;
+  }
+
+  const { intlLocale } = getLocaleConfig(language);
+
+  const formattedDate = date.toLocaleString(intlLocale, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+
+  return updatedText(formattedDate);
+}
+
+/**
  * Formats a remaining duration in milliseconds into a human-readable
  * hours and minutes string.
  *
  * Uses ceil() so any remaining seconds are displayed as at least 1 minute
  * instead of showing "0 min" before the target time is reached.
- *
- * Examples:
- * 45 seconds → "1 min"
- * 2 minutes → "2 mins"
- * 1 hour → "1 hr"
- * 2 hours → "2 hrs"
- * 2 hours 30 minutes → "2 hrs 30 mins"
  */
 export function formatDuration(milliseconds: number) {
   const totalMinutes = Math.max(0, Math.ceil(milliseconds / 60_000));
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
 
-  if (hours === 0) return i18n.t("duration.minute", { count: minutes });
-  if (minutes === 0) return i18n.t("duration.hour", { count: hours });
+  if (hours === 0) {
+    return i18n.t("duration.minute", { count: minutes });
+  }
 
-  return `${i18n.t("duration.hour", { count: hours })} ${i18n.t("duration.minute", { count: minutes })}`;
+  if (minutes === 0) {
+    return i18n.t("duration.hour", { count: hours });
+  }
+
+  return `${i18n.t("duration.hour", { count: hours })} ${i18n.t(
+    "duration.minute",
+    { count: minutes },
+  )}`;
 }
 
 /**
@@ -179,7 +206,6 @@ export function formatDuration(milliseconds: number) {
  */
 export function formatDurationClock(milliseconds: number) {
   const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
-
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
@@ -195,10 +221,17 @@ export function formatDurationClock(milliseconds: number) {
  * Formats a number into a localized currency string.
  *
  * Example:
- * 1234.56 → "$1,234.56"
+ * English → "$1,234.56"
+ * Russian → "1 234,56 $"
  */
-export const formatAmount = (amount: number, currency = "USD"): string => {
-  return new Intl.NumberFormat("en-US", {
+export const formatAmount = (
+  amount: number,
+  currency = "USD",
+  language = i18n.language,
+): string => {
+  const { intlLocale } = getLocaleConfig(language);
+
+  return new Intl.NumberFormat(intlLocale, {
     style: "currency",
     currency,
     minimumFractionDigits: 2,
@@ -213,5 +246,7 @@ export const formatAmount = (amount: number, currency = "USD"): string => {
  * 1234.56 → "1,235"
  */
 export const formatDistance = (distanceKm: number): string => {
-  return Math.round(distanceKm).toLocaleString();
+  const { intlLocale } = getLocaleConfig(i18n.language);
+
+  return Math.round(distanceKm).toLocaleString(intlLocale);
 };

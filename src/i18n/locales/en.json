@@ -237,6 +237,74 @@
       "tahajjudInfo": "Tahajjud is performed during the night after sleeping and waking for prayer. The last third of the night is a particularly significant time for voluntary worship."
     }
   },
+  "zakat": {
+    "nisab": {
+      "title": "Nisab",
+      "description": "Choose the standard used to determine your Nisab threshold.",
+      "silver": "Silver",
+      "gold": "Gold",
+      "silverAmount": "612.36 g",
+      "goldAmount": "87.48 g",
+      "currentNisab": "Current Nisab",
+      "usingSavedPrices": "Using previously saved market prices.",
+      "lastUpdatedRecently": "Last updated recently",
+      "updated": "Updated {{date}}",
+      "loadingPrices": "Loading current market prices...",
+      "marketPriceError": "Unable to load current market prices."
+    },
+    "preciousMetals": {
+      "title": "Gold & Silver",
+      "description": "Enter the current monetary value of the gold and silver you own.",
+      "gold": "Value of gold",
+      "silver": "Value of silver"
+    },
+    "assets": {
+      "title": "Assets",
+      "description": "Include your zakatable cash, savings, investments and business assets.",
+      "cashAndBank": "Cash & bank balance",
+      "cashAndBankDescription": "Include the total money you currently hold in cash and bank accounts.",
+      "futurePurposeSavings": "Money saved for a future purpose",
+      "futurePurposeSavingsDescription": "For example, money set aside for Hajj or another future purpose.",
+      "moneyOwed": "Money owed to you",
+      "moneyOwedDescription": "Loans or other money you expect to receive.",
+      "investments": "Investments & savings",
+      "investmentsDescription": "Zakatable investments, shares and similar assets.",
+      "businessStock": "Business stock",
+      "businessStockDescription": "Goods or stock held for trade."
+    },
+    "liabilities": {
+      "title": "Deductible Liabilities",
+      "description": "Include debts and payments that may be deductible from your zakatable wealth.",
+      "shortTermDebt": "Short-term debt",
+      "shortTermDebtDescription": "Debt that must be paid within the next 12 months.",
+      "immediateBills": "Immediate bills",
+      "immediateBillsDescription": "Rent, taxes, utilities and other payments currently due.",
+      "wagesDue": "Wages due",
+      "wagesDueDescription": "Outstanding wages owed to employees."
+    },
+    "result": {
+      "title": "Zakat Summary",
+      "description": "Based on the values you entered.",
+      "totalAssets": "Total assets",
+      "deductibleLiabilities": "Deductible liabilities",
+      "netWealth": "Net wealth",
+      "nisabMet": "Nisab (met)",
+      "nisabNotMet": "Nisab (not met)",
+      "zakatAmount": "Zakat Amount",
+      "meetsNisab": "Your net wealth meets the selected Nisab threshold. Hawl eligibility is not assessed by this calculator.",
+      "belowNisab": "Your net wealth is below the selected Nisab threshold.",
+      "copyZakat": "Copy Zakat",
+      "copied": "Copied",
+      "shareZakat": "Share Zakat",
+      "copyAccessibilityLabel": "Copy Zakat amount",
+      "copyAccessibilityHint": "Copies the Zakat amount to the clipboard",
+      "shareAccessibilityLabel": "Share Zakat amount",
+      "shareAccessibilityHint": "Shares the Zakat amount",
+      "shareMessage": "My Zakat amount is {{amount}}."
+    },
+    "reset": "Reset",
+    "info": "Zakat is generally calculated at 2.5% of zakatable wealth once it reaches the Nisab threshold and the applicable Hawl period has passed. For personal religious circumstances, consult a qualified scholar."
+  },
   "settings": {
     "header": {
       "title": "Sanctuary Preferences",

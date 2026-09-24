@@ -3,6 +3,7 @@ import type { ZakatSummary } from "@/types/zakat";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, Share, Text, View } from "react-native";
 import ZakatSummaryRow from "./ZakatSummaryRow";
 
@@ -11,6 +12,10 @@ interface ZakatResultCardProps {
 }
 
 const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "zakat.result",
+  });
+
   const [isCopied, setIsCopied] = useState(false);
 
   const zakatAmount = formatAmount(summary.zakatAmount);
@@ -27,7 +32,9 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
 
   const handleShare = async () => {
     await Share.share({
-      message: `My Zakat amount is ${zakatAmount}.`,
+      message: t("shareMessage", {
+        amount: zakatAmount,
+      }),
     });
   };
 
@@ -40,23 +47,23 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
           </View>
 
           <Text className="font-sans-semibold text-primary text-lg">
-            Zakat Summary
+            {t("title")}
           </Text>
         </View>
 
         <Text className="font-sans-regular text-muted-foreground text-sm leading-5">
-          Based on the values you entered.
+          {t("description")}
         </Text>
       </View>
 
       <View className="gap-4">
         <ZakatSummaryRow
-          label="Total assets"
+          label={t("totalAssets")}
           value={formatAmount(summary.totalAssets)}
         />
 
         <ZakatSummaryRow
-          label="Deductible liabilities"
+          label={t("deductibleLiabilities")}
           value={`-${formatAmount(summary.totalLiabilities)}`}
           color="destructive"
         />
@@ -64,20 +71,20 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
         <View className="bg-border h-px" />
 
         <ZakatSummaryRow
-          label="Net wealth"
+          label={t("netWealth")}
           value={formatAmount(summary.netWealth)}
           emphasized
         />
 
         <ZakatSummaryRow
-          label={`Nisab (${summary.meetsNisab ? "met" : "not met"})`}
+          label={summary.meetsNisab ? t("nisabMet") : t("nisabNotMet")}
           value={formatAmount(summary.nisabAmount)}
         />
       </View>
 
       <View className="bg-muted rounded-2xl p-5">
         <Text className="font-sans-medium text-muted-foreground text-center text-sm">
-          Zakat Amount
+          {t("zakatAmount")}
         </Text>
 
         <Text className="font-sans-bold text-primary mt-1 text-center text-3xl">
@@ -85,17 +92,15 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
         </Text>
 
         <Text className="font-sans-regular text-muted-foreground mt-2 text-center text-xs leading-5">
-          {summary.meetsNisab
-            ? "Your net wealth meets the selected Nisab threshold. Hawl eligibility is not assessed by this calculator."
-            : "Your net wealth is below the selected Nisab threshold."}
+          {summary.meetsNisab ? t("meetsNisab") : t("belowNisab")}
         </Text>
 
         <View className="mt-4 flex-row gap-3">
           <Pressable
             onPress={handleCopy}
             accessibilityRole="button"
-            accessibilityLabel="Copy Zakat amount"
-            accessibilityHint="Copies the Zakat amount to the clipboard"
+            accessibilityLabel={t("copyAccessibilityLabel")}
+            accessibilityHint={t("copyAccessibilityHint")}
             className="border-border bg-background flex-1 flex-row items-center justify-center gap-2 rounded-xl border px-4 py-3 active:opacity-70"
           >
             <Fa
@@ -105,15 +110,15 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
             />
 
             <Text className="font-sans-semibold text-foreground text-sm">
-              {isCopied ? "Copied" : "Copy Zakat"}
+              {isCopied ? t("copied") : t("copyZakat")}
             </Text>
           </Pressable>
 
           <Pressable
             onPress={handleShare}
             accessibilityRole="button"
-            accessibilityLabel="Share Zakat amount"
-            accessibilityHint="Shares the Zakat amount"
+            accessibilityLabel={t("shareAccessibilityLabel")}
+            accessibilityHint={t("shareAccessibilityHint")}
             className="bg-primary flex-1 flex-row items-center justify-center gap-2 rounded-xl px-4 py-3 active:opacity-70"
           >
             <Fa
@@ -123,7 +128,7 @@ const ZakatResultCard = ({ summary }: ZakatResultCardProps) => {
             />
 
             <Text className="font-sans-semibold text-primary-foreground text-sm">
-              Share Zakat
+              {t("shareZakat")}
             </Text>
           </Pressable>
         </View>

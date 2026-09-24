@@ -1,4 +1,5 @@
 import type { ZakatMarketPrices } from "@/types/zakat";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 
 interface MetalPricesProps {
@@ -6,11 +7,15 @@ interface MetalPricesProps {
 }
 
 const MetalPrices = ({ prices }: MetalPricesProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "zakat.nisab",
+  });
+
   return (
     <View className="gap-3">
       <View className="flex-row items-center justify-between">
         <Text className="font-sans-regular text-muted-foreground text-base">
-          Gold
+          {t("gold")}
         </Text>
 
         <Text className="font-sans-semibold text-foreground text-base">
@@ -20,7 +25,7 @@ const MetalPrices = ({ prices }: MetalPricesProps) => {
 
       <View className="flex-row items-center justify-between">
         <Text className="font-sans-regular text-muted-foreground text-base">
-          Silver
+          {t("silver")}
         </Text>
 
         <Text className="font-sans-semibold text-foreground text-base">

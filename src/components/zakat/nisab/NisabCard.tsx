@@ -1,7 +1,9 @@
 import MetalPrices from "@/components/zakat/nisab/MetalPrices";
 import NisabSelector from "@/components/zakat/nisab/NisabSelector";
+import { formatUpdatedAt } from "@/lib/format";
 import type { ZakatMarketPrices, ZakatNisabStandard } from "@/types/zakat";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Text, View } from "react-native";
 
 interface NisabCardProps {
@@ -14,19 +16,6 @@ interface NisabCardProps {
   onNisabStandardChange: (value: ZakatNisabStandard) => void;
 }
 
-const formatUpdatedAt = (updatedAt: string) => {
-  const date = new Date(updatedAt);
-
-  if (Number.isNaN(date.getTime())) {
-    return "Last updated recently";
-  }
-
-  return `Updated ${date.toLocaleString([], {
-    dateStyle: "medium",
-    timeStyle: "short",
-  })}`;
-};
-
 const NisabCard = ({
   prices,
   isLoading,
@@ -36,6 +25,10 @@ const NisabCard = ({
   nisabAmount,
   onNisabStandardChange,
 }: NisabCardProps) => {
+  const { t, i18n } = useTranslation(undefined, {
+    keyPrefix: "zakat.nisab",
+  });
+
   return (
     <View className="bg-card gap-5 rounded-2xl p-5 shadow-md">
       <View className="gap-1">
@@ -46,7 +39,7 @@ const NisabCard = ({
             </View>
 
             <Text className="font-sans-semibold text-primary text-lg">
-              Nisab
+              {t("title")}
             </Text>
           </View>
 
@@ -54,7 +47,7 @@ const NisabCard = ({
         </View>
 
         <Text className="font-sans-regular text-muted-foreground text-sm leading-5">
-          Choose the standard used to determine your Nisab threshold.
+          {t("description")}
         </Text>
       </View>
 
@@ -72,8 +65,13 @@ const NisabCard = ({
 
           <Text className="font-sans-regular text-muted-foreground text-xs">
             {isStale
-              ? "Using previously saved market prices."
-              : formatUpdatedAt(prices.updatedAt)}
+              ? t("usingSavedPrices")
+              : formatUpdatedAt(
+                  prices.updatedAt,
+                  t("lastUpdatedRecently"),
+                  (date) => t("updated", { date }),
+                  i18n.language,
+                )}
           </Text>
         </>
       ) : error ? (
@@ -82,7 +80,7 @@ const NisabCard = ({
         </Text>
       ) : (
         <Text className="font-sans-regular text-muted-foreground text-sm leading-5">
-          Loading current market prices...
+          {t("loadingPrices")}
         </Text>
       )}
     </View>
