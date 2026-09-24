@@ -5,7 +5,7 @@ import * as Location from "expo-location";
 const geocodeCache = new Map<string, LocationAddress>();
 
 function getCacheKey(latitude: number, longitude: number, language: string) {
-  return `${latitude.toFixed(2)},${longitude.toFixed(2)},${language}`;
+  return `${latitude.toFixed(4)},${longitude.toFixed(4)},${language}`;
 }
 
 async function reverseGeocodeWithExpo(
