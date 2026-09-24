@@ -47,7 +47,10 @@ const PrayersToday = ({ prayers }: PrayersTodayProps) => {
         <Pressable
           onPress={handleSettingsPress}
           className="flex-row items-center gap-1.5 rounded-md p-1 active:opacity-75"
-          accessibilityLabel={`Prayer settings. Method: ${asrLabel}, ${calculationMethodLabel}`}
+          accessibilityLabel={t("settingsAccessibilityLabel", {
+            asrLabel,
+            calculationMethodLabel,
+          })}
         >
           <Text className="font-sans-semibold text-muted-foreground text-xs">
             {asrLabel} ({calculationMethodLabel})
