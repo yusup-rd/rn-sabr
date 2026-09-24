@@ -191,11 +191,25 @@ export function useIslamicEvents(selectedDate: Date) {
 
         const months = getAdjacentMonths(new Date(year, month - 1, 1));
 
-        const results = await Promise.all(
+        const settled = await Promise.allSettled(
           months.map((currentMonth) =>
             loadMonth(currentMonth.year, currentMonth.month, cache),
           ),
         );
+
+        const results = settled.flatMap((result) =>
+          result.status === "fulfilled" ? [result.value] : [],
+        );
+
+        if (results.length === 0) {
+          const firstFailure = settled.find(
+            (result): result is PromiseRejectedResult =>
+              result.status === "rejected",
+          );
+          throw (
+            firstFailure?.reason ?? new Error("Failed to load Islamic events")
+          );
+        }
 
         const monthEvents = results.flatMap((result) => result.events);
 
