@@ -37,6 +37,7 @@ export interface IslamicEvent {
  * their original provider name.
  */
 const EVENT_ID_MAP: Record<string, IslamicEventId> = {
+  "islamic new year": "islamic_new_year",
   "eid-ul-fitr": "eid_al_fitr",
   "eid-ul-adha": "eid_al_adha",
   "lailat-ul-qadr": "laylat_al_qadr",
@@ -111,9 +112,11 @@ function normalizeApiDay(day: IslamicEventsApiDay): IslamicEvent[] {
   for (const eventName of day.events) {
     const id = getIslamicEventId(eventName) ?? getFallbackEventId(eventName);
 
-    // Ramadan start is already generated from the Hijri date
-    // above, so don't add it a second time from the API event.
-    if (id === "ramadan_start") {
+    if (
+      id === "ramadan_start" ||
+      id === "islamic_new_year" ||
+      events.some((event) => event.id === id)
+    ) {
       continue;
     }
 
