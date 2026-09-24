@@ -29,22 +29,29 @@ const useDeviceHeading = (options?: UseDeviceHeadingOptions): DeviceHeading => {
     let subscription: Location.LocationSubscription | null = null;
 
     const startWatching = async () => {
-      const permission = await Location.requestForegroundPermissionsAsync();
-
-      if (!mounted) return;
-
-      if (permission.status !== "granted") {
-        setPermissionStatus("denied");
-        return;
-      }
-
-      servicesEnabledRef.current = await Location.hasServicesEnabledAsync();
-
-      if (!mounted) return;
-
-      setPermissionStatus("granted");
-
       try {
+        const permission = await Location.getForegroundPermissionsAsync();
+
+        if (!mounted) return;
+
+        if (permission.status !== "granted") {
+          const requestedPermission =
+            await Location.requestForegroundPermissionsAsync();
+
+          if (!mounted) return;
+
+          if (requestedPermission.status !== "granted") {
+            setPermissionStatus("denied");
+            return;
+          }
+        }
+
+        servicesEnabledRef.current = await Location.hasServicesEnabledAsync();
+
+        if (!mounted) return;
+
+        setPermissionStatus("granted");
+
         const nextSubscription = await Location.watchHeadingAsync(
           (headingData) => {
             if (!mounted) return;
@@ -75,10 +82,15 @@ const useDeviceHeading = (options?: UseDeviceHeadingOptions): DeviceHeading => {
         }
 
         subscription = nextSubscription;
-      } catch {}
+      } catch (error) {
+        if (!mounted) return;
+
+        console.warn("Failed to initialize compass:", error);
+        setPermissionStatus("granted");
+      }
     };
 
-    startWatching();
+    void startWatching();
 
     return () => {
       mounted = false;
