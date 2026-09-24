@@ -3,6 +3,12 @@ import { useLocationStore } from "@/store/locationStore";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
+interface ResolvedLocation {
+  latitude: number;
+  longitude: number;
+  language: string;
+}
+
 export function useLocationName() {
   const { i18n } = useTranslation();
   const language = i18n.language;
@@ -17,14 +23,20 @@ export function useLocationName() {
     (state) => state.setLocationNameStatus,
   );
 
-  const resolvedForLanguage = useRef<string | null>(null);
+  const resolvedLocation = useRef<ResolvedLocation | null>(null);
 
   useEffect(() => {
     if (latitude == null || longitude == null) {
       return;
     }
 
-    if (locationName && resolvedForLanguage.current === language) {
+    const hasResolvedCurrentLocation =
+      locationName &&
+      resolvedLocation.current?.latitude === latitude &&
+      resolvedLocation.current?.longitude === longitude &&
+      resolvedLocation.current?.language === language;
+
+    if (hasResolvedCurrentLocation) {
       return;
     }
 
@@ -45,7 +57,12 @@ export function useLocationName() {
             ? `${address.city}, ${address.country}`
             : (address.country ?? address.city ?? null);
 
-        resolvedForLanguage.current = language;
+        resolvedLocation.current = {
+          latitude,
+          longitude,
+          language,
+        };
+
         setLocationName(name);
         setLocationNameStatus(name ? "resolved" : "failed");
       } catch {
