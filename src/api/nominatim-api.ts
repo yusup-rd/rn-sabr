@@ -15,6 +15,11 @@ interface NominatimResponse {
   address?: NominatimAddress;
 }
 
+// TODO: Move reverse-geocoding requests behind the NestJS API.
+//
+// Direct Nominatim requests from the mobile app are not globally rate-limited
+// across Sabr installations. The backend should provide shared caching and
+// global rate limiting before forwarding requests to Nominatim.
 export async function reverseGeocodeWithNominatim(
   latitude: number,
   longitude: number,
