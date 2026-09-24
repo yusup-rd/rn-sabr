@@ -199,6 +199,42 @@
           "settings": "{{prayer}} prayer settings"
         }
       }
+    },
+    "daylightArc": {
+      "title": "Daylight",
+      "titleWithDate": "Daylight · {{date}}",
+      "description": "Sun's journey across the sky",
+      "sunrise": "Sunrise",
+      "sunset": "Sunset",
+      "daylight": "Daylight",
+      "currentTime": "Current time",
+      "daylightRemaining": "Daylight remaining",
+      "untilSunrise": "Until sunrise",
+      "daylightEnded": "Daylight ended",
+      "beforeSunrise": "Before sunrise",
+      "afterSunset": "After sunset"
+    },
+    "nightPortions": {
+      "title": "Night Portions",
+      "titleWithDate": "Night · {{date}}",
+      "description": "From sunset until Fajr",
+      "nightDuration": "Night",
+      "sunset": "Sunset",
+      "fajr": "Fajr",
+      "firstThird": "1st third",
+      "secondThird": "2nd third",
+      "lastThird": "Last third",
+      "lastThirdBeganAt": "Last third began at",
+      "lastThirdBeginsAt": "Last third begins at",
+      "duration": "Duration",
+      "beforeNight": "Before night",
+      "nightEnded": "Night ended",
+      "lastThirdMessage": "You are currently in the last third of the night.",
+      "lastThirdCountdown": "Last third begins in {{duration}}.",
+      "tahajjud": "Tahajjud",
+      "tahajjudDescription": "Voluntary night prayer traditionally associated with waking after sleep.",
+      "nightPrayerWindow": "Night prayer window",
+      "tahajjudInfo": "Tahajjud is performed during the night after sleeping and waking for prayer. The last third of the night is a particularly significant time for voluntary worship."
     }
   },
   "settings": {

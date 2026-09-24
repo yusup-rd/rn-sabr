@@ -1,4 +1,5 @@
 import { formatDayMonth, formatDuration, formatTime } from "@/lib/format";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import DayScene from "./scenes/DayScene";
 import NightScene from "./scenes/NightScene";
@@ -18,6 +19,10 @@ const DaylightArc = ({
   isToday,
   selectedDate,
 }: DaylightArcProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.daylightArc",
+  });
+
   const sunriseTime = sunrise.getTime();
   const sunsetTime = sunset.getTime();
   const nowTime = now.getTime();
@@ -28,15 +33,11 @@ const DaylightArc = ({
     daylightDuration > 0 ? (nowTime - sunriseTime) / daylightDuration : 0;
 
   const isBeforeSunrise = nowTime < sunriseTime;
-
   const isAfterSunset = nowTime > sunsetTime;
-
   const isDaytime = !isBeforeSunrise && !isAfterSunset;
 
   const progress = Math.min(1, Math.max(0, rawProgress));
-
   const remainingDaylight = Math.max(0, sunsetTime - nowTime);
-
   const daylightProgress = Math.min(100, Math.max(0, progress * 100));
 
   /*
@@ -47,18 +48,20 @@ const DaylightArc = ({
       <View className="bg-card rounded-2xl p-5 shadow-md">
         <View className="gap-1">
           <Text className="font-sans-semibold text-foreground text-base">
-            Daylight · {formatDayMonth(selectedDate)}
+            {t("titleWithDate", {
+              date: formatDayMonth(selectedDate),
+            })}
           </Text>
 
           <Text className="text-muted-foreground font-sans text-xs">
-            Sun&apos;s journey across the sky
+            {t("description")}
           </Text>
         </View>
 
         <View className="mt-5 flex-row items-center justify-between">
           <View className="gap-0.5">
             <Text className="text-muted-foreground font-sans text-xs">
-              Sunrise
+              {t("sunrise")}
             </Text>
 
             <Text className="font-sans-semibold text-foreground text-base">
@@ -68,7 +71,7 @@ const DaylightArc = ({
 
           <View className="items-center gap-0.5">
             <Text className="text-muted-foreground font-sans text-xs">
-              Daylight
+              {t("daylight")}
             </Text>
 
             <Text className="font-sans-semibold text-primary text-base">
@@ -78,7 +81,7 @@ const DaylightArc = ({
 
           <View className="items-end gap-0.5">
             <Text className="text-muted-foreground font-sans text-xs">
-              Sunset
+              {t("sunset")}
             </Text>
 
             <Text className="font-sans-semibold text-foreground text-base">
@@ -99,11 +102,11 @@ const DaylightArc = ({
       <View className="flex-row items-center justify-between">
         <View className="gap-1">
           <Text className="font-sans-semibold text-foreground text-base">
-            Daylight
+            {t("title")}
           </Text>
 
           <Text className="text-muted-foreground font-sans text-xs">
-            Sun&apos;s journey across the sky
+            {t("description")}
           </Text>
         </View>
 
@@ -112,8 +115,8 @@ const DaylightArc = ({
             {isDaytime
               ? `${Math.round(daylightProgress)}%`
               : isBeforeSunrise
-                ? "Before sunrise"
-                : "After sunset"}
+                ? t("beforeSunrise")
+                : t("afterSunset")}
           </Text>
         </View>
       </View>
@@ -131,7 +134,7 @@ const DaylightArc = ({
           </Text>
 
           <Text className="text-muted-foreground font-sans text-xs">
-            Sunrise
+            {t("sunrise")}
           </Text>
         </View>
 
@@ -141,7 +144,7 @@ const DaylightArc = ({
           </Text>
 
           <Text className="text-muted-foreground font-sans text-xs">
-            Sunset
+            {t("sunset")}
           </Text>
         </View>
       </View>
@@ -150,7 +153,7 @@ const DaylightArc = ({
       <View className="border-border mt-4 flex-row items-center justify-between border-t pt-4">
         <View className="gap-0.5">
           <Text className="text-muted-foreground font-sans text-xs">
-            Current time
+            {t("currentTime")}
           </Text>
 
           <Text className="font-sans-semibold text-foreground text-sm">
@@ -161,10 +164,10 @@ const DaylightArc = ({
         <View className="items-end gap-0.5">
           <Text className="text-muted-foreground font-sans text-xs">
             {isDaytime
-              ? "Daylight remaining"
+              ? t("daylightRemaining")
               : isBeforeSunrise
-                ? "Until sunrise"
-                : "Daylight ended"}
+                ? t("untilSunrise")
+                : t("daylightEnded")}
           </Text>
 
           {isDaytime || isBeforeSunrise ? (

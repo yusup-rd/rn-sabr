@@ -1,5 +1,7 @@
+import InfoSection from "@/components/ui/InfoSection";
 import { formatDuration, formatTime } from "@/lib/format";
 import { AntDesign } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 
 interface TahajjudSectionProps {
@@ -8,6 +10,10 @@ interface TahajjudSectionProps {
 }
 
 const TahajjudSection = ({ sunset, fajr }: TahajjudSectionProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.nightPortions",
+  });
+
   const nightPrayerDuration = fajr.getTime() - sunset.getTime();
 
   return (
@@ -19,12 +25,11 @@ const TahajjudSection = ({ sunset, fajr }: TahajjudSectionProps) => {
 
         <View className="flex-1 gap-1">
           <Text className="font-sans-semibold text-foreground text-sm">
-            Tahajjud
+            {t("tahajjud")}
           </Text>
 
           <Text className="text-muted-foreground font-sans text-xs leading-5">
-            Voluntary night prayer traditionally associated with waking after
-            sleep.
+            {t("tahajjudDescription")}
           </Text>
         </View>
       </View>
@@ -33,7 +38,7 @@ const TahajjudSection = ({ sunset, fajr }: TahajjudSectionProps) => {
         <View className="flex-row items-center justify-between">
           <View className="flex-1 gap-0.5">
             <Text className="text-muted-foreground font-sans text-xs">
-              Night prayer window
+              {t("nightPrayerWindow")}
             </Text>
 
             <Text className="font-sans-semibold text-foreground text-sm">
@@ -43,7 +48,7 @@ const TahajjudSection = ({ sunset, fajr }: TahajjudSectionProps) => {
 
           <View className="items-end gap-0.5">
             <Text className="text-muted-foreground font-sans text-xs">
-              Duration
+              {t("duration")}
             </Text>
 
             <Text className="font-sans-semibold text-primary text-sm">
@@ -53,11 +58,7 @@ const TahajjudSection = ({ sunset, fajr }: TahajjudSectionProps) => {
         </View>
       </View>
 
-      <Text className="text-muted-foreground font-sans text-xs leading-5">
-        Tahajjud is performed during the night after sleeping and waking for
-        prayer. The last third of the night is a particularly significant time
-        for voluntary worship.
-      </Text>
+      <InfoSection message={t("tahajjudInfo")} />
     </View>
   );
 };

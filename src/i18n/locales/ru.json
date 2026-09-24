@@ -201,6 +201,42 @@
           "settings": "Настройки намаза {{prayer}}"
         }
       }
+    },
+    "daylightArc": {
+      "title": "Световой день",
+      "titleWithDate": "Световой день · {{date}}",
+      "description": "Путь солнца по небу",
+      "sunrise": "Восход",
+      "sunset": "Закат",
+      "daylight": "Световой день",
+      "currentTime": "Текущее время",
+      "daylightRemaining": "До конца светового дня",
+      "untilSunrise": "До восхода",
+      "daylightEnded": "Световой день завершён",
+      "beforeSunrise": "До восхода",
+      "afterSunset": "После заката"
+    },
+    "nightPortions": {
+      "title": "Части ночи",
+      "titleWithDate": "Ночь · {{date}}",
+      "description": "От заката до Фаджра",
+      "nightDuration": "Ночь",
+      "sunset": "Закат",
+      "fajr": "Фаджр",
+      "firstThird": "1-я треть",
+      "secondThird": "2-я треть",
+      "lastThird": "Последняя треть",
+      "lastThirdBeganAt": "Последняя треть началась в",
+      "lastThirdBeginsAt": "Последняя треть начинается в",
+      "duration": "Продолжительность",
+      "beforeNight": "До наступления ночи",
+      "nightEnded": "Ночь завершилась",
+      "lastThirdMessage": "Сейчас последняя треть ночи.",
+      "lastThirdCountdown": "Последняя треть начнётся через {{duration}}.",
+      "tahajjud": "Тахаджуд",
+      "tahajjudDescription": "Добровольная ночная молитва, которую совершают после сна и пробуждения.",
+      "nightPrayerWindow": "Время ночной молитвы",
+      "tahajjudInfo": "Тахаджуд совершается ночью после сна и пробуждения для молитвы. Последняя треть ночи считается особенно значимым временем для добровольного поклонения."
     }
   },
   "settings": {

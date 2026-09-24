@@ -5,6 +5,7 @@ import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
+import InfoSection from "../ui/InfoSection";
 import PrayerCard from "./PrayerCard";
 
 interface PrayersTodayProps {
@@ -56,12 +57,7 @@ const PrayersToday = ({ prayers }: PrayersTodayProps) => {
         </Pressable>
       </View>
 
-      <View className="border-border flex-row items-center gap-2 rounded-lg border p-2">
-        <Fa name="circle-info" size={16} className="text-muted-foreground" />
-        <Text className="text-muted-foreground flex-1 font-sans text-xs">
-          {t("info")}
-        </Text>
-      </View>
+      <InfoSection message={t("info")} />
 
       <View className="gap-2">
         {prayers.map((prayer) => (
