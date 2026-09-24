@@ -1,5 +1,6 @@
 import { BEAD_COUNT, TASBIH_STORAGE_KEY } from "@/constants/tasbih";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Haptics from "expo-haptics";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 interface TasbihStorage {
@@ -64,7 +65,6 @@ export const useTasbih = (): UseTasbihReturn => {
           0,
           Math.min(BEAD_COUNT, stored.currentCount),
         );
-
         const restoredTotal = Math.max(0, stored.totalCount);
 
         currentCountRef.current = restoredCount;
@@ -133,6 +133,12 @@ export const useTasbih = (): UseTasbihReturn => {
           setTotalCount(nextTotal);
           setPersistenceError(null);
 
+          if (nextTotal % BEAD_COUNT === 0) {
+            await Haptics.notificationAsync(
+              Haptics.NotificationFeedbackType.Success,
+            );
+          }
+
           return true;
         } catch (error) {
           const message =
@@ -141,7 +147,6 @@ export const useTasbih = (): UseTasbihReturn => {
               : "Failed to save Tasbih state.";
 
           setPersistenceError(message);
-
           return false;
         }
       });
@@ -156,8 +161,8 @@ export const useTasbih = (): UseTasbihReturn => {
     return enqueueMutation(async () => {
       try {
         await AsyncStorage.removeItem(TASBIH_STORAGE_KEY);
-        mutationVersion.current += 1;
 
+        mutationVersion.current += 1;
         currentCountRef.current = 0;
         totalCountRef.current = 0;
 
@@ -173,7 +178,6 @@ export const useTasbih = (): UseTasbihReturn => {
             : "Failed to reset Tasbih state.";
 
         setPersistenceError(message);
-
         return false;
       }
     });
