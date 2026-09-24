@@ -9,7 +9,7 @@ const LoadingCard = ({ title, message }: LoadingCardProps) => {
   return (
     <View className="bg-card flex-row gap-2 rounded-xl p-5 shadow-md">
       <ActivityIndicator size="small" />
-      <View>
+      <View className="flex-1">
         <Text className="font-sans-semibold text-foreground text-base">
           {title}
         </Text>

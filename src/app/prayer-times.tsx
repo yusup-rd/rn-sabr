@@ -158,10 +158,10 @@ const PrayerTimes = () => {
           )}
 
         {hasLocation &&
-          prayerTimes.selectedSunset &&
+          prayerTimes.selectedNightSunset &&
           prayerTimes.selectedNextFajr && (
             <NightPortions
-              sunset={prayerTimes.selectedSunset}
+              sunset={prayerTimes.selectedNightSunset}
               fajr={prayerTimes.selectedNextFajr}
               now={prayerTimes.now}
               isToday={isToday}

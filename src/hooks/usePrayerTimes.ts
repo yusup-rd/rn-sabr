@@ -202,6 +202,7 @@ export function usePrayerTimes(selectedDate?: Date) {
         selectedPrayers: [],
         selectedSunrise: null,
         selectedSunset: null,
+        selectedNightSunset: null,
         selectedNextFajr: null,
         previousPrayer: null,
         nextPrayer: null,
@@ -217,20 +218,20 @@ export function usePrayerTimes(selectedDate?: Date) {
     const { yesterday, today, tomorrow, selected, selectedNextDay } =
       calculatedData;
 
+    const nowTime = now.getTime();
     const nextTodayPrayer = today.prayers.find(
-      (prayer) => prayer.time.getTime() > now.getTime(),
+      (prayer) => prayer.time.getTime() > nowTime,
     );
 
     const previousTodayPrayer = [...today.prayers]
       .reverse()
-      .find((prayer) => prayer.time.getTime() <= now.getTime());
+      .find((prayer) => prayer.time.getTime() <= nowTime);
 
     let previousPrayer: Prayer;
     let nextPrayer: Prayer;
 
     if (nextTodayPrayer) {
       nextPrayer = nextTodayPrayer;
-
       previousPrayer = previousTodayPrayer ?? yesterday.prayers[4];
     } else {
       nextPrayer = tomorrow.prayers[0];
@@ -240,7 +241,7 @@ export function usePrayerTimes(selectedDate?: Date) {
     const prayers = today.prayers.map((prayer) => {
       let status: PrayerStatus = "upcoming";
 
-      if (prayer.time.getTime() <= now.getTime()) {
+      if (prayer.time.getTime() <= nowTime) {
         status = "completed";
       }
 
@@ -255,27 +256,23 @@ export function usePrayerTimes(selectedDate?: Date) {
         ...prayer,
         status,
         remainingFormatted: isNextPrayerToday
-          ? formatDuration(prayer.time.getTime() - now.getTime())
+          ? formatDuration(prayer.time.getTime() - nowTime)
           : undefined,
       };
     });
 
     const intervalStart = previousPrayer.time.getTime();
-
     const intervalEnd = nextPrayer.time.getTime();
-
     const intervalDuration = intervalEnd - intervalStart;
-
-    const elapsed = now.getTime() - intervalStart;
+    const elapsed = nowTime - intervalStart;
 
     const elapsedPercent =
       intervalDuration > 0
         ? Math.min(100, Math.max(0, (elapsed / intervalDuration) * 100))
         : 0;
 
-    const isBeforeSunrise = now.getTime() < today.sunrise.getTime();
-
-    const isBeforeSunset = now.getTime() < today.sunset.getTime();
+    const isBeforeSunrise = nowTime < today.sunrise.getTime();
+    const isBeforeSunset = nowTime < today.sunset.getTime();
 
     let solarEvent: {
       label: "Sunrise" | "Sunset";
@@ -299,27 +296,55 @@ export function usePrayerTimes(selectedDate?: Date) {
       };
     }
 
+    /*
+     * A night spans two calendar dates.
+     *
+     * Before today's sunset:
+     *   yesterday's sunset → today's Fajr
+     *
+     * After today's sunset:
+     *   today's sunset → tomorrow's Fajr
+     *
+     * For another selected date:
+     *   selected date's sunset → following day's Fajr
+     */
+
+    const isSelectedDateToday = selectedKey === todayKey;
+
+    const isBeforeSelectedSunset =
+      isSelectedDateToday && nowTime < selected.sunset.getTime();
+
+    const selectedFajr =
+      selected.prayers.find((prayer) => prayer.name === "Fajr")?.time ?? null;
+
+    const selectedNextFajr =
+      selectedNextDay.prayers.find((prayer) => prayer.name === "Fajr")?.time ??
+      null;
+
+    const nightSunset = isBeforeSelectedSunset
+      ? yesterday.sunset
+      : selected.sunset;
+
+    const nightFajr = isBeforeSelectedSunset ? selectedFajr : selectedNextFajr;
+
     return {
       prayers,
       selectedPrayers: selected.prayers,
       selectedSunrise: selected.sunrise,
       selectedSunset: selected.sunset,
-      selectedNextFajr:
-        selectedNextDay.prayers.find((prayer) => prayer.name === "Fajr")
-          ?.time ?? null,
+      selectedNightSunset: nightSunset,
+      selectedNextFajr: nightFajr,
       previousPrayer,
       nextPrayer,
-      countdown: formatDurationClock(nextPrayer.time.getTime() - now.getTime()),
+      countdown: formatDurationClock(nextPrayer.time.getTime() - nowTime),
       elapsedPercent,
       sunrise: today.sunrise,
       sunset: today.sunset,
       now,
       solarEvent: {
         label: solarEvent.label,
-        remainingFormatted: formatDuration(
-          solarEvent.time.getTime() - now.getTime(),
-        ),
+        remainingFormatted: formatDuration(solarEvent.time.getTime() - nowTime),
       },
     };
-  }, [calculatedData, now]);
+  }, [calculatedData, now, selectedKey, todayKey]);
 }
