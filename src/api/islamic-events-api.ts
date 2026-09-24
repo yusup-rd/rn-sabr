@@ -63,7 +63,12 @@ function normalizeDay(day: AladhanCalendarDay): IslamicEventsApiDay {
       month: hijriMonth,
       year: hijriYear,
     },
-    events: [...day.hijri.holidays, ...day.hijri.adjustedHolidays],
+    events: [
+      ...(Array.isArray(day.hijri?.holidays) ? day.hijri.holidays : []),
+      ...(Array.isArray(day.hijri?.adjustedHolidays)
+        ? day.hijri.adjustedHolidays
+        : []),
+    ],
   };
 }
 export async function fetchIslamicEventsCalendar(
@@ -80,7 +85,11 @@ export async function fetchIslamicEventsCalendar(
 
   const data: AladhanCalendarResponse = await response.json();
 
-  if (data.code !== 200 || data.status !== "OK") {
+  if (
+    data?.code !== 200 ||
+    data?.status !== "OK" ||
+    !Array.isArray(data?.data)
+  ) {
     throw new Error("Islamic events API request failed");
   }
 
