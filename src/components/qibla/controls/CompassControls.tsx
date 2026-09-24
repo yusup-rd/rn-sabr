@@ -1,5 +1,6 @@
 import { useTheme } from "@/providers/ThemeProvider";
 import { MaterialCommunityIcons as Mi } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { Switch, Text, View } from "react-native";
 
 interface CompassControlsProps {
@@ -14,6 +15,9 @@ const CompassControls = ({
   onHapticsChange,
 }: CompassControlsProps) => {
   const { colors } = useTheme();
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "qibla.controls",
+  });
 
   return (
     <View className="bg-card w-full flex-row items-center justify-between gap-2 rounded-xl p-4 shadow-md">
@@ -26,7 +30,7 @@ const CompassControls = ({
         numberOfLines={1}
         ellipsizeMode="tail"
       >
-        Haptic Feedback
+        {t("hapticFeedback")}
       </Text>
 
       <View>

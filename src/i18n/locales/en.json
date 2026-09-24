@@ -305,6 +305,42 @@
     "reset": "Reset",
     "info": "Zakat is generally calculated at 2.5% of zakatable wealth once it reaches the Nisab threshold and the applicable Hawl period has passed. For personal religious circumstances, consult a qualified scholar."
   },
+  "qibla": {
+    "location": {
+      "unavailableTitle": "Location unavailable",
+      "unavailableDescription": "Set your location to calculate the Qibla direction."
+    },
+    "compass": {
+      "starting": "Starting compass...",
+      "findingDirection": "Finding your direction..."
+    },
+    "permission": {
+      "requiredTitle": "Compass permission required",
+      "requiredDescription": "Allow location access to use the Qibla compass."
+    },
+    "alignment": {
+      "facingQibla": "Facing Qibla",
+      "turnTowardsQibla": "Turn your phone towards Qibla"
+    },
+    "calibration": {
+      "title": "Compass needs calibration",
+      "description": "Move your phone in a figure-eight to improve compass accuracy."
+    },
+    "noSensor": {
+      "title": "Compass unavailable",
+      "description": "This device doesn't have a compass sensor, so your facing direction can't be determined automatically.",
+      "qiblaAvailableTitle": "Qibla direction is still available",
+      "qiblaAvailableDescription": "Your Qibla bearing can still be calculated from your location. Use another compass to physically align yourself with it."
+    },
+    "controls": {
+      "hapticFeedback": "Haptic Feedback"
+    },
+    "readout": {
+      "qibla": "Qibla",
+      "facing": "You're facing",
+      "kilometers": "km"
+    }
+  },
   "settings": {
     "header": {
       "title": "Sanctuary Preferences",

@@ -8,6 +8,7 @@ import useQiblaCompass from "@/hooks/useQiblaCompass";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styled } from "nativewind";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import { SafeAreaView as NativeSafeAreaView } from "react-native-safe-area-context";
 
@@ -16,6 +17,10 @@ const SafeAreaView = styled(NativeSafeAreaView);
 const HAPTICS_STORAGE_KEY = "@app/compass-haptics";
 
 const Qibla = () => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "qibla",
+  });
+
   const [hapticsEnabled, setHapticsEnabled] = useState(false);
   const [hapticsLoaded, setHapticsLoaded] = useState(false);
 
@@ -59,25 +64,27 @@ const Qibla = () => {
       {qibla === null ? (
         <View className="flex-1 items-center justify-center gap-3">
           <Text className="font-sans-semibold text-foreground text-lg">
-            Location unavailable
+            {t("location.unavailableTitle")}
           </Text>
+
           <Text className="text-muted-foreground px-8 text-center font-sans text-sm">
-            Set your location to calculate the Qibla direction.
+            {t("location.unavailableDescription")}
           </Text>
         </View>
       ) : permissionStatus === "checking" ? (
         <View className="flex-1 items-center justify-center">
           <Text className="text-muted-foreground font-sans text-sm">
-            Starting compass…
+            {t("compass.starting")}
           </Text>
         </View>
       ) : permissionStatus === "denied" ? (
         <View className="flex-1 items-center justify-center gap-3 px-8">
           <Text className="font-sans-semibold text-foreground text-lg">
-            Compass permission required
+            {t("permission.requiredTitle")}
           </Text>
+
           <Text className="text-muted-foreground text-center font-sans text-sm">
-            Allow location access to use the Qibla compass.
+            {t("permission.requiredDescription")}
           </Text>
         </View>
       ) : heading === null && !hasSensor ? (
@@ -87,13 +94,14 @@ const Qibla = () => {
       ) : heading === null ? (
         <View className="flex-1 items-center justify-center">
           <Text className="text-muted-foreground font-sans text-sm">
-            Finding your direction…
+            {t("compass.findingDirection")}
           </Text>
         </View>
       ) : (
         <View className="flex-1">
           <View className="h-28 items-center justify-start gap-4">
             <QiblaAlignmentStatus isFacingQibla={isFacingQibla} />
+
             <View className="w-full">
               <CalibrationCard visible={showCalibration} />
             </View>

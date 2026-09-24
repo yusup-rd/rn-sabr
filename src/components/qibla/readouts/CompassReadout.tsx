@@ -1,4 +1,6 @@
+import { formatDistance } from "@/lib/format";
 import { degreesToCompassLabel } from "@/lib/qibla-calculations";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 
 interface CompassReadoutProps {
@@ -12,25 +14,35 @@ const CompassReadout = ({
   distance,
   heading,
 }: CompassReadoutProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "qibla.readout",
+  });
+  const { t: tCompass } = useTranslation(undefined, {
+    keyPrefix: "compass",
+  });
+
   const qiblaDirection = degreesToCompassLabel(bearing);
   const facingDirection = degreesToCompassLabel(heading);
+
+  const qiblaDirectionLabel = tCompass(qiblaDirection.toLowerCase());
+  const facingDirectionLabel = tCompass(facingDirection.toLowerCase());
 
   return (
     <View className="bg-card w-full flex-row items-center justify-between rounded-xl p-4 shadow-md">
       <View className="flex-1 items-center gap-1">
         <Text className="font-sans-semibold text-foreground text-base">
-          Qibla
+          {t("qibla")}
         </Text>
 
         <View className="flex-row items-center gap-1">
           <Text className="font-sans-medium text-muted-foreground text-sm">
-            {Math.round(bearing)}° {qiblaDirection}
+            {Math.round(bearing)}° {qiblaDirectionLabel}
           </Text>
 
           <Text className="text-muted-foreground text-sm">•</Text>
 
           <Text className="font-sans-medium text-muted-foreground text-sm">
-            {Math.round(distance).toLocaleString()} km
+            {formatDistance(distance)} {t("kilometers")}
           </Text>
         </View>
       </View>
@@ -39,11 +51,11 @@ const CompassReadout = ({
 
       <View className="flex-1 items-center gap-1">
         <Text className="font-sans-semibold text-foreground text-base">
-          You&apos;re facing
+          {t("facing")}
         </Text>
 
         <Text className="font-sans-medium text-muted-foreground text-sm">
-          {Math.round(heading)}° {facingDirection}
+          {Math.round(heading)}° {facingDirectionLabel}
         </Text>
       </View>
     </View>

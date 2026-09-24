@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 import Svg, { Circle, G, Line, Path, Text as SvgText } from "react-native-svg";
 import QiblaMarker from "./QiblaMarker";
 
@@ -12,14 +13,14 @@ interface CompassDialProps {
 }
 
 const DIRECTIONS = [
-  { label: "N", angle: 0 },
-  { label: "NE", angle: 45 },
-  { label: "E", angle: 90 },
-  { label: "SE", angle: 135 },
-  { label: "S", angle: 180 },
-  { label: "SW", angle: 225 },
-  { label: "W", angle: 270 },
-  { label: "NW", angle: 315 },
+  { key: "n", angle: 0 },
+  { key: "ne", angle: 45 },
+  { key: "e", angle: 90 },
+  { key: "se", angle: 135 },
+  { key: "s", angle: 180 },
+  { key: "sw", angle: 225 },
+  { key: "w", angle: 270 },
+  { key: "nw", angle: 315 },
 ] as const;
 
 const LABEL_ROTATIONS: Record<number, number> = {
@@ -41,20 +42,19 @@ const CompassDial = ({
   qiblaBearing,
   qiblaColor,
 }: CompassDialProps) => {
-  const center = size / 2;
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "compass",
+  });
 
+  const center = size / 2;
   const outerRadius = center - 7;
   const rimRadius = outerRadius - 5;
   const innerRadius = rimRadius - 8;
-
   const labelRadius = innerRadius - 29;
-
   const majorTickOuter = rimRadius - 3;
   const majorTickInner = majorTickOuter - 13;
-
   const intercardinalTickOuter = rimRadius - 4;
   const intercardinalTickInner = intercardinalTickOuter - 8;
-
   const minorTickOuter = rimRadius - 5;
   const minorTickInner = minorTickOuter - 4;
 
@@ -172,7 +172,7 @@ const CompassDial = ({
       })}
 
       {/* Cardinal markings */}
-      {DIRECTIONS.map(({ angle, label }) => {
+      {DIRECTIONS.map(({ angle, key }) => {
         if (angle % 90 !== 0) {
           return null;
         }
@@ -181,7 +181,7 @@ const CompassDial = ({
         const end = polarPoint(angle, majorTickOuter);
 
         return (
-          <G key={`cardinal-${label}`}>
+          <G key={`cardinal-${key}`}>
             <Line
               x1={start.x}
               y1={start.y}
@@ -198,17 +198,15 @@ const CompassDial = ({
       })}
 
       {/* Direction labels */}
-      {DIRECTIONS.map(({ label, angle }) => {
+      {DIRECTIONS.map(({ key, angle }) => {
         const radians = (angle * Math.PI) / 180;
-
         const x = center + Math.sin(radians) * labelRadius;
         const y = center - Math.cos(radians) * labelRadius;
-
         const isCardinal = angle % 90 === 0;
-        const isNorth = label === "N";
+        const isNorth = key === "n";
 
         return (
-          <G key={label}>
+          <G key={key}>
             {isNorth && (
               <Circle cx={x} cy={y} r={13} fill={color} opacity={0.09} />
             )}
@@ -224,7 +222,7 @@ const CompassDial = ({
               alignmentBaseline="middle"
               transform={`rotate(${LABEL_ROTATIONS[angle]} ${x} ${y})`}
             >
-              {label}
+              {t(key)}
             </SvgText>
           </G>
         );

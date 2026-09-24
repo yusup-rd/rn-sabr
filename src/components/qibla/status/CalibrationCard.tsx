@@ -1,4 +1,5 @@
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 
 interface CalibrationCardProps {
@@ -6,6 +7,10 @@ interface CalibrationCardProps {
 }
 
 const CalibrationCard = ({ visible }: CalibrationCardProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "qibla.calibration",
+  });
+
   if (!visible) {
     return null;
   }
@@ -22,11 +27,11 @@ const CalibrationCard = ({ visible }: CalibrationCardProps) => {
 
       <View className="flex-1">
         <Text className="font-sans-semibold text-foreground text-sm">
-          Compass needs calibration
+          {t("title")}
         </Text>
 
         <Text className="text-muted-foreground mt-0.5 font-sans text-xs leading-5">
-          Move your phone in a figure-eight to improve compass accuracy.
+          {t("description")}
         </Text>
       </View>
     </View>
