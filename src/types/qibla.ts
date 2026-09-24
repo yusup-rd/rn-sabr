@@ -1,4 +1,5 @@
-export type HeadingPermissionStatus = "checking" | "granted" | "denied";
+export type HeadingPermissionStatus =
+  "checking" | "granted" | "denied" | "error";
 
 export interface DeviceHeading {
   heading: number | null;

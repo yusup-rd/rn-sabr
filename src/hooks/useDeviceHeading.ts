@@ -34,16 +34,25 @@ const useDeviceHeading = (options?: UseDeviceHeadingOptions): DeviceHeading => {
 
         if (!mounted) return;
 
-        if (permission.status !== "granted") {
+        let permissionGranted = permission.status === "granted";
+
+        if (!permissionGranted) {
           const requestedPermission =
             await Location.requestForegroundPermissionsAsync();
 
           if (!mounted) return;
 
-          if (requestedPermission.status !== "granted") {
+          permissionGranted = requestedPermission.status === "granted";
+
+          if (!permissionGranted) {
             setPermissionStatus("denied");
             return;
           }
+        }
+
+        if (!permissionGranted) {
+          setPermissionStatus("error");
+          return;
         }
 
         servicesEnabledRef.current = await Location.hasServicesEnabledAsync();
@@ -86,7 +95,7 @@ const useDeviceHeading = (options?: UseDeviceHeadingOptions): DeviceHeading => {
         if (!mounted) return;
 
         console.warn("Failed to initialize compass:", error);
-        setPermissionStatus("granted");
+        setPermissionStatus("error");
       }
     };
 

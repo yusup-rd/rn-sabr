@@ -1,4 +1,4 @@
-import { DynamicColorIOS } from "react-native";
+import { DynamicColorIOS, Platform } from "react-native";
 
 export const lightColors = {
   // Neutrals
@@ -67,13 +67,19 @@ export const theme = {
   dark: darkColors,
 } as const;
 
-export const nativeTabColors = {
-  foreground: DynamicColorIOS({
-    light: lightColors.foreground,
-    dark: darkColors.foreground,
-  }),
-  primary: DynamicColorIOS({
-    light: lightColors.primary,
-    dark: darkColors.primary,
-  }),
-};
+export const nativeTabColors =
+  Platform.OS === "ios"
+    ? {
+        foreground: DynamicColorIOS({
+          light: lightColors.foreground,
+          dark: darkColors.foreground,
+        }),
+        primary: DynamicColorIOS({
+          light: lightColors.primary,
+          dark: darkColors.primary,
+        }),
+      }
+    : {
+        foreground: lightColors.foreground,
+        primary: lightColors.primary,
+      };
