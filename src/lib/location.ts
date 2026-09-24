@@ -2,7 +2,15 @@ import { reverseGeocodeWithNominatim } from "@/api/nominatim-api";
 import type { LocationAddress } from "@/types/location";
 import * as Location from "expo-location";
 
-const geocodeCache = new Map<string, LocationAddress>();
+const FALLBACK_CACHE_TTL = 5 * 60 * 1000;
+
+interface GeocodeCacheEntry {
+  address: LocationAddress;
+  source: "nominatim" | "expo";
+  cachedAt: number;
+}
+
+const geocodeCache = new Map<string, GeocodeCacheEntry>();
 
 function getCacheKey(latitude: number, longitude: number, language: string) {
   return `${latitude.toFixed(4)},${longitude.toFixed(4)},${language}`;
@@ -46,23 +54,37 @@ export async function reverseGeocode(
   const cached = geocodeCache.get(cacheKey);
 
   if (cached) {
-    return cached;
+    const fallbackExpired =
+      cached.source === "expo" &&
+      Date.now() - cached.cachedAt >= FALLBACK_CACHE_TTL;
+
+    if (!fallbackExpired) {
+      return cached.address;
+    }
+
+    geocodeCache.delete(cacheKey);
   }
 
   let result: LocationAddress;
+  let source: GeocodeCacheEntry["source"];
 
   try {
     result = await reverseGeocodeWithNominatim(latitude, longitude, language);
+    source = "nominatim";
   } catch (error) {
     console.warn(
       "Nominatim reverse geocode failed, falling back to expo-location:",
       error,
     );
-
     result = await reverseGeocodeWithExpo(latitude, longitude);
+    source = "expo";
   }
 
-  geocodeCache.set(cacheKey, result);
+  geocodeCache.set(cacheKey, {
+    address: result,
+    source,
+    cachedAt: Date.now(),
+  });
 
   return result;
 }
