@@ -41,12 +41,11 @@ export function formatDate(
   monthFormat: MonthFormat = "short",
 ) {
   const { intlLocale } = getLocaleConfig(language);
-  const isEnglish = language === "en";
 
   const formatted = date.toLocaleDateString(intlLocale, {
     weekday: "long",
     day: "numeric",
-    month: isEnglish ? "short" : monthFormat,
+    month: monthFormat,
   });
 
   return capitalizeFirst(formatted, intlLocale);
