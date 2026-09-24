@@ -4,6 +4,7 @@ import { getIslamicEventForDate } from "@/lib/islamic-events";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { clsx } from "clsx";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import CalendarSheet from "./CalendarSheet";
 
@@ -16,6 +17,10 @@ const CalendarPicker = ({
   selectedDate,
   onSelectDate,
 }: CalendarPickerProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.calendar",
+  });
+
   const [sheetVisible, setSheetVisible] = useState(false);
 
   const weekStart = startOfWeek(selectedDate);
@@ -45,7 +50,7 @@ const CalendarPicker = ({
           <Pressable
             onPress={goToPreviousDay}
             accessibilityRole="button"
-            accessibilityLabel="Previous day"
+            accessibilityLabel={t("previousDay")}
             className="bg-muted size-8 shrink-0 items-center justify-center rounded-full"
           >
             <Fa name="chevron-left" size={10} className="text-foreground" />
@@ -70,7 +75,7 @@ const CalendarPicker = ({
           <Pressable
             onPress={() => setSheetVisible(true)}
             accessibilityRole="button"
-            accessibilityLabel="Open calendar"
+            accessibilityLabel={t("openCalendar")}
             className="bg-muted size-8 shrink-0 items-center justify-center rounded-full"
           >
             <Fa name="calendar-days" size={13} className="text-foreground" />
@@ -79,7 +84,7 @@ const CalendarPicker = ({
           <Pressable
             onPress={goToNextDay}
             accessibilityRole="button"
-            accessibilityLabel="Next day"
+            accessibilityLabel={t("nextDay")}
             className="bg-muted size-8 shrink-0 items-center justify-center rounded-full"
           >
             <Fa name="chevron-right" size={10} className="text-foreground" />
@@ -96,7 +101,7 @@ const CalendarPicker = ({
                 key={date.toISOString()}
                 onPress={() => selectDate(date)}
                 className={clsx(
-                  "will-change-variable flex-1 items-center rounded-lg p-2",
+                  "flex-1 items-center rounded-lg p-2",
                   selected ? "bg-primary shadow-xs" : "bg-card",
                 )}
               >
@@ -128,7 +133,6 @@ const CalendarPicker = ({
           })}
         </View>
 
-        {/* Selected event */}
         {selectedEvent && (
           <View className="bg-secondary-soft flex-row items-center gap-2 rounded-lg px-3 py-2">
             <View className="bg-secondary size-1.5 shrink-0 rounded-full" />
@@ -140,7 +144,6 @@ const CalendarPicker = ({
         )}
       </View>
 
-      {/* Calendar sheet */}
       <View className="absolute inset-0" pointerEvents="box-none">
         <CalendarSheet
           visible={sheetVisible}

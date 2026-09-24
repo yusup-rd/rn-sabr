@@ -28,7 +28,7 @@ const HeroCountdown = ({
 }: HeroCountdownProps) => {
   const { t } = useTranslation(undefined, { keyPrefix: "home.hero" });
   const { t: tPrayer } = useTranslation(undefined, {
-    keyPrefix: "prayerTimes",
+    keyPrefix: "prayers",
   });
   const { t: tCompass } = useTranslation(undefined, { keyPrefix: "compass" });
 

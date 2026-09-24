@@ -5,6 +5,7 @@ import { background } from "@expo/ui/jetpack-compose/modifiers";
 import { presentationBackground } from "@expo/ui/swift-ui/modifiers";
 import { Ionicons } from "@expo/vector-icons";
 import { clsx } from "clsx";
+import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Switch, Text, View } from "react-native";
 
 interface PrayerTimeSettingsSheetProps {
@@ -18,7 +19,24 @@ interface PrayerTimeSettingsSheetProps {
   onSave: () => void;
 }
 
-const reminderOptions = [0, 5, 10, 15];
+const reminderOptions = [
+  {
+    minutes: 0,
+    key: "atTime",
+  },
+  {
+    minutes: 5,
+    key: "fiveMinutesBefore",
+  },
+  {
+    minutes: 10,
+    key: "tenMinutesBefore",
+  },
+  {
+    minutes: 15,
+    key: "fifteenMinutesBefore",
+  },
+] as const;
 
 const PrayerTimeSettingsSheet = ({
   visible,
@@ -31,10 +49,19 @@ const PrayerTimeSettingsSheet = ({
   onSave,
 }: PrayerTimeSettingsSheetProps) => {
   const { colors } = useTheme();
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.schedule.notification",
+  });
+  const { t: tPrayer } = useTranslation(undefined, {
+    keyPrefix: "prayers",
+  });
 
   if (!prayer) {
     return null;
   }
+
+  const prayerKey = prayer.name.toLowerCase();
+  const descriptionKey = prayer.description.toLowerCase();
 
   return (
     <Host>
@@ -57,7 +84,6 @@ const PrayerTimeSettingsSheet = ({
             contentContainerClassName="gap-5 px-1 py-5"
             showsVerticalScrollIndicator={false}
           >
-            {/* Header */}
             <View className="items-center gap-1">
               <View className="bg-primary-soft mb-1 size-12 items-center justify-center rounded-full">
                 <Ionicons
@@ -68,7 +94,7 @@ const PrayerTimeSettingsSheet = ({
               </View>
 
               <Text className="font-sans-bold text-foreground text-xl">
-                {prayer.name}
+                {tPrayer(prayerKey)}
               </Text>
 
               <Text className="font-sans-semibold text-primary text-base">
@@ -76,11 +102,10 @@ const PrayerTimeSettingsSheet = ({
               </Text>
 
               <Text className="text-muted-foreground font-sans text-xs">
-                {prayer.description}
+                {tPrayer(descriptionKey)}
               </Text>
             </View>
 
-            {/* Notification */}
             <View className="bg-card overflow-hidden rounded-xl shadow-md">
               <View className="flex-row items-center justify-between px-4 py-4">
                 <View className="flex-row items-center gap-3">
@@ -94,11 +119,11 @@ const PrayerTimeSettingsSheet = ({
 
                   <View className="gap-0.5">
                     <Text className="font-sans-semibold text-foreground text-sm">
-                      Notification
+                      {t("title")}
                     </Text>
 
                     <Text className="text-muted-foreground font-sans text-xs">
-                      Remind me about this prayer
+                      {t("description")}
                     </Text>
                   </View>
                 </View>
@@ -115,22 +140,16 @@ const PrayerTimeSettingsSheet = ({
               </View>
             </View>
 
-            {/* Reminder timing */}
             <View
               className={clsx("gap-3", enabled ? "opacity-100" : "opacity-50")}
             >
               <Text className="font-sans-semibold text-foreground text-base">
-                Remind me
+                {t("remind")}
               </Text>
 
               <View className="bg-card overflow-hidden rounded-xl shadow-md">
-                {reminderOptions.map((minutes, index) => {
+                {reminderOptions.map(({ minutes, key }, index) => {
                   const selected = minutesBefore === minutes;
-
-                  const label =
-                    minutes === 0
-                      ? "At prayer time"
-                      : `${minutes} minutes before`;
 
                   return (
                     <Pressable
@@ -149,7 +168,7 @@ const PrayerTimeSettingsSheet = ({
                           selected ? "font-sans-semibold" : "font-sans",
                         )}
                       >
-                        {label}
+                        {t(`remindTimes.${key}`)}
                       </Text>
 
                       <View
@@ -170,7 +189,6 @@ const PrayerTimeSettingsSheet = ({
               </View>
             </View>
 
-            {/* Info */}
             <View className="bg-primary-soft flex-row items-center gap-2 rounded-xl px-4 py-3">
               <Ionicons
                 name="information-circle-outline"
@@ -179,17 +197,16 @@ const PrayerTimeSettingsSheet = ({
               />
 
               <Text className="text-primary-soft-foreground flex-1 font-sans text-xs leading-5">
-                Notification settings apply to this prayer every day.
+                {t("info")}
               </Text>
             </View>
 
-            {/* Done */}
             <Pressable
               onPress={onSave}
               className="bg-primary items-center rounded-xl px-4 py-3.5 active:opacity-80"
             >
               <Text className="font-sans-semibold text-primary-foreground text-sm">
-                Done
+                {t("action.done")}
               </Text>
             </Pressable>
           </ScrollView>

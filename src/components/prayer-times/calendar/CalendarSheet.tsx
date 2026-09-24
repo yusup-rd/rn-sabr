@@ -7,6 +7,7 @@ import { background } from "@expo/ui/jetpack-compose/modifiers";
 import { presentationBackground } from "@expo/ui/swift-ui/modifiers";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import CalendarMonthGrid from "./CalendarMonthGrid";
 
@@ -24,6 +25,9 @@ const CalendarSheet = ({
   onSelectDate,
 }: CalendarSheetProps) => {
   const { colors } = useTheme();
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.calendar",
+  });
 
   const [visibleMonth, setVisibleMonth] = useState(
     () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
@@ -82,23 +86,21 @@ const CalendarSheet = ({
       >
         <RNHostView>
           <View className="gap-5 px-1 py-5">
-            {/* Header */}
             <View className="items-center">
               <Text className="text-foreground font-sans-bold text-xl">
                 {formatMonthYear(visibleMonth)}
               </Text>
 
               <Text className="text-muted-foreground font-sans-medium text-xs">
-                Select a day
+                {t("description")}
               </Text>
             </View>
 
-            {/* Month navigation */}
             <View className="flex-row items-center justify-between">
               <Pressable
                 onPress={goToPreviousMonth}
                 accessibilityRole="button"
-                accessibilityLabel="Previous month"
+                accessibilityLabel={t("previousMonth")}
                 className="bg-muted size-9 items-center justify-center rounded-full"
               >
                 <Fa name="chevron-left" size={10} className="text-foreground" />
@@ -107,18 +109,18 @@ const CalendarSheet = ({
               <Pressable
                 onPress={goToToday}
                 accessibilityRole="button"
-                accessibilityLabel="Today"
+                accessibilityLabel={t("today")}
                 className="bg-secondary-soft rounded-full px-4 py-2"
               >
                 <Text className="text-secondary-soft-foreground font-sans-semibold text-xs">
-                  Today
+                  {t("today")}
                 </Text>
               </Pressable>
 
               <Pressable
                 onPress={goToNextMonth}
                 accessibilityRole="button"
-                accessibilityLabel="Next month"
+                accessibilityLabel={t("nextMonth")}
                 className="bg-muted size-9 items-center justify-center rounded-full"
               >
                 <Fa
@@ -129,14 +131,12 @@ const CalendarSheet = ({
               </Pressable>
             </View>
 
-            {/* Calendar */}
             <CalendarMonthGrid
               month={visibleMonth}
               selectedDate={selectedDate}
               onSelectDate={handleSelectDate}
             />
 
-            {/* Selected date information */}
             <View className="border-border border-t pt-4">
               <Text className="text-foreground font-sans-semibold text-sm">
                 {formatHijriDate(selectedDate)}
@@ -160,7 +160,7 @@ const CalendarSheet = ({
                 </View>
               ) : (
                 <Text className="text-muted-foreground mt-1 font-sans text-xs">
-                  No Islamic observance marked for this date.
+                  {t("noObservance")}
                 </Text>
               )}
             </View>

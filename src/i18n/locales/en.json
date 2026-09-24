@@ -6,7 +6,7 @@
     "mosques": "Mosques",
     "settings": "Settings"
   },
-  "prayerTimes": {
+  "prayers": {
     "fajr": "Fajr",
     "dawn": "Dawn",
     "sunrise": "Sunrise",
@@ -123,6 +123,69 @@
         "title": "Tasbih",
         "description": "Count your dhikr",
         "badge": "33"
+      }
+    }
+  },
+  "prayerTimes": {
+    "loading": {
+      "title": "Getting your location",
+      "message": "Please wait while we determine your current location."
+    },
+    "locationError": {
+      "permissionBlockedTitle": "Location unavailable",
+      "unavailableTitle": "We couldn't determine your current location.",
+      "openSettings": "Open Settings",
+      "tryAgain": "Try Again"
+    },
+    "location": {
+      "loading": "Locating...",
+      "unavailable": "Location unavailable"
+    },
+    "prayerCalculation": {
+      "title": "Prayer Calculation",
+      "description": "Choose how your prayer times are calculated.",
+      "calculationMethod": "Prayer Time Method",
+      "asrMethod": "Asr Method",
+      "actions": {
+        "apply": "Apply",
+        "cancel": "Cancel"
+      }
+    },
+    "calendar": {
+      "description": "Select a day",
+      "today": "Today",
+      "previousDay": "Previous day",
+      "nextDay": "Next day",
+      "openCalendar": "Open calendar",
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month",
+      "noObservance": "No Islamic observance marked for this date."
+    },
+    "schedule": {
+      "todayTitle": "Today's Prayer Times",
+      "title": "{{date}} Prayer Times",
+      "notification": {
+        "title": "Notification",
+        "description": "Remind me about this prayer",
+        "remind": "Remind me",
+        "remindTimes": {
+          "atTime": "At prayer time",
+          "fiveMinutesBefore": "5 minutes before",
+          "tenMinutesBefore": "10 minutes before",
+          "fifteenMinutesBefore": "15 minutes before"
+        },
+        "info": "Notification settings apply to this prayer every day.",
+        "action": {
+          "done": "Done"
+        },
+        "status": {
+          "off": "Off",
+          "atTime": "At prayer time",
+          "minutesBefore": "{{count}} min before"
+        },
+        "accessibility": {
+          "settings": "{{prayer}} prayer settings"
+        }
       }
     }
   },

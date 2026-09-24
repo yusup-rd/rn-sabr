@@ -1,4 +1,5 @@
-import { getMonthDays, isSameDay } from "@/lib/date";
+import { addDays, getMonthDays, isSameDay, startOfWeek } from "@/lib/date";
+import { formatWeekday } from "@/lib/format";
 import { getHijriDateParts, getIslamicEvent } from "@/lib/islamic-events";
 import { clsx } from "clsx";
 import { Pressable, Text, View } from "react-native";
@@ -9,22 +10,25 @@ interface CalendarMonthGridProps {
   onSelectDate: (date: Date) => void;
 }
 
-const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
 const CalendarMonthGrid = ({
   month,
   selectedDate,
   onSelectDate,
 }: CalendarMonthGridProps) => {
   const days = getMonthDays(month);
+  const weekStart = startOfWeek(month);
+
+  const weekDays = Array.from({ length: 7 }, (_, index) =>
+    addDays(weekStart, index),
+  );
 
   return (
     <View className="gap-2">
       <View className="flex-row">
-        {weekDays.map((day) => (
-          <View key={day} className="w-[14.285%] items-center">
+        {weekDays.map((date) => (
+          <View key={date.toISOString()} className="w-[14.285%] items-center">
             <Text className="text-muted-foreground font-sans-semibold text-xs">
-              {day}
+              {formatWeekday(date)}
             </Text>
           </View>
         ))}

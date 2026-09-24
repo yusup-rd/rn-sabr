@@ -31,7 +31,9 @@ const PrayerCalculationSheet = ({
   onSave,
 }: PrayerCalculationSheetProps) => {
   const { colors } = useTheme();
-
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.prayerCalculation",
+  });
   const { t: tMethod } = useTranslation(undefined, {
     keyPrefix: "prayerCalculationMethods",
   });
@@ -64,22 +66,20 @@ const PrayerCalculationSheet = ({
             contentContainerClassName="gap-5 px-1 py-5"
             showsVerticalScrollIndicator={false}
           >
-            {/* Header */}
             <View className="gap-1">
               <Text className="text-foreground font-sans-bold text-xl">
-                Prayer Calculation
+                {t("title")}
               </Text>
 
               <Text className="text-muted-foreground font-sans-medium text-sm">
-                Choose how your prayer times are calculated.
+                {t("description")}
               </Text>
             </View>
 
             <View className="gap-5">
-              {/* Calculation method */}
               <View className="gap-2">
                 <Text className="text-foreground font-sans-semibold text-sm">
-                  Calculation Method
+                  {t("calculationMethod")}
                 </Text>
 
                 <View className="gap-2">
@@ -95,10 +95,9 @@ const PrayerCalculationSheet = ({
                 </View>
               </View>
 
-              {/* Asr method */}
               <View className="gap-2">
                 <Text className="text-foreground font-sans-semibold text-sm">
-                  Asr Calculation
+                  {t("asrMethod")}
                 </Text>
 
                 <View className="gap-2">
@@ -115,14 +114,13 @@ const PrayerCalculationSheet = ({
               </View>
             </View>
 
-            {/* Actions */}
             <View className="flex-row gap-3">
               <Pressable
                 onPress={onClose}
                 className="bg-muted flex-1 items-center rounded-xl py-3.5"
               >
                 <Text className="text-foreground font-sans-semibold text-sm">
-                  Cancel
+                  {t("actions.cancel")}
                 </Text>
               </Pressable>
 
@@ -131,7 +129,7 @@ const PrayerCalculationSheet = ({
                 className="bg-primary flex-1 items-center rounded-xl py-3.5"
               >
                 <Text className="text-primary-foreground font-sans-semibold text-sm">
-                  Apply
+                  {t("actions.apply")}
                 </Text>
               </Pressable>
             </View>

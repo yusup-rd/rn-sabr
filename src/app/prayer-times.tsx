@@ -12,9 +12,14 @@ import { useLocationStore } from "@/store/locationStore";
 import { usePrayerStore } from "@/store/prayerStore";
 import type { AsrMethod, CalculationMethodId, Prayer } from "@/types/prayer";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Linking, ScrollView } from "react-native";
 
 const PrayerTimes = () => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes",
+  });
+
   const [calculationSheetVisible, setCalculationSheetVisible] = useState(false);
   const [prayerSettingsVisible, setPrayerSettingsVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -45,9 +50,7 @@ const PrayerTimes = () => {
   } = useLocationStore();
 
   const prayerTimes = usePrayerTimes(selectedDate);
-
   const isToday = selectedDate.toDateString() === new Date().toDateString();
-
   const hasLocation = latitude != null && longitude != null;
 
   const handleCalculationOpen = () => {
@@ -68,10 +71,8 @@ const PrayerTimes = () => {
     const settings = prayerNotifications[prayer.name];
 
     setSelectedPrayer(prayer);
-
     setDraftNotificationEnabled(settings.enabled);
     setDraftNotificationMinutesBefore(settings.minutesBefore);
-
     setPrayerSettingsVisible(true);
   };
 
@@ -121,19 +122,17 @@ const PrayerTimes = () => {
 
         {locationLoading ? (
           <LoadingCard
-            title="Getting your location"
-            message="Please wait while we determine your current location."
+            title={t("loading.title")}
+            message={t("loading.message")}
           />
         ) : !hasLocation || locationError ? (
           <ErrorCard
-            title="Location unavailable"
-            message={
-              locationError ?? "We couldn't determine your current location."
-            }
+            title={t("locationError.permissionBlockedTitle")}
+            message={locationError ?? t("locationError.unavailableTitle")}
             actionLabel={
               locationPermissionStatus === "blocked"
-                ? "Open Settings"
-                : "Try Again"
+                ? t("locationError.openSettings")
+                : t("locationError.tryAgain")
             }
             onActionPress={handleLocationAction}
           />

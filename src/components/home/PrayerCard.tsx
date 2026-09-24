@@ -11,7 +11,7 @@ interface PrayerCardProps {
 const PrayerCard = ({ prayer }: PrayerCardProps) => {
   const { t } = useTranslation(undefined, { keyPrefix: "home.prayersToday" });
   const { t: tPrayer } = useTranslation(undefined, {
-    keyPrefix: "prayerTimes",
+    keyPrefix: "prayers",
   });
 
   const isSoon = prayer.status === "soon";
