@@ -341,6 +341,21 @@
       "kilometers": "km"
     }
   },
+  "tasbih": {
+    "reset": {
+      "title": "Reset Tasbih?",
+      "description": "This will reset your current count, rounds, and total count.",
+      "cancel": "Cancel",
+      "confirm": "Reset",
+      "failedTitle": "Reset Failed",
+      "failedDescription": "Unable to reset the Tasbih. Please try again."
+    },
+    "counter": {
+      "progress": "{{count}} / 33",
+      "rounds": "Rounds",
+      "total": "Total"
+    }
+  },
   "settings": {
     "header": {
       "title": "Sanctuary Preferences",

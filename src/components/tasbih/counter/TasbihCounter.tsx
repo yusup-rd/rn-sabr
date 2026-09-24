@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import Animated, {
   Easing,
@@ -23,9 +24,7 @@ const AnimatedLastDigit = ({ value, className }: AnimatedLastDigitProps) => {
     }
 
     previousValue.current = value;
-
     progress.value = 0;
-
     progress.value = withTiming(1, {
       duration: 180,
       easing: Easing.out(Easing.cubic),
@@ -69,6 +68,10 @@ const TasbihCounter = ({
   rounds,
   totalCount,
 }: TasbihCounterProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "tasbih.counter",
+  });
+
   return (
     <>
       <View className="flex-row items-baseline">
@@ -85,7 +88,7 @@ const TasbihCounter = ({
       <View className="gap-1">
         <View className="flex-row items-center gap-3">
           <Text className="text-muted-foreground font-sans-medium text-xs">
-            Rounds
+            {t("rounds")}
           </Text>
 
           <AnimatedLastDigit
@@ -96,7 +99,7 @@ const TasbihCounter = ({
 
         <View className="flex-row items-center gap-3">
           <Text className="text-muted-foreground font-sans-medium text-xs">
-            Total
+            {t("total")}
           </Text>
 
           <AnimatedLastDigit
