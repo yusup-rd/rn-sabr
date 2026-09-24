@@ -134,9 +134,13 @@ export const useTasbih = (): UseTasbihReturn => {
           setPersistenceError(null);
 
           if (nextTotal % BEAD_COUNT === 0) {
-            await Haptics.notificationAsync(
-              Haptics.NotificationFeedbackType.Success,
-            );
+            try {
+              await Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Success,
+              );
+            } catch {
+              // Haptic feedback does not change the saved tap result.
+            }
           }
 
           return true;
