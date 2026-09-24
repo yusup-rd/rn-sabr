@@ -1,6 +1,7 @@
+import { useIslamicEvents } from "@/hooks/useIslamicEvents";
 import { nextMonth, previousMonth } from "@/lib/date";
 import { formatHijriDate, formatMonthYear } from "@/lib/format";
-import { getIslamicEventForDate } from "@/lib/islamic-events";
+import { getIslamicEventsForDate } from "@/lib/islamic-events";
 import { useTheme } from "@/providers/ThemeProvider";
 import { BottomSheet, Host, RNHostView } from "@expo/ui";
 import { background } from "@expo/ui/jetpack-compose/modifiers";
@@ -25,6 +26,7 @@ const CalendarSheet = ({
   onSelectDate,
 }: CalendarSheetProps) => {
   const { colors } = useTheme();
+
   const { t } = useTranslation(undefined, {
     keyPrefix: "prayerTimes.calendar",
   });
@@ -34,6 +36,8 @@ const CalendarSheet = ({
   );
 
   const previousVisible = useRef(visible);
+
+  const { events: islamicEvents } = useIslamicEvents(visibleMonth);
 
   useEffect(() => {
     if (visible && !previousVisible.current) {
@@ -45,7 +49,7 @@ const CalendarSheet = ({
     previousVisible.current = visible;
   }, [visible, selectedDate]);
 
-  const selectedEvent = getIslamicEventForDate(selectedDate);
+  const selectedEvents = getIslamicEventsForDate(selectedDate, islamicEvents);
 
   const handleSelectDate = (date: Date) => {
     onSelectDate(date);
@@ -135,6 +139,7 @@ const CalendarSheet = ({
               month={visibleMonth}
               selectedDate={selectedDate}
               onSelectDate={handleSelectDate}
+              islamicEvents={islamicEvents}
             />
 
             <View className="border-border border-t pt-4">
@@ -142,21 +147,24 @@ const CalendarSheet = ({
                 {formatHijriDate(selectedDate)}
               </Text>
 
-              {selectedEvent ? (
-                <View className="bg-secondary-soft mt-2 rounded-lg px-3 py-2">
-                  <View className="flex-row items-center gap-2">
-                    <View className="bg-secondary size-2 rounded-full" />
+              {selectedEvents.length > 0 ? (
+                <View className="bg-secondary-soft mt-2 gap-1 rounded-lg px-3 py-2">
+                  {selectedEvents.map((event) => (
+                    <View
+                      key={`${event.id}-${event.date}`}
+                      className="flex-row items-center gap-2"
+                    >
+                      <View className="bg-secondary size-2 shrink-0 rounded-full" />
 
-                    <Text className="text-secondary-soft-foreground font-sans-semibold text-xs">
-                      {selectedEvent.name}
-                    </Text>
-                  </View>
-
-                  {selectedEvent.description && (
-                    <Text className="text-secondary-soft-foreground/80 mt-1 font-sans text-xs">
-                      {selectedEvent.description}
-                    </Text>
-                  )}
+                      <Text className="text-secondary-soft-foreground font-sans-semibold text-xs">
+                        {event.name
+                          ? t(`events.${event.id}`, {
+                              defaultValue: event.name,
+                            })
+                          : t(`events.${event.id}`)}
+                      </Text>
+                    </View>
+                  ))}
                 </View>
               ) : (
                 <Text className="text-muted-foreground mt-1 font-sans text-xs">

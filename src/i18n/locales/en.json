@@ -159,7 +159,19 @@
       "openCalendar": "Open calendar",
       "previousMonth": "Previous month",
       "nextMonth": "Next month",
-      "noObservance": "No Islamic observance marked for this date."
+      "noObservance": "No Islamic observance marked for this date.",
+      "events": {
+        "islamic_new_year": "Islamic New Year",
+        "ashura": "Ashura",
+        "isra_miraj": "Isra and Mi'raj",
+        "nisf_shaban": "Laylat al-Bara'ah",
+        "ramadan_start": "Beginning of Ramadan",
+        "laylat_al_qadr": "Laylat al-Qadr",
+        "eid_al_fitr": "Eid al-Fitr",
+        "arafah": "Day of Arafah",
+        "eid_al_adha": "Eid al-Adha",
+        "mawlid": "Mawlid"
+      }
     },
     "schedule": {
       "todayTitle": "Today's Prayer Times",

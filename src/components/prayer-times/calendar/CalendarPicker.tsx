@@ -1,6 +1,7 @@
+import { useIslamicEvents } from "@/hooks/useIslamicEvents";
 import { addDays, isSameDay, startOfWeek } from "@/lib/date";
 import { formatDate, formatHijriDate, formatWeekday } from "@/lib/format";
-import { getIslamicEventForDate } from "@/lib/islamic-events";
+import { getIslamicEventsForDate } from "@/lib/islamic-events";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { clsx } from "clsx";
 import { useState } from "react";
@@ -23,13 +24,15 @@ const CalendarPicker = ({
 
   const [sheetVisible, setSheetVisible] = useState(false);
 
+  const { events: islamicEvents } = useIslamicEvents(selectedDate);
+
   const weekStart = startOfWeek(selectedDate);
 
   const weekDays = Array.from({ length: 7 }, (_, index) =>
     addDays(weekStart, index),
   );
 
-  const selectedEvent = getIslamicEventForDate(selectedDate);
+  const selectedEvents = getIslamicEventsForDate(selectedDate, islamicEvents);
 
   const selectDate = (date: Date) => {
     onSelectDate(date);
@@ -94,7 +97,8 @@ const CalendarPicker = ({
         <View className="flex-row gap-1">
           {weekDays.map((date) => {
             const selected = isSameDay(date, selectedDate);
-            const event = getIslamicEventForDate(date);
+
+            const events = getIslamicEventsForDate(date, islamicEvents);
 
             return (
               <Pressable
@@ -125,7 +129,7 @@ const CalendarPicker = ({
                   {date.getDate()}
                 </Text>
 
-                {event && (
+                {events.length > 0 && (
                   <View className="bg-secondary mt-1 size-1 rounded-full" />
                 )}
               </Pressable>
@@ -133,13 +137,24 @@ const CalendarPicker = ({
           })}
         </View>
 
-        {selectedEvent && (
-          <View className="bg-secondary-soft flex-row items-center gap-2 rounded-lg px-3 py-2">
-            <View className="bg-secondary size-1.5 shrink-0 rounded-full" />
+        {selectedEvents.length > 0 && (
+          <View className="bg-secondary-soft gap-1 rounded-lg px-3 py-2">
+            {selectedEvents.map((event) => (
+              <View
+                key={`${event.id}-${event.date}`}
+                className="flex-row items-center gap-2"
+              >
+                <View className="bg-secondary size-1.5 shrink-0 rounded-full" />
 
-            <Text className="text-secondary-soft-foreground font-sans-semibold text-xs">
-              {selectedEvent.name}
-            </Text>
+                <Text className="text-secondary-soft-foreground font-sans-semibold text-xs">
+                  {event.name
+                    ? t(`events.${event.id}`, {
+                        defaultValue: event.name,
+                      })
+                    : t(`events.${event.id}`)}
+                </Text>
+              </View>
+            ))}
           </View>
         )}
       </View>
