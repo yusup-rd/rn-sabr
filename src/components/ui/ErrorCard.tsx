@@ -18,7 +18,7 @@ const ErrorCard = ({
     <View className="bg-card rounded-xl p-5 shadow-md">
       <View className="flex-row items-center gap-2">
         <Fa name="circle-exclamation" size={20} className="text-destructive" />
-        <View>
+        <View className="flex-1">
           <Text className="font-sans-semibold text-foreground text-base">
             {title}
           </Text>
