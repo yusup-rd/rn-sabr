@@ -1,12 +1,14 @@
+import { useIslamicEvents } from "@/hooks/useIslamicEvents";
 import { nextMonth, previousMonth } from "@/lib/date";
 import { formatHijriDate, formatMonthYear } from "@/lib/format";
-import { getIslamicEventForDate } from "@/lib/islamic-events";
+import { getIslamicEventsForDate } from "@/lib/islamic-events";
 import { useTheme } from "@/providers/ThemeProvider";
 import { BottomSheet, Host, RNHostView } from "@expo/ui";
 import { background } from "@expo/ui/jetpack-compose/modifiers";
 import { presentationBackground } from "@expo/ui/swift-ui/modifiers";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import CalendarMonthGrid from "./CalendarMonthGrid";
 
@@ -24,23 +26,38 @@ const CalendarSheet = ({
   onSelectDate,
 }: CalendarSheetProps) => {
   const { colors } = useTheme();
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.calendar",
+  });
 
   const [visibleMonth, setVisibleMonth] = useState(
-    new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
+    () => new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
   );
 
+  const previousVisible = useRef(visible);
+
+  const { events: islamicEvents } = useIslamicEvents(visibleMonth);
+  const { events: selectedMonthEvents } = useIslamicEvents(selectedDate);
+
   useEffect(() => {
-    if (visible) {
+    if (visible && !previousVisible.current) {
       setVisibleMonth(
         new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1),
       );
     }
+
+    previousVisible.current = visible;
   }, [visible, selectedDate]);
 
-  const selectedEvent = getIslamicEventForDate(selectedDate);
+  const selectedEvents = getIslamicEventsForDate(
+    selectedDate,
+    selectedMonthEvents,
+  );
 
   const handleSelectDate = (date: Date) => {
     onSelectDate(date);
+
+    setVisibleMonth(new Date(date.getFullYear(), date.getMonth(), 1));
   };
 
   const goToPreviousMonth = () => {
@@ -56,7 +73,7 @@ const CalendarSheet = ({
 
     setVisibleMonth(new Date(today.getFullYear(), today.getMonth(), 1));
 
-    handleSelectDate(today);
+    onSelectDate(today);
   };
 
   return (
@@ -76,23 +93,21 @@ const CalendarSheet = ({
       >
         <RNHostView>
           <View className="gap-5 px-1 py-5">
-            {/* Header */}
             <View className="items-center">
               <Text className="text-foreground font-sans-bold text-xl">
                 {formatMonthYear(visibleMonth)}
               </Text>
 
               <Text className="text-muted-foreground font-sans-medium text-xs">
-                Select a day
+                {t("description")}
               </Text>
             </View>
 
-            {/* Month navigation */}
             <View className="flex-row items-center justify-between">
               <Pressable
                 onPress={goToPreviousMonth}
                 accessibilityRole="button"
-                accessibilityLabel="Previous month"
+                accessibilityLabel={t("previousMonth")}
                 className="bg-muted size-9 items-center justify-center rounded-full"
               >
                 <Fa name="chevron-left" size={10} className="text-foreground" />
@@ -101,18 +116,18 @@ const CalendarSheet = ({
               <Pressable
                 onPress={goToToday}
                 accessibilityRole="button"
-                accessibilityLabel="Today"
+                accessibilityLabel={t("today")}
                 className="bg-secondary-soft rounded-full px-4 py-2"
               >
                 <Text className="text-secondary-soft-foreground font-sans-semibold text-xs">
-                  Today
+                  {t("today")}
                 </Text>
               </Pressable>
 
               <Pressable
                 onPress={goToNextMonth}
                 accessibilityRole="button"
-                accessibilityLabel="Next month"
+                accessibilityLabel={t("nextMonth")}
                 className="bg-muted size-9 items-center justify-center rounded-full"
               >
                 <Fa
@@ -123,38 +138,40 @@ const CalendarSheet = ({
               </Pressable>
             </View>
 
-            {/* Calendar */}
             <CalendarMonthGrid
               month={visibleMonth}
               selectedDate={selectedDate}
               onSelectDate={handleSelectDate}
+              islamicEvents={islamicEvents}
             />
 
-            {/* Selected date information */}
             <View className="border-border border-t pt-4">
               <Text className="text-foreground font-sans-semibold text-sm">
                 {formatHijriDate(selectedDate)}
               </Text>
 
-              {selectedEvent ? (
-                <View className="bg-secondary-soft mt-2 rounded-lg px-3 py-2">
-                  <View className="flex-row items-center gap-2">
-                    <View className="bg-secondary size-2 rounded-full" />
+              {selectedEvents.length > 0 ? (
+                <View className="bg-secondary-soft mt-2 gap-1 rounded-lg px-3 py-2">
+                  {selectedEvents.map((event) => (
+                    <View
+                      key={`${event.id}-${event.date}`}
+                      className="flex-row items-center gap-2"
+                    >
+                      <View className="bg-secondary size-2 shrink-0 rounded-full" />
 
-                    <Text className="text-secondary-soft-foreground font-sans-semibold text-xs">
-                      {selectedEvent.name}
-                    </Text>
-                  </View>
-
-                  {selectedEvent.description && (
-                    <Text className="text-secondary-soft-foreground/80 mt-1 font-sans text-xs">
-                      {selectedEvent.description}
-                    </Text>
-                  )}
+                      <Text className="text-secondary-soft-foreground font-sans-semibold text-xs">
+                        {event.name
+                          ? t(`events.${event.id}`, {
+                              defaultValue: event.name,
+                            })
+                          : t(`events.${event.id}`)}
+                      </Text>
+                    </View>
+                  ))}
                 </View>
               ) : (
                 <Text className="text-muted-foreground mt-1 font-sans text-xs">
-                  No Islamic observance marked for this date.
+                  {t("noObservance")}
                 </Text>
               )}
             </View>

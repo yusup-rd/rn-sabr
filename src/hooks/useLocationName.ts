@@ -1,8 +1,18 @@
 import { reverseGeocode } from "@/lib/location";
 import { useLocationStore } from "@/store/locationStore";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+
+interface ResolvedLocation {
+  latitude: number;
+  longitude: number;
+  language: string;
+}
 
 export function useLocationName() {
+  const { i18n } = useTranslation();
+  const language = i18n.language;
+
   const latitude = useLocationStore((state) => state.latitude);
   const longitude = useLocationStore((state) => state.longitude);
   const locationName = useLocationStore((state) => state.locationName);
@@ -13,12 +23,20 @@ export function useLocationName() {
     (state) => state.setLocationNameStatus,
   );
 
+  const resolvedLocation = useRef<ResolvedLocation | null>(null);
+
   useEffect(() => {
     if (latitude == null || longitude == null) {
       return;
     }
 
-    if (locationName) {
+    const hasResolvedCurrentLocation =
+      locationName &&
+      resolvedLocation.current?.latitude === latitude &&
+      resolvedLocation.current?.longitude === longitude &&
+      resolvedLocation.current?.language === language;
+
+    if (hasResolvedCurrentLocation) {
       return;
     }
 
@@ -28,7 +46,7 @@ export function useLocationName() {
       setLocationNameStatus("loading");
 
       try {
-        const address = await reverseGeocode(latitude, longitude);
+        const address = await reverseGeocode(latitude, longitude, language);
 
         if (cancelled) {
           return;
@@ -38,6 +56,12 @@ export function useLocationName() {
           address.city && address.country
             ? `${address.city}, ${address.country}`
             : (address.country ?? address.city ?? null);
+
+        resolvedLocation.current = {
+          latitude,
+          longitude,
+          language,
+        };
 
         setLocationName(name);
         setLocationNameStatus(name ? "resolved" : "failed");
@@ -60,6 +84,7 @@ export function useLocationName() {
     latitude,
     longitude,
     locationName,
+    language,
     setLocationName,
     setLocationNameStatus,
   ]);

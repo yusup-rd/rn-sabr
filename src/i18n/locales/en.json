@@ -1,0 +1,382 @@
+{
+  "tabs": {
+    "home": "Home",
+    "quran": "Quran",
+    "qibla": "Qibla",
+    "mosques": "Mosques",
+    "settings": "Settings"
+  },
+  "prayers": {
+    "fajr": "Fajr",
+    "dawn": "Dawn",
+    "sunrise": "Sunrise",
+    "dhuhr": "Dhuhr",
+    "noon": "Noon",
+    "asr": "Asr",
+    "afternoon": "Afternoon",
+    "maghrib": "Maghrib",
+    "sunset": "Sunset",
+    "isha": "Isha",
+    "night": "Night"
+  },
+  "duration": {
+    "hour_one": "{{count}} hr",
+    "hour_other": "{{count}} hrs",
+    "minute_one": "{{count}} min",
+    "minute_other": "{{count}} mins"
+  },
+  "compass": {
+    "n": "N",
+    "ne": "NE",
+    "e": "E",
+    "se": "SE",
+    "s": "S",
+    "sw": "SW",
+    "w": "W",
+    "nw": "NW"
+  },
+  "hijri": {
+    "era": "AH"
+  },
+  "prayerCalculationMethods": {
+    "short": {
+      "mwl": "MWL",
+      "isna": "ISNA",
+      "egyptian": "Egyptian",
+      "karachi": "Karachi",
+      "ummAlQura": "Umm al-Qura"
+    },
+    "full": {
+      "mwl": "Muslim World League",
+      "isna": "Islamic Society of North America",
+      "egyptian": "Egyptian General Authority",
+      "karachi": "University of Islamic Sciences, Karachi",
+      "ummAlQura": "Umm al-Qura University"
+    }
+  },
+  "asrMethods": {
+    "short": {
+      "standard": "Standard",
+      "hanafi": "Hanafi"
+    },
+    "full": {
+      "standard": "Shafi'i, Maliki & Hanbali",
+      "hanafi": "Hanafi"
+    }
+  },
+  "home": {
+    "loading": {
+      "title": "Getting your location...",
+      "message": "We need your location to calculate prayer times."
+    },
+    "locationError": {
+      "permissionBlockedTitle": "Location permission is disabled",
+      "unavailableTitle": "Location unavailable",
+      "openSettings": "Open Settings",
+      "tryAgain": "Try Again"
+    },
+    "dateLocation": {
+      "loading": "Locating...",
+      "unavailable": "Location unavailable"
+    },
+    "hero": {
+      "unavailable": {
+        "title": "Prayer times unavailable",
+        "description": "Set your location to calculate prayer times."
+      },
+      "nextPrayer": "Next Prayer",
+      "timeRemaining": "Time Remaining",
+      "percentElapsed": "{{percent}}% elapsed",
+      "solarEventIn": "{{label}} in {{time}}",
+      "qiblaAt": "Qibla: {{degrees}}° {{direction}}"
+    },
+    "prayersToday": {
+      "title": "Today's Prayers",
+      "info": "These are calculated times for the Adhan (call to prayer). Actual congregational (Iqamah) times vary depending on your local mosque.",
+      "nextIn": "Next in {{time}}",
+      "settingsAccessibilityLabel": "Prayer settings. Asr: {{asrLabel}}, Method: {{calculationMethodLabel}}"
+    },
+    "quickAccess": {
+      "quran": {
+        "title": "Quran",
+        "description": {
+          "default": "Read Quran",
+          "continue": "Read Surah {{surahName}}"
+        },
+        "badge": "Surah"
+      },
+      "mosques": {
+        "title": "Mosques",
+        "description": "{{count}} open nearby",
+        "badge": "{{distance}} km"
+      },
+      "prayerTimes": {
+        "title": "Prayer Times",
+        "description": "Times & notifications",
+        "badge": "Daily"
+      },
+      "zakat": {
+        "title": "Zakat",
+        "description": "Quick Calculator",
+        "badge": "Nisab"
+      },
+      "tasbih": {
+        "title": "Tasbih",
+        "description": "Count your dhikr",
+        "badge": "33"
+      }
+    }
+  },
+  "prayerTimes": {
+    "loading": {
+      "title": "Getting your location",
+      "message": "Please wait while we determine your current location."
+    },
+    "locationError": {
+      "permissionBlockedTitle": "Location unavailable",
+      "unavailableTitle": "We couldn't determine your current location.",
+      "openSettings": "Open Settings",
+      "tryAgain": "Try Again"
+    },
+    "location": {
+      "loading": "Locating...",
+      "unavailable": "Location unavailable"
+    },
+    "prayerCalculation": {
+      "title": "Prayer Calculation",
+      "description": "Choose how your prayer times are calculated.",
+      "calculationMethod": "Prayer Time Method",
+      "asrMethod": "Asr Method",
+      "actions": {
+        "apply": "Apply",
+        "cancel": "Cancel"
+      }
+    },
+    "calendar": {
+      "description": "Select a day",
+      "today": "Today",
+      "previousDay": "Previous day",
+      "nextDay": "Next day",
+      "openCalendar": "Open calendar",
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month",
+      "noObservance": "No Islamic observance marked for this date.",
+      "events": {
+        "islamic_new_year": "Islamic New Year",
+        "ashura": "Ashura",
+        "isra_miraj": "Isra and Mi'raj",
+        "nisf_shaban": "Laylat al-Bara'ah",
+        "ramadan_start": "Beginning of Ramadan",
+        "laylat_al_qadr": "Laylat al-Qadr",
+        "eid_al_fitr": "Eid al-Fitr",
+        "arafah": "Day of Arafah",
+        "eid_al_adha": "Eid al-Adha",
+        "mawlid": "Mawlid"
+      }
+    },
+    "schedule": {
+      "todayTitle": "Today's Prayer Times",
+      "title": "{{date}} Prayer Times",
+      "notification": {
+        "title": "Notification",
+        "description": "Remind me about this prayer",
+        "remind": "Remind me",
+        "remindTimes": {
+          "atTime": "At prayer time",
+          "fiveMinutesBefore": "5 minutes before",
+          "tenMinutesBefore": "10 minutes before",
+          "fifteenMinutesBefore": "15 minutes before"
+        },
+        "info": "Notification settings apply to this prayer every day.",
+        "action": {
+          "done": "Done"
+        },
+        "status": {
+          "off": "Off",
+          "atTime": "At prayer time",
+          "minutesBefore": "{{count}} min before"
+        },
+        "accessibility": {
+          "settings": "{{prayer}} prayer settings"
+        }
+      }
+    },
+    "daylightArc": {
+      "title": "Daylight",
+      "titleWithDate": "Daylight · {{date}}",
+      "description": "Sun's journey across the sky",
+      "sunrise": "Sunrise",
+      "sunset": "Sunset",
+      "daylight": "Daylight",
+      "currentTime": "Current time",
+      "daylightRemaining": "Daylight remaining",
+      "untilSunrise": "Until sunrise",
+      "daylightEnded": "Daylight ended",
+      "beforeSunrise": "Before sunrise",
+      "afterSunset": "After sunset"
+    },
+    "nightPortions": {
+      "title": "Night Portions",
+      "titleWithDate": "Night · {{date}}",
+      "description": "From sunset until Fajr",
+      "nightDuration": "Night",
+      "sunset": "Sunset",
+      "fajr": "Fajr",
+      "firstThird": "1st third",
+      "secondThird": "2nd third",
+      "lastThird": "Last third",
+      "lastThirdBeganAt": "Last third began at",
+      "lastThirdBeginsAt": "Last third begins at",
+      "duration": "Duration",
+      "beforeNight": "Before night",
+      "nightEnded": "Night ended",
+      "lastThirdMessage": "You are currently in the last third of the night.",
+      "lastThirdCountdown": "Last third begins in {{duration}}.",
+      "tahajjud": "Tahajjud",
+      "tahajjudDescription": "Voluntary night prayer traditionally associated with waking after sleep.",
+      "nightPrayerWindow": "Night prayer window",
+      "tahajjudInfo": "Tahajjud is performed during the night after sleeping and waking for prayer. The last third of the night is a particularly significant time for voluntary worship."
+    }
+  },
+  "zakat": {
+    "nisab": {
+      "title": "Nisab",
+      "description": "Choose the standard used to determine your Nisab threshold.",
+      "silver": "Silver",
+      "gold": "Gold",
+      "silverAmount": "612.36 g",
+      "goldAmount": "87.48 g",
+      "currentNisab": "Current Nisab",
+      "usingSavedPrices": "Using previously saved market prices.",
+      "lastUpdatedRecently": "Last updated recently",
+      "updated": "Updated {{date}}",
+      "loadingPrices": "Loading current market prices...",
+      "marketPriceError": "Unable to load current market prices."
+    },
+    "preciousMetals": {
+      "title": "Gold & Silver",
+      "description": "Enter the current monetary value of the gold and silver you own.",
+      "gold": "Value of gold",
+      "silver": "Value of silver"
+    },
+    "assets": {
+      "title": "Assets",
+      "description": "Include your zakatable cash, savings, investments and business assets.",
+      "cashAndBank": "Cash & bank balance",
+      "cashAndBankDescription": "Include the total money you currently hold in cash and bank accounts.",
+      "futurePurposeSavings": "Money saved for a future purpose",
+      "futurePurposeSavingsDescription": "For example, money set aside for Hajj or another future purpose.",
+      "moneyOwed": "Money owed to you",
+      "moneyOwedDescription": "Loans or other money you expect to receive.",
+      "investments": "Investments & savings",
+      "investmentsDescription": "Zakatable investments, shares and similar assets.",
+      "businessStock": "Business stock",
+      "businessStockDescription": "Goods or stock held for trade."
+    },
+    "liabilities": {
+      "title": "Deductible Liabilities",
+      "description": "Include debts and payments that may be deductible from your zakatable wealth.",
+      "shortTermDebt": "Short-term debt",
+      "shortTermDebtDescription": "Debt that must be paid within the next 12 months.",
+      "immediateBills": "Immediate bills",
+      "immediateBillsDescription": "Rent, taxes, utilities and other payments currently due.",
+      "wagesDue": "Wages due",
+      "wagesDueDescription": "Outstanding wages owed to employees."
+    },
+    "result": {
+      "title": "Zakat Summary",
+      "description": "Based on the values you entered.",
+      "totalAssets": "Total assets",
+      "deductibleLiabilities": "Deductible liabilities",
+      "netWealth": "Net wealth",
+      "nisabMet": "Nisab (met)",
+      "nisabNotMet": "Nisab (not met)",
+      "zakatAmount": "Zakat Amount",
+      "meetsNisab": "Your net wealth meets the selected Nisab threshold. Hawl eligibility is not assessed by this calculator.",
+      "belowNisab": "Your net wealth is below the selected Nisab threshold.",
+      "copyZakat": "Copy Zakat",
+      "copied": "Copied",
+      "shareZakat": "Share Zakat",
+      "copyAccessibilityLabel": "Copy Zakat amount",
+      "copyAccessibilityHint": "Copies the Zakat amount to the clipboard",
+      "shareAccessibilityLabel": "Share Zakat amount",
+      "shareAccessibilityHint": "Shares the Zakat amount",
+      "shareMessage": "My Zakat amount is {{amount}}."
+    },
+    "reset": "Reset",
+    "info": "Zakat is generally calculated at 2.5% of zakatable wealth once it reaches the Nisab threshold and the applicable Hawl period has passed. For personal religious circumstances, consult a qualified scholar."
+  },
+  "qibla": {
+    "location": {
+      "unavailableTitle": "Location unavailable",
+      "unavailableDescription": "Set your location to calculate the Qibla direction."
+    },
+    "compass": {
+      "starting": "Starting compass...",
+      "findingDirection": "Finding your direction..."
+    },
+    "permission": {
+      "requiredTitle": "Compass permission required",
+      "requiredDescription": "Allow location access to use the Qibla compass."
+    },
+    "alignment": {
+      "facingQibla": "Facing Qibla",
+      "turnTowardsQibla": "Turn your phone towards Qibla"
+    },
+    "calibration": {
+      "title": "Compass needs calibration",
+      "description": "Move your phone in a figure-eight to improve compass accuracy."
+    },
+    "noSensor": {
+      "title": "Compass unavailable",
+      "description": "This device doesn't have a compass sensor, so your facing direction can't be determined automatically.",
+      "qiblaAvailableTitle": "Qibla direction is still available",
+      "qiblaAvailableDescription": "Your Qibla bearing can still be calculated from your location. Use another compass to physically align yourself with it."
+    },
+    "controls": {
+      "hapticFeedback": "Haptic Feedback"
+    },
+    "readout": {
+      "qibla": "Qibla",
+      "facing": "You're facing",
+      "kilometers": "km"
+    }
+  },
+  "tasbih": {
+    "reset": {
+      "title": "Reset Tasbih?",
+      "description": "This will reset your current count, rounds, and total count.",
+      "cancel": "Cancel",
+      "confirm": "Reset",
+      "failedTitle": "Reset Failed",
+      "failedDescription": "Unable to reset the Tasbih. Please try again."
+    },
+    "counter": {
+      "rounds": "Rounds",
+      "total": "Total"
+    }
+  },
+  "settings": {
+    "header": {
+      "title": "Sanctuary Preferences",
+      "description": "Personalize your quiet companion for mindfulness, accurate timings, and sacred routines."
+    },
+    "sections": {
+      "appearance": {
+        "title": "Appearance & Language",
+        "theme": {
+          "title": "Theme",
+          "light": "Light",
+          "dark": "Dark",
+          "system": "System"
+        },
+        "language": {
+          "title": "Language",
+          "description": "Choose your preferred language.",
+          "english": "English",
+          "russian": "Russian"
+        }
+      }
+    }
+  }
+}

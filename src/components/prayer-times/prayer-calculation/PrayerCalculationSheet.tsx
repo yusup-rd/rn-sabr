@@ -4,7 +4,7 @@ import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 import { BottomSheet, Host, RNHostView } from "@expo/ui";
 import { background } from "@expo/ui/jetpack-compose/modifiers";
 import { presentationBackground } from "@expo/ui/swift-ui/modifiers";
-import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import PrayerCalculationOption from "./PrayerCalculationOption";
 
@@ -12,6 +12,8 @@ interface PrayerCalculationSheetProps {
   visible: boolean;
   calculationMethod: CalculationMethodId;
   asrMethod: AsrMethod;
+  onCalculationMethodChange: (method: CalculationMethodId) => void;
+  onAsrMethodChange: (method: AsrMethod) => void;
   onClose: () => void;
   onSave: (
     calculationMethod: CalculationMethodId,
@@ -23,26 +25,24 @@ const PrayerCalculationSheet = ({
   visible,
   calculationMethod,
   asrMethod,
+  onCalculationMethodChange,
+  onAsrMethodChange,
   onClose,
   onSave,
 }: PrayerCalculationSheetProps) => {
-  const [selectedMethod, setSelectedMethod] =
-    useState<CalculationMethodId>(calculationMethod);
-
-  const [selectedAsrMethod, setSelectedAsrMethod] =
-    useState<AsrMethod>(asrMethod);
-
   const { colors } = useTheme();
-
-  useEffect(() => {
-    if (visible) {
-      setSelectedMethod(calculationMethod);
-      setSelectedAsrMethod(asrMethod);
-    }
-  }, [visible, calculationMethod, asrMethod]);
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.prayerCalculation",
+  });
+  const { t: tMethod } = useTranslation(undefined, {
+    keyPrefix: "prayerCalculationMethods",
+  });
+  const { t: tAsr } = useTranslation(undefined, {
+    keyPrefix: "asrMethods",
+  });
 
   const handleSave = () => {
-    onSave(selectedMethod, selectedAsrMethod);
+    onSave(calculationMethod, asrMethod);
   };
 
   return (
@@ -68,62 +68,59 @@ const PrayerCalculationSheet = ({
           >
             <View className="gap-1">
               <Text className="text-foreground font-sans-bold text-xl">
-                Prayer Calculation
+                {t("title")}
               </Text>
 
               <Text className="text-muted-foreground font-sans-medium text-sm">
-                Choose how your prayer times are calculated.
+                {t("description")}
               </Text>
             </View>
 
             <View className="gap-5">
-              {/* Calculation method */}
               <View className="gap-2">
                 <Text className="text-foreground font-sans-semibold text-sm">
-                  Calculation Method
+                  {t("calculationMethod")}
                 </Text>
 
                 <View className="gap-2">
                   {calculationMethods.map((method) => (
                     <PrayerCalculationOption
                       key={method.id}
-                      title={method.label}
-                      description={method.description}
-                      selected={selectedMethod === method.id}
-                      onPress={() => setSelectedMethod(method.id)}
+                      title={tMethod(`short.${method.key}`)}
+                      description={tMethod(`full.${method.key}`)}
+                      selected={calculationMethod === method.id}
+                      onPress={() => onCalculationMethodChange(method.id)}
                     />
                   ))}
                 </View>
               </View>
 
-              {/* Asr method */}
               <View className="gap-2">
                 <Text className="text-foreground font-sans-semibold text-sm">
-                  Asr Calculation
+                  {t("asrMethod")}
                 </Text>
 
                 <View className="gap-2">
                   {asrMethods.map((method) => (
                     <PrayerCalculationOption
                       key={method.id}
-                      title={method.label}
-                      description={method.description}
-                      selected={selectedAsrMethod === method.id}
-                      onPress={() => setSelectedAsrMethod(method.id)}
+                      title={tAsr(`short.${method.key}`)}
+                      description={tAsr(`full.${method.key}`)}
+                      selected={asrMethod === method.id}
+                      onPress={() => onAsrMethodChange(method.id)}
                     />
                   ))}
                 </View>
               </View>
             </View>
 
-            {/* Actions */}
             <View className="flex-row gap-3">
               <Pressable
                 onPress={onClose}
                 className="bg-muted flex-1 items-center rounded-xl py-3.5"
               >
                 <Text className="text-foreground font-sans-semibold text-sm">
-                  Cancel
+                  {t("actions.cancel")}
                 </Text>
               </Pressable>
 
@@ -132,7 +129,7 @@ const PrayerCalculationSheet = ({
                 className="bg-primary flex-1 items-center rounded-xl py-3.5"
               >
                 <Text className="text-primary-foreground font-sans-semibold text-sm">
-                  Apply
+                  {t("actions.apply")}
                 </Text>
               </Pressable>
             </View>

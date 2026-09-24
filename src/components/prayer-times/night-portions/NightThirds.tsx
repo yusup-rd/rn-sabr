@@ -1,5 +1,6 @@
 import { formatTime } from "@/lib/format";
 import { clsx } from "clsx";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 
 interface NightThirdsProps {
@@ -25,6 +26,10 @@ const NightThirds = ({
   isSecondThird,
   isLastThird,
 }: NightThirdsProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.nightPortions",
+  });
+
   return (
     <View className="border-border overflow-hidden rounded-2xl border">
       <View className={clsx("px-4 py-3.5", isFirstThird && "bg-primary-soft")}>
@@ -43,7 +48,7 @@ const NightThirds = ({
                 isFirstThird ? "text-primary" : "text-foreground",
               )}
             >
-              1st third
+              {t("firstThird")}
             </Text>
           </View>
 
@@ -71,7 +76,7 @@ const NightThirds = ({
                 isSecondThird ? "text-primary" : "text-foreground",
               )}
             >
-              2nd third
+              {t("secondThird")}
             </Text>
           </View>
 
@@ -100,7 +105,7 @@ const NightThirds = ({
                 isLastThird ? "text-primary" : "text-foreground",
               )}
             >
-              Last third
+              {t("lastThird")}
             </Text>
           </View>
 

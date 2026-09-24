@@ -2,6 +2,7 @@ import { usePrayerStore } from "@/store/prayerStore";
 import type { Prayer } from "@/types/prayer";
 import { Ionicons } from "@expo/vector-icons";
 import { clsx } from "clsx";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 
 interface ScheduledPrayerRowProps {
@@ -15,20 +16,32 @@ const ScheduledPrayerRow = ({
   showBorder,
   onPress,
 }: ScheduledPrayerRowProps) => {
+  const { t: tPrayer } = useTranslation(undefined, {
+    keyPrefix: "prayers",
+  });
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.schedule.notification",
+  });
+
   const notificationSettings = usePrayerStore(
     (state) => state.prayerNotifications[prayer.name],
   );
 
+  const prayerKey = prayer.name.toLowerCase();
+  const descriptionKey = prayer.description.toLowerCase();
+
   const getNotificationLabel = () => {
     if (!notificationSettings.enabled) {
-      return "Off";
+      return t("status.off");
     }
 
     if (notificationSettings.minutesBefore === 0) {
-      return "At prayer time";
+      return t("status.atTime");
     }
 
-    return `${notificationSettings.minutesBefore} min before`;
+    return t("status.minutesBefore", {
+      count: notificationSettings.minutesBefore,
+    });
   };
 
   const notificationLabel = getNotificationLabel();
@@ -37,7 +50,9 @@ const ScheduledPrayerRow = ({
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={`${prayer.name} prayer settings`}
+      accessibilityLabel={t("accessibility.settings", {
+        prayer: tPrayer(prayerKey),
+      })}
       className={clsx(
         "active:bg-muted flex-row items-center justify-between px-4 py-3.5",
         showBorder && "border-border border-b",
@@ -51,7 +66,7 @@ const ScheduledPrayerRow = ({
         <View className="min-w-0 flex-1 gap-0.5">
           <View className="flex-row items-center gap-2">
             <Text className="font-sans-semibold text-foreground text-sm">
-              {prayer.name}
+              {tPrayer(prayerKey)}
             </Text>
 
             <View className="flex-row items-center gap-1">
@@ -85,7 +100,7 @@ const ScheduledPrayerRow = ({
             className="text-muted-foreground font-sans text-xs"
             numberOfLines={1}
           >
-            {prayer.description}
+            {tPrayer(descriptionKey)}
           </Text>
         </View>
       </View>

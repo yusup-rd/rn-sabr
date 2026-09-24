@@ -1,5 +1,6 @@
 import { formatDayMonth } from "@/lib/format";
 import { clsx } from "clsx";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 
 interface NightStatus {
@@ -19,17 +20,23 @@ const NightPortionsHeader = ({
   selectedDate,
   status,
 }: NightPortionsHeaderProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.nightPortions",
+  });
+
   return (
     <View className="flex-row items-start justify-between">
       <View className="flex-1 gap-1">
         <Text className="font-sans-semibold text-foreground text-base">
-          Night Portions
+          {t("title")}
         </Text>
 
         <Text className="text-muted-foreground font-sans text-xs">
           {isToday
-            ? "From sunset until Fajr"
-            : `Night · ${formatDayMonth(selectedDate)}`}
+            ? t("description")
+            : t("titleWithDate", {
+                date: formatDayMonth(selectedDate),
+              })}
         </Text>
       </View>
 

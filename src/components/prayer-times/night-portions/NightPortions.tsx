@@ -1,8 +1,5 @@
-import {
-  formatDuration,
-  formatRemainingDuration,
-  formatTime,
-} from "@/lib/format";
+import { formatDuration, formatTime } from "@/lib/format";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import NightPortionsHeader from "./NightPortionsHeader";
 import NightSummary from "./NightSummary";
@@ -24,6 +21,10 @@ const NightPortions = ({
   isToday,
   selectedDate,
 }: NightPortionsProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.nightPortions",
+  });
+
   const sunsetTime = sunset.getTime();
   const fajrTime = fajr.getTime();
   const nowTime = now.getTime();
@@ -37,8 +38,10 @@ const NightPortions = ({
   const thirdDuration = nightDuration / 3;
 
   const firstThirdEnd = sunsetTime + thirdDuration;
+
   const secondThirdStart = firstThirdEnd;
   const secondThirdEnd = sunsetTime + thirdDuration * 2;
+
   const lastThirdStart = secondThirdEnd;
   const lastThirdEnd = fajrTime;
 
@@ -66,8 +69,8 @@ const NightPortions = ({
   const lastThirdHasBegun = isToday ? nowTime >= lastThirdStart : isPastDate;
 
   const lastThirdLabel = lastThirdHasBegun
-    ? "Last third began at"
-    : "Last third begins at";
+    ? t("lastThirdBeganAt")
+    : t("lastThirdBeginsAt");
 
   const status = (() => {
     if (!isToday) {
@@ -76,7 +79,7 @@ const NightPortions = ({
 
     if (isBeforeNight) {
       return {
-        label: "Before night",
+        label: t("beforeNight"),
         className: "bg-muted",
         textClassName: "text-muted-foreground",
       };
@@ -84,7 +87,7 @@ const NightPortions = ({
 
     if (isAfterNight) {
       return {
-        label: "Night ended",
+        label: t("nightEnded"),
         className: "bg-muted",
         textClassName: "text-muted-foreground",
       };
@@ -92,7 +95,7 @@ const NightPortions = ({
 
     if (isLastThird) {
       return {
-        label: "Last third",
+        label: t("lastThird"),
         className: "bg-primary-soft",
         textClassName: "text-primary",
       };
@@ -100,7 +103,7 @@ const NightPortions = ({
 
     if (isSecondThird) {
       return {
-        label: "2nd third",
+        label: t("secondThird"),
         className: "bg-primary-soft",
         textClassName: "text-primary",
       };
@@ -108,7 +111,7 @@ const NightPortions = ({
 
     if (isFirstThird) {
       return {
-        label: "1st third",
+        label: t("firstThird"),
         className: "bg-primary-soft",
         textClassName: "text-primary",
       };
@@ -152,7 +155,7 @@ const NightPortions = ({
 
         <View className="items-end gap-0.5">
           <Text className="text-muted-foreground font-sans text-xs">
-            Duration
+            {t("duration")}
           </Text>
 
           <Text className="font-sans-semibold text-primary text-sm">
@@ -164,10 +167,10 @@ const NightPortions = ({
       {isToday && !isBeforeNight && !isAfterNight && (
         <Text className="text-muted-foreground text-center font-sans text-xs">
           {isLastThird
-            ? "You are currently in the last third of the night."
-            : `Last third begins in ${formatRemainingDuration(
-                lastThirdStart - nowTime,
-              )}.`}
+            ? t("lastThirdMessage")
+            : t("lastThirdCountdown", {
+                duration: formatDuration(lastThirdStart - nowTime),
+              })}
         </Text>
       )}
 

@@ -1,7 +1,12 @@
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 
 const NoSensorFallback = () => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "qibla.noSensor",
+  });
+
   return (
     <View className="w-full items-center gap-5">
       <View className="items-center justify-center gap-2">
@@ -10,12 +15,11 @@ const NoSensorFallback = () => {
         </View>
 
         <Text className="font-sans-semibold text-foreground text-center text-lg">
-          Compass unavailable
+          {t("title")}
         </Text>
 
         <Text className="text-muted-foreground max-w-sm text-center font-sans text-sm">
-          This device doesn't have a compass sensor, so your facing direction
-          can't be determined automatically.
+          {t("description")}
         </Text>
       </View>
 
@@ -31,12 +35,11 @@ const NoSensorFallback = () => {
 
           <View className="flex-1 gap-0.5">
             <Text className="font-sans-semibold text-foreground text-sm">
-              Qibla direction is still available
+              {t("qiblaAvailableTitle")}
             </Text>
 
             <Text className="text-muted-foreground font-sans text-xs">
-              Your Qibla bearing can still be calculated from your location. Use
-              another compass to physically align yourself with it.
+              {t("qiblaAvailableDescription")}
             </Text>
           </View>
         </View>

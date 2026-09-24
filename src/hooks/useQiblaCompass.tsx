@@ -34,11 +34,22 @@ const useQiblaCompass = ({
   const handleHeading = useCallback(
     (heading: number) => {
       if (!initialized.value) {
+        // Reanimated SharedValues are intentionally mutable.
+        // eslint-disable-next-line react-hooks/immutability
         initialized.value = true;
 
         targetRotationRef.current = heading;
+
+        // Reanimated SharedValues are intentionally mutable.
+        // eslint-disable-next-line react-hooks/immutability
         targetRotation.value = heading;
+
+        // Reanimated SharedValues are intentionally mutable.
+        // eslint-disable-next-line react-hooks/immutability
         rotation.value = heading;
+
+        // Reanimated SharedValues are intentionally mutable.
+        // eslint-disable-next-line react-hooks/immutability
         velocity.value = 0;
 
         return;
@@ -48,6 +59,8 @@ const useQiblaCompass = ({
 
       if (previousTarget === null) {
         targetRotationRef.current = heading;
+
+        // Reanimated SharedValues are intentionally mutable.
         targetRotation.value = heading;
 
         return;
@@ -56,6 +69,8 @@ const useQiblaCompass = ({
       const nextTarget = shortestRotationPath(previousTarget, heading);
 
       targetRotationRef.current = nextTarget;
+
+      // Reanimated SharedValues are intentionally mutable.
       targetRotation.value = nextTarget;
     },
     [initialized, rotation, targetRotation, velocity],
@@ -90,19 +105,17 @@ const useQiblaCompass = ({
     }
 
     wasFacingQibla.current = isFacingQibla;
-  }, [hapticsEnabled, isFacingQibla]);
+  }, [hapticsEnabled, isFacingQibla, isFocused]);
 
   useEffect(() => {
-    if (accuracy === null) {
-      setShowCalibration(false);
-      return;
-    }
+    const shouldShow = accuracy !== null && accuracy <= 1;
 
-    const shouldShow = accuracy <= 1;
-
-    const timeout = setTimeout(() => {
-      setShowCalibration(shouldShow);
-    }, 500);
+    const timeout = setTimeout(
+      () => {
+        setShowCalibration(shouldShow);
+      },
+      accuracy === null ? 0 : 500,
+    );
 
     return () => clearTimeout(timeout);
   }, [accuracy]);
@@ -122,11 +135,18 @@ const useQiblaCompass = ({
       }
 
       const dt = Math.min(frameTime / 1000, 0.032);
+
       const displacement = targetRotation.value - rotation.value;
+
       const acceleration =
         displacement * SPRING_STIFFNESS - velocity.value * SPRING_DAMPING;
 
+      // Reanimated SharedValues are intentionally mutable inside the worklet.
+      // eslint-disable-next-line react-hooks/immutability
       velocity.value += acceleration * dt;
+
+      // Reanimated SharedValues are intentionally mutable inside the worklet.
+      // eslint-disable-next-line react-hooks/immutability
       rotation.value += velocity.value * dt;
     },
     [initialized, rotation, targetRotation, velocity],

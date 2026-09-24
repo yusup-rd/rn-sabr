@@ -154,4 +154,6 @@ const AnimatedBead = memo(
   },
 );
 
+AnimatedBead.displayName = "AnimatedBead";
+
 export default TasbihBeads;

@@ -1,3 +1,4 @@
+import InfoSection from "@/components/ui/InfoSection";
 import ZakatInput from "@/components/zakat/form/ZakatInput";
 import ZakatSection from "@/components/zakat/form/ZakatSection";
 import NisabCard from "@/components/zakat/nisab/NisabCard";
@@ -5,9 +6,14 @@ import ZakatResultCard from "@/components/zakat/result/ZakatResultCard";
 import useZakatMarketPrices from "@/hooks/useZakatMarketPrices";
 import { calculateZakatSummary } from "@/lib/zakat-calculations";
 import { useZakatStore } from "@/store/zakatStore";
+import { useTranslation } from "react-i18next";
 import { Pressable, ScrollView, Text } from "react-native";
 
 const Zakat = () => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "zakat",
+  });
+
   const {
     nisabStandard,
     gold,
@@ -71,18 +77,18 @@ const Zakat = () => {
 
       {/* Precious metals */}
       <ZakatSection
-        title="Gold & Silver"
-        description="Enter the current monetary value of the gold and silver you own."
+        title={t("preciousMetals.title")}
+        description={t("preciousMetals.description")}
         icon="gem"
       >
         <ZakatInput
-          label="Value of gold"
+          label={t("preciousMetals.gold")}
           value={gold}
           onChange={(value) => setField("gold", value)}
         />
 
         <ZakatInput
-          label="Value of silver"
+          label={t("preciousMetals.silver")}
           value={silver}
           onChange={(value) => setField("silver", value)}
         />
@@ -90,41 +96,41 @@ const Zakat = () => {
 
       {/* Assets */}
       <ZakatSection
-        title="Assets"
-        description="Include your zakatable cash, savings, investments and business assets."
+        title={t("assets.title")}
+        description={t("assets.description")}
         icon="wallet"
       >
         <ZakatInput
-          label="Cash & bank balance"
-          description="Include the total money you currently hold in cash and bank accounts."
+          label={t("assets.cashAndBank")}
+          description={t("assets.cashAndBankDescription")}
           value={cashAndBank}
           onChange={(value) => setField("cashAndBank", value)}
         />
 
         <ZakatInput
-          label="Money saved for a future purpose"
-          description="For example, money set aside for Hajj or another future purpose."
+          label={t("assets.futurePurposeSavings")}
+          description={t("assets.futurePurposeSavingsDescription")}
           value={futurePurposeSavings}
           onChange={(value) => setField("futurePurposeSavings", value)}
         />
 
         <ZakatInput
-          label="Money owed to you"
-          description="Loans or other money you expect to receive."
+          label={t("assets.moneyOwed")}
+          description={t("assets.moneyOwedDescription")}
           value={moneyOwed}
           onChange={(value) => setField("moneyOwed", value)}
         />
 
         <ZakatInput
-          label="Investments & savings"
-          description="Zakatable investments, shares and similar assets."
+          label={t("assets.investments")}
+          description={t("assets.investmentsDescription")}
           value={investments}
           onChange={(value) => setField("investments", value)}
         />
 
         <ZakatInput
-          label="Business stock"
-          description="Goods or stock held for trade."
+          label={t("assets.businessStock")}
+          description={t("assets.businessStockDescription")}
           value={businessStock}
           onChange={(value) => setField("businessStock", value)}
         />
@@ -132,27 +138,27 @@ const Zakat = () => {
 
       {/* Liabilities */}
       <ZakatSection
-        title="Deductible Liabilities"
-        description="Include debts and payments that may be deductible from your zakatable wealth."
+        title={t("liabilities.title")}
+        description={t("liabilities.description")}
         icon="file-invoice-dollar"
       >
         <ZakatInput
-          label="Short-term debt"
-          description="Debt that must be paid within the next 12 months."
+          label={t("liabilities.shortTermDebt")}
+          description={t("liabilities.shortTermDebtDescription")}
           value={shortTermDebt}
           onChange={(value) => setField("shortTermDebt", value)}
         />
 
         <ZakatInput
-          label="Immediate bills"
-          description="Rent, taxes, utilities and other payments currently due."
+          label={t("liabilities.immediateBills")}
+          description={t("liabilities.immediateBillsDescription")}
           value={immediateBills}
           onChange={(value) => setField("immediateBills", value)}
         />
 
         <ZakatInput
-          label="Wages due"
-          description="Outstanding wages owed to employees."
+          label={t("liabilities.wagesDue")}
+          description={t("liabilities.wagesDueDescription")}
           value={wagesDue}
           onChange={(value) => setField("wagesDue", value)}
         />
@@ -167,16 +173,12 @@ const Zakat = () => {
         className="border-border bg-card active:bg-muted items-center rounded-2xl border px-5 py-4"
       >
         <Text className="font-sans-semibold text-foreground text-base">
-          Reset Calculator
+          {t("reset")}
         </Text>
       </Pressable>
 
       {/* Info */}
-      <Text className="font-sans-regular text-muted-foreground px-2 text-center text-xs leading-5">
-        Zakat is generally calculated at 2.5% of zakatable wealth once it
-        reaches the Nisab threshold and the applicable Hawl period has passed.
-        For personal religious circumstances, consult a qualified scholar.
-      </Text>
+      <InfoSection message={t("info")} />
     </ScrollView>
   );
 };

@@ -2,51 +2,44 @@ import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 
 interface CalculationMethodOption {
   id: CalculationMethodId;
-  label: string;
-  description: string;
+  key: string;
+}
+
+interface AsrMethodOption {
+  id: AsrMethod;
+  key: string;
 }
 
 export const calculationMethods: CalculationMethodOption[] = [
   {
     id: "mwl",
-    label: "Muslim World League",
-    description: "MWL",
+    key: "mwl",
   },
   {
     id: "isna",
-    label: "Islamic Society of North America",
-    description: "ISNA",
+    key: "isna",
   },
   {
     id: "egyptian",
-    label: "Egyptian General Authority",
-    description: "Egyptian",
+    key: "egyptian",
   },
   {
     id: "karachi",
-    label: "University of Islamic Sciences, Karachi",
-    description: "Karachi",
+    key: "karachi",
   },
   {
     id: "umm-al-qura",
-    label: "Umm al-Qura University",
-    description: "Umm al-Qura",
+    key: "ummAlQura",
   },
 ];
 
-export const asrMethods: {
-  id: AsrMethod;
-  label: string;
-  description: string;
-}[] = [
+export const asrMethods: AsrMethodOption[] = [
   {
     id: "standard",
-    label: "Standard",
-    description: "Shafi'i, Maliki & Hanbali",
+    key: "standard",
   },
   {
     id: "hanafi",
-    label: "Hanafi",
-    description: "Hanafi",
+    key: "hanafi",
   },
 ];

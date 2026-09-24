@@ -1,5 +1,6 @@
 import { formatDayMonth } from "@/lib/format";
 import type { Prayer } from "@/types/prayer";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 import ScheduledPrayerRow from "./ScheduledPrayerRow";
 
@@ -16,9 +17,15 @@ const ScheduledTimes = ({
   isToday,
   onPrayerPress,
 }: ScheduledTimesProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.schedule",
+  });
+
   const title = isToday
-    ? "Today's Prayer Times"
-    : `${formatDayMonth(selectedDate)} Prayer Times`;
+    ? t("todayTitle")
+    : t("title", {
+        date: formatDayMonth(selectedDate),
+      });
 
   return (
     <View className="gap-2">

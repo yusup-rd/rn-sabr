@@ -2,6 +2,7 @@ import { calculationMethods } from "@/constants/prayer-calculation";
 import { useLocationStore } from "@/store/locationStore";
 import type { AsrMethod, CalculationMethodId } from "@/types/prayer";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 
 interface PrayerCalculationSelectorProps {
@@ -15,6 +16,16 @@ const PrayerCalculationSelector = ({
   asrMethod,
   onPress,
 }: PrayerCalculationSelectorProps) => {
+  const { t: tMethod } = useTranslation(undefined, {
+    keyPrefix: "prayerCalculationMethods.short",
+  });
+  const { t: tAsr } = useTranslation(undefined, {
+    keyPrefix: "asrMethods.short",
+  });
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes",
+  });
+
   const locationName = useLocationStore((state) => state.locationName);
   const locationNameStatus = useLocationStore(
     (state) => state.locationNameStatus,
@@ -24,14 +35,15 @@ const PrayerCalculationSelector = ({
     (item) => item.id === calculationMethod,
   );
 
-  const asrLabel = asrMethod === "hanafi" ? "Hanafi" : "Standard";
+  const calculationMethodLabel = method ? tMethod(method.key) : "—";
+
+  const asrLabel = tAsr(asrMethod);
 
   return (
     <Pressable
       onPress={onPress}
       className="bg-card active:bg-muted rounded-2xl px-4 py-3.5 shadow-md"
     >
-      {/* Location */}
       <View className="flex-row items-center gap-2">
         <Fa name="location-dot" size={12} className="text-primary" />
 
@@ -40,8 +52,8 @@ const PrayerCalculationSelector = ({
           numberOfLines={1}
         >
           {locationNameStatus === "loading"
-            ? "Locating..."
-            : (locationName ?? "Location unavailable")}
+            ? t("location.loading")
+            : (locationName ?? t("location.unavailable"))}
         </Text>
 
         <Fa name="chevron-right" size={11} className="text-muted-foreground" />
@@ -49,26 +61,23 @@ const PrayerCalculationSelector = ({
 
       <View className="bg-border my-3 h-px" />
 
-      {/* Calculation settings */}
       <View className="flex-row">
-        {/* Calculation method */}
         <View className="flex-1">
           <Text className="text-muted-foreground font-sans-medium text-xs">
-            Calculation method
+            {t("prayerCalculation.calculationMethod")}
           </Text>
 
           <Text
             className="text-foreground font-sans-semibold mt-1 text-sm"
             numberOfLines={1}
           >
-            {method?.description ?? "Unknown"}
+            {calculationMethodLabel}
           </Text>
         </View>
 
-        {/* Asr method */}
         <View className="flex-1">
           <Text className="text-muted-foreground font-sans-medium text-xs">
-            Asr method
+            {t("prayerCalculation.asrMethod")}
           </Text>
 
           <Text className="text-foreground font-sans-semibold mt-1 text-sm">

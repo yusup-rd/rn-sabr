@@ -1,15 +1,11 @@
 import { prayerMetadata } from "@/constants/prayers";
-import {
-  formatDuration,
-  formatDurationClock,
-  formatRemainingDuration,
-  formatTime,
-} from "@/lib/format";
+import { formatDuration, formatDurationClock, formatTime } from "@/lib/format";
 import { calculatePrayerTimes } from "@/lib/prayer-calculations";
 import { useLocationStore } from "@/store/locationStore";
 import { usePrayerStore } from "@/store/prayerStore";
 import type { Prayer, PrayerName, PrayerStatus } from "@/types/prayer";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const TEST_CURRENT_TIME = false;
 const TEST_HOUR = 13;
@@ -55,6 +51,7 @@ function getPrayerData(
   longitude: number,
   calculationMethod: Parameters<typeof calculatePrayerTimes>[3],
   asrMethod: Parameters<typeof calculatePrayerTimes>[4],
+  language: string,
 ) {
   const times = calculatePrayerTimes(
     latitude,
@@ -71,7 +68,7 @@ function getPrayerData(
     return {
       name,
       time,
-      formattedTime: formatTime(time),
+      formattedTime: formatTime(time, language),
       description: metadata.description,
       icon: metadata.icon,
       status: "upcoming",
@@ -86,6 +83,9 @@ function getPrayerData(
 }
 
 export function usePrayerTimes(selectedDate?: Date) {
+  const { i18n: i18nInstance } = useTranslation();
+  const language = i18nInstance.language;
+
   const calculationMethod = usePrayerStore((state) => state.calculationMethod);
   const asrMethod = usePrayerStore((state) => state.asrMethod);
   const latitude = useLocationStore((state) => state.latitude);
@@ -116,13 +116,27 @@ export function usePrayerTimes(selectedDate?: Date) {
       return null;
     }
 
-    const yesterday = new Date(now);
+    const [todayYear, todayMonth, todayDay] = todayKey.split("-").map(Number);
+
+    const [selectedYear, selectedMonth, selectedDay] = selectedKey
+      .split("-")
+      .map(Number);
+
+    const currentDate = new Date(todayYear, todayMonth, todayDay);
+
+    const selectedDateValue = new Date(
+      selectedYear,
+      selectedMonth,
+      selectedDay,
+    );
+
+    const yesterday = new Date(currentDate);
     yesterday.setDate(yesterday.getDate() - 1);
 
-    const tomorrow = new Date(now);
+    const tomorrow = new Date(currentDate);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const selectedNextDay = new Date(selectedDate ?? now);
+    const selectedNextDay = new Date(selectedDateValue);
     selectedNextDay.setDate(selectedNextDay.getDate() + 1);
 
     return {
@@ -132,14 +146,16 @@ export function usePrayerTimes(selectedDate?: Date) {
         longitude,
         calculationMethod,
         asrMethod,
+        language,
       ),
 
       today: getPrayerData(
-        now,
+        currentDate,
         latitude,
         longitude,
         calculationMethod,
         asrMethod,
+        language,
       ),
 
       tomorrow: getPrayerData(
@@ -148,14 +164,16 @@ export function usePrayerTimes(selectedDate?: Date) {
         longitude,
         calculationMethod,
         asrMethod,
+        language,
       ),
 
       selected: getPrayerData(
-        selectedDate ?? now,
+        selectedDateValue,
         latitude,
         longitude,
         calculationMethod,
         asrMethod,
+        language,
       ),
 
       selectedNextDay: getPrayerData(
@@ -164,6 +182,7 @@ export function usePrayerTimes(selectedDate?: Date) {
         longitude,
         calculationMethod,
         asrMethod,
+        language,
       ),
     };
   }, [
@@ -173,6 +192,7 @@ export function usePrayerTimes(selectedDate?: Date) {
     longitude,
     calculationMethod,
     asrMethod,
+    language,
   ]);
 
   return useMemo(() => {
@@ -235,7 +255,7 @@ export function usePrayerTimes(selectedDate?: Date) {
         ...prayer,
         status,
         remainingFormatted: isNextPrayerToday
-          ? formatRemainingDuration(prayer.time.getTime() - now.getTime())
+          ? formatDuration(prayer.time.getTime() - now.getTime())
           : undefined,
       };
     });

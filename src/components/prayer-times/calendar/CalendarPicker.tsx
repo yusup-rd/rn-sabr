@@ -1,9 +1,11 @@
+import { useIslamicEvents } from "@/hooks/useIslamicEvents";
 import { addDays, isSameDay, startOfWeek } from "@/lib/date";
 import { formatDate, formatHijriDate, formatWeekday } from "@/lib/format";
-import { getIslamicEventForDate } from "@/lib/islamic-events";
+import { getIslamicEventsForDate } from "@/lib/islamic-events";
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { clsx } from "clsx";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 import CalendarSheet from "./CalendarSheet";
 
@@ -16,7 +18,13 @@ const CalendarPicker = ({
   selectedDate,
   onSelectDate,
 }: CalendarPickerProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "prayerTimes.calendar",
+  });
+
   const [sheetVisible, setSheetVisible] = useState(false);
+
+  const { events: islamicEvents } = useIslamicEvents(selectedDate);
 
   const weekStart = startOfWeek(selectedDate);
 
@@ -24,7 +32,7 @@ const CalendarPicker = ({
     addDays(weekStart, index),
   );
 
-  const selectedEvent = getIslamicEventForDate(selectedDate);
+  const selectedEvents = getIslamicEventsForDate(selectedDate, islamicEvents);
 
   const selectDate = (date: Date) => {
     onSelectDate(date);
@@ -45,7 +53,7 @@ const CalendarPicker = ({
           <Pressable
             onPress={goToPreviousDay}
             accessibilityRole="button"
-            accessibilityLabel="Previous day"
+            accessibilityLabel={t("previousDay")}
             className="bg-muted size-8 shrink-0 items-center justify-center rounded-full"
           >
             <Fa name="chevron-left" size={10} className="text-foreground" />
@@ -70,7 +78,7 @@ const CalendarPicker = ({
           <Pressable
             onPress={() => setSheetVisible(true)}
             accessibilityRole="button"
-            accessibilityLabel="Open calendar"
+            accessibilityLabel={t("openCalendar")}
             className="bg-muted size-8 shrink-0 items-center justify-center rounded-full"
           >
             <Fa name="calendar-days" size={13} className="text-foreground" />
@@ -79,7 +87,7 @@ const CalendarPicker = ({
           <Pressable
             onPress={goToNextDay}
             accessibilityRole="button"
-            accessibilityLabel="Next day"
+            accessibilityLabel={t("nextDay")}
             className="bg-muted size-8 shrink-0 items-center justify-center rounded-full"
           >
             <Fa name="chevron-right" size={10} className="text-foreground" />
@@ -89,14 +97,15 @@ const CalendarPicker = ({
         <View className="flex-row gap-1">
           {weekDays.map((date) => {
             const selected = isSameDay(date, selectedDate);
-            const event = getIslamicEventForDate(date);
+
+            const events = getIslamicEventsForDate(date, islamicEvents);
 
             return (
               <Pressable
                 key={date.toISOString()}
                 onPress={() => selectDate(date)}
                 className={clsx(
-                  "will-change-variable flex-1 items-center rounded-lg p-2",
+                  "flex-1 items-center rounded-lg p-2",
                   selected ? "bg-primary shadow-xs" : "bg-card",
                 )}
               >
@@ -120,7 +129,7 @@ const CalendarPicker = ({
                   {date.getDate()}
                 </Text>
 
-                {event && (
+                {events.length > 0 && (
                   <View className="bg-secondary mt-1 size-1 rounded-full" />
                 )}
               </Pressable>
@@ -128,19 +137,28 @@ const CalendarPicker = ({
           })}
         </View>
 
-        {/* Selected event */}
-        {selectedEvent && (
-          <View className="bg-secondary-soft flex-row items-center gap-2 rounded-lg px-3 py-2">
-            <View className="bg-secondary size-1.5 shrink-0 rounded-full" />
+        {selectedEvents.length > 0 && (
+          <View className="bg-secondary-soft gap-1 rounded-lg px-3 py-2">
+            {selectedEvents.map((event) => (
+              <View
+                key={`${event.id}-${event.date}`}
+                className="flex-row items-center gap-2"
+              >
+                <View className="bg-secondary size-1.5 shrink-0 rounded-full" />
 
-            <Text className="text-secondary-soft-foreground font-sans-semibold text-xs">
-              {selectedEvent.name}
-            </Text>
+                <Text className="text-secondary-soft-foreground font-sans-semibold text-xs">
+                  {event.name
+                    ? t(`events.${event.id}`, {
+                        defaultValue: event.name,
+                      })
+                    : t(`events.${event.id}`)}
+                </Text>
+              </View>
+            ))}
           </View>
         )}
       </View>
 
-      {/* Calendar sheet */}
       <View className="absolute inset-0" pointerEvents="box-none">
         <CalendarSheet
           visible={sheetVisible}

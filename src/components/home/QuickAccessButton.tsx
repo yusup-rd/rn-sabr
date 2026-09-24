@@ -1,5 +1,7 @@
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
+import { clsx } from "clsx";
 import { Href, router } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { Pressable, Text, View } from "react-native";
 
 interface QuickAccessButtonProps {
@@ -10,11 +12,9 @@ interface QuickAccessItem {
   icon: React.ComponentProps<typeof Fa>["name"];
   iconClassName: string;
   iconContainerClassName: string;
-  badge: string;
   badgeClassName: string;
   badgeTextClassName: string;
-  title: string;
-  description: string;
+  titleKey: string;
   route: Href;
 }
 
@@ -26,11 +26,9 @@ const quickAccessConfig: Record<
     icon: "book-quran",
     iconClassName: "text-secondary-soft-foreground",
     iconContainerClassName: "bg-secondary-soft",
-    badge: "Surah",
     badgeClassName: "bg-secondary-soft",
     badgeTextClassName: "text-secondary-soft-foreground",
-    title: "Quran",
-    description: "Read Surah Al-Kahf",
+    titleKey: "quran.title",
     route: "/quran",
   },
 
@@ -38,11 +36,9 @@ const quickAccessConfig: Record<
     icon: "mosque",
     iconClassName: "text-primary-soft-foreground",
     iconContainerClassName: "bg-primary-soft",
-    badge: "0.4 mi",
     badgeClassName: "bg-primary-soft",
     badgeTextClassName: "text-primary-soft-foreground",
-    title: "Mosques",
-    description: "4 open nearby",
+    titleKey: "mosques.title",
     route: "/mosques",
   },
 
@@ -50,11 +46,9 @@ const quickAccessConfig: Record<
     icon: "calendar-days",
     iconClassName: "text-muted-foreground",
     iconContainerClassName: "bg-muted",
-    badge: "Daily",
     badgeClassName: "",
     badgeTextClassName: "text-muted-foreground",
-    title: "Prayer Times",
-    description: "Times & notifications",
+    titleKey: "prayerTimes.title",
     route: "/prayer-times",
   },
 
@@ -62,11 +56,9 @@ const quickAccessConfig: Record<
     icon: "money-bill-wave",
     iconClassName: "text-muted-foreground",
     iconContainerClassName: "bg-muted",
-    badge: "Nisab",
     badgeClassName: "",
     badgeTextClassName: "text-muted-foreground",
-    title: "Zakat",
-    description: "Quick Calculator",
+    titleKey: "zakat.title",
     route: "/zakat",
   },
 
@@ -74,48 +66,107 @@ const quickAccessConfig: Record<
     icon: "hands-praying",
     iconClassName: "text-primary-soft-foreground",
     iconContainerClassName: "bg-primary-soft",
-    badge: "33",
     badgeClassName: "bg-primary-soft",
     badgeTextClassName: "text-primary-soft-foreground",
-    title: "Tasbih",
-    description: "Count your dhikr",
+    titleKey: "tasbih.title",
     route: "/tasbih",
   },
 };
 
 const QuickAccessButton = ({ type }: QuickAccessButtonProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "home.quickAccess",
+  });
+
   const item = quickAccessConfig[type];
 
-  const handlePress = () => {
-    if (item.route) {
-      router.push(item.route);
+  const getBadge = () => {
+    switch (type) {
+      case "quran":
+        return t("quran.badge");
+
+      case "mosques":
+        // TODO: Replace with dynamic distance from nearest mosque API.
+        return t("mosques.badge", {
+          distance: 0.4,
+        });
+
+      case "prayer":
+        return t("prayerTimes.badge");
+
+      case "zakat":
+        return t("zakat.badge");
+
+      case "tasbih":
+        return t("tasbih.badge");
     }
+  };
+
+  const getDescription = () => {
+    switch (type) {
+      case "quran":
+        // TODO: Replace with Quran reading tracker state.
+        // If user has no reading history:
+        // show "Read Quran". - (.default)
+        // If user has progress:
+        // show "Read Surah {{surahName}}" with the saved surah. - (.continue)
+        return t("quran.description.continue", {
+          surahName: "Al-Kahf",
+        });
+
+      case "mosques":
+        // TODO: Replace with dynamic mosque data.
+        // Count should come from nearby mosque availability.
+        return t("mosques.description", {
+          count: 4,
+        });
+
+      case "prayer":
+        return t("prayerTimes.description");
+
+      case "zakat":
+        return t("zakat.description");
+
+      case "tasbih":
+        return t("tasbih.description");
+    }
+  };
+
+  const handlePress = () => {
+    router.push(item.route);
   };
 
   return (
     <Pressable
       className="bg-card gap-3 rounded-xl p-4 shadow-md active:opacity-75"
       onPress={handlePress}
-      accessibilityLabel={item.title}
+      accessibilityLabel={t(item.titleKey)}
     >
       <View className="flex-row items-center justify-between gap-2">
         <View
-          className={`size-9 items-center justify-center rounded-full ${item.iconContainerClassName}`}
+          className={clsx(
+            "size-9 items-center justify-center rounded-full",
+            item.iconContainerClassName,
+          )}
         >
           <Fa name={item.icon} size={16} className={item.iconClassName} />
         </View>
 
-        {item.badge && (
-          <View
-            className={`flex items-center justify-center rounded-full px-2 py-0.5 ${item.badgeClassName}`}
+        <View
+          className={clsx(
+            "flex items-center justify-center rounded-full px-2 py-0.5",
+            item.badgeClassName,
+          )}
+        >
+          <Text
+            className={clsx(
+              "font-sans-semibold text-xs",
+              item.badgeTextClassName,
+            )}
           >
-            <Text
-              className={`font-sans-semibold text-xs ${item.badgeTextClassName}`}
-            >
-              {item.badge}
-            </Text>
-          </View>
-        )}
+            {getBadge()}
+          </Text>
+        </View>
       </View>
 
       <View>
@@ -124,7 +175,7 @@ const QuickAccessButton = ({ type }: QuickAccessButtonProps) => {
           numberOfLines={1}
           ellipsizeMode="tail"
         >
-          {item.title}
+          {t(item.titleKey)}
         </Text>
 
         <Text
@@ -132,7 +183,7 @@ const QuickAccessButton = ({ type }: QuickAccessButtonProps) => {
           numberOfLines={1}
           ellipsizeMode="tail"
         >
-          {item.description}
+          {getDescription()}
         </Text>
       </View>
     </Pressable>

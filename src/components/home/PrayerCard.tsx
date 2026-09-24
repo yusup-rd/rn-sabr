@@ -1,6 +1,7 @@
 import type { Prayer } from "@/types/prayer";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { clsx } from "clsx";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 
 interface PrayerCardProps {
@@ -8,6 +9,11 @@ interface PrayerCardProps {
 }
 
 const PrayerCard = ({ prayer }: PrayerCardProps) => {
+  const { t } = useTranslation(undefined, { keyPrefix: "home.prayersToday" });
+  const { t: tPrayer } = useTranslation(undefined, {
+    keyPrefix: "prayers",
+  });
+
   const isSoon = prayer.status === "soon";
   const isCompleted = prayer.status === "completed";
 
@@ -34,7 +40,7 @@ const PrayerCard = ({ prayer }: PrayerCardProps) => {
         <View className="gap-0.5">
           <View className="flex-row items-center gap-1.5">
             <Text className="font-sans-semibold text-foreground text-sm">
-              {prayer.name}
+              {tPrayer(prayer.name.toLowerCase())}
             </Text>
 
             {isSoon && <View className="bg-secondary size-1.5 rounded-full" />}
@@ -49,8 +55,8 @@ const PrayerCard = ({ prayer }: PrayerCardProps) => {
             )}
           >
             {isSoon
-              ? `Next in ${prayer.remainingFormatted}`
-              : prayer.description}
+              ? t("nextIn", { time: prayer.remainingFormatted })
+              : tPrayer(prayer.description.toLowerCase())}
           </Text>
         </View>
       </View>

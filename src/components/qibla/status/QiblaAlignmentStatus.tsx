@@ -1,4 +1,5 @@
 import { FontAwesome6 as Fa } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 
 interface QiblaAlignmentStatusProps {
@@ -6,6 +7,10 @@ interface QiblaAlignmentStatusProps {
 }
 
 const QiblaAlignmentStatus = ({ isFacingQibla }: QiblaAlignmentStatusProps) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: "qibla.alignment",
+  });
+
   if (isFacingQibla) {
     return (
       <View className="flex-row items-center gap-2">
@@ -14,7 +19,7 @@ const QiblaAlignmentStatus = ({ isFacingQibla }: QiblaAlignmentStatusProps) => {
         </View>
 
         <Text className="font-sans-semibold text-primary text-sm">
-          Facing Qibla
+          {t("facingQibla")}
         </Text>
       </View>
     );
@@ -31,7 +36,7 @@ const QiblaAlignmentStatus = ({ isFacingQibla }: QiblaAlignmentStatusProps) => {
       </View>
 
       <Text className="font-sans-medium text-muted-foreground text-sm">
-        Turn your phone towards Qibla
+        {t("turnTowardsQibla")}
       </Text>
     </View>
   );

@@ -1,5 +1,9 @@
-import { getMonthDays, isSameDay } from "@/lib/date";
-import { getHijriDateParts, getIslamicEvent } from "@/lib/islamic-events";
+import { addDays, getMonthDays, isSameDay, startOfWeek } from "@/lib/date";
+import { formatWeekday } from "@/lib/format";
+import {
+  getIslamicEventsForDate,
+  type IslamicEvent,
+} from "@/lib/islamic-events";
 import { clsx } from "clsx";
 import { Pressable, Text, View } from "react-native";
 
@@ -7,24 +11,28 @@ interface CalendarMonthGridProps {
   month: Date;
   selectedDate: Date;
   onSelectDate: (date: Date) => void;
+  islamicEvents: IslamicEvent[];
 }
-
-const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const CalendarMonthGrid = ({
   month,
   selectedDate,
   onSelectDate,
+  islamicEvents,
 }: CalendarMonthGridProps) => {
   const days = getMonthDays(month);
+  const weekStart = startOfWeek(month);
+  const weekDays = Array.from({ length: 7 }, (_, index) =>
+    addDays(weekStart, index),
+  );
 
   return (
     <View className="gap-2">
       <View className="flex-row">
-        {weekDays.map((day) => (
-          <View key={day} className="w-[14.285%] items-center">
+        {weekDays.map((date) => (
+          <View key={date.toISOString()} className="w-[14.285%] items-center">
             <Text className="text-muted-foreground font-sans-semibold text-xs">
-              {day}
+              {formatWeekday(date)}
             </Text>
           </View>
         ))}
@@ -37,8 +45,7 @@ const CalendarMonthGrid = ({
           }
 
           const selected = isSameDay(date, selectedDate);
-          const hijri = getHijriDateParts(date);
-          const event = getIslamicEvent(hijri.month, hijri.day);
+          const events = getIslamicEventsForDate(date, islamicEvents);
 
           return (
             <Pressable
@@ -62,7 +69,7 @@ const CalendarMonthGrid = ({
                   {date.getDate()}
                 </Text>
 
-                {event && (
+                {events.length > 0 && (
                   <View className="bg-secondary absolute bottom-1 size-1.5 rounded-full" />
                 )}
               </View>

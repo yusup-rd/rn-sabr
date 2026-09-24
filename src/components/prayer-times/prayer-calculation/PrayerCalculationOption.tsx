@@ -2,19 +2,19 @@ import { FontAwesome6 as Fa } from "@expo/vector-icons";
 import { clsx } from "clsx";
 import { Pressable, Text, View } from "react-native";
 
-interface SelectionRowProps {
+interface PrayerCalculationOptionProps {
   title: string;
   description: string;
   selected: boolean;
   onPress: () => void;
 }
 
-const SelectionRow = ({
+const PrayerCalculationOption = ({
   title,
   description,
   selected,
   onPress,
-}: SelectionRowProps) => {
+}: PrayerCalculationOptionProps) => {
   return (
     <Pressable
       onPress={onPress}
@@ -56,4 +56,4 @@ const SelectionRow = ({
   );
 };
 
-export default SelectionRow;
+export default PrayerCalculationOption;
